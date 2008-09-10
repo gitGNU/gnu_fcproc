@@ -1,0 +1,3 @@
+Start symbol input
+
+input: | input ;

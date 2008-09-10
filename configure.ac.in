@@ -1,0 +1,121 @@
+# Process this file with autoconf to produce a configure script.
+
+#
+# configure.ac for fcp
+#
+# Copyright (C) 2007, 2008 Francesco Salvestrini
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+AC_INIT([Filter Chains Processor],[@VERSION@],[salvestrini@gmail.com],[fcp])
+
+# Check for a recent version of autoconf
+AC_PREREQ([2.61])
+
+# Place/find all autotools related files in the following directories
+AC_CONFIG_AUX_DIR([tools/autotools])
+AC_CONFIG_MACRO_DIR([tools/autotools/m4])
+AC_CONFIG_SRCDIR([src/main.cxx])
+
+#
+# For automake options (AM_INIT_AUTOMAKE options) see Makefile.am
+# file, AUTOMAKE_OPTIONS variable
+#
+AM_INIT_AUTOMAKE([1.10 foreign -Wall])
+
+#
+# Autoheader support
+#
+AC_CONFIG_HEADERS([src/config.h])
+
+#
+# Build related programs
+#
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+AC_PROG_LN_S
+AC_PROG_GREP
+AC_PROG_SED
+
+AC_PROG_YACC
+AC_PROG_LEX
+
+AC_PROG_CPP
+AC_PROG_CXX
+AC_PROG_CXX_C_O
+
+AX_PATH_MISSING([HELP2MAN], [help2man])
+AX_PATH_MISSING([SITETOOL], [sitetool])
+
+AC_PATH_PROG([WGET],        [wget])
+AC_PATH_PROG([PERL],        [perl])
+
+#
+# Check for execinfo.h, backtrace() and backtrace_symbols(). They may be useful
+#
+
+AC_CHECK_HEADER([execinfo.h],[
+  AC_DEFINE([HAVE_EXECINFO_H], [1], [Define to 1 if you have <execinfo.h>])
+])
+AC_CHECK_FUNC(backtrace, [
+  AC_DEFINE([HAVE_BACKTRACE],[1],
+	    [Define if backtrace() is available])
+])
+AC_CHECK_FUNC(backtrace_symbols, [
+  AC_DEFINE([HAVE_BACKTRACE_SYMBOLS],[1],
+	    [Define if backtrace_symbols is available])
+])
+
+#
+# The API version is the base version.  We must guarantee
+# compatibility for all releases with the same API version.
+# Our current rule is that:
+#
+# * All releases, including the prereleases, in an X.Y series
+#   are compatible.  So 1.5.1c is compatible with 1.5.
+#
+# * Prereleases on the trunk are all incompatible -- 1.5b and 1.5c
+#   aren't the same.
+#
+API_VERSION=`echo "$PACKAGE_VERSION" | sed -e 's/^\([[0-9]]*\.[[0-9]]*[[a-z]]*\).*$/\1/'`
+AC_SUBST(API_VERSION)
+
+# Versioned directories, defined here for convenience
+AC_SUBST(pkgvdir,     ["\${datadir}/${PACKAGE}-${API_VERSION}"])
+AC_SUBST(pkgvbindir,  ["\${datadir}/${PACKAGE}-${API_VERSION}/bin"])
+AC_SUBST(pkgvlibsdir, ["\${datadir}/${PACKAGE}-${API_VERSION}/libs"])
+
+AC_CONFIG_FILES([
+	Makefile
+
+	src/Makefile
+
+	tools/Makefile
+	tools/maint/Makefile
+	tools/autotools/Makefile
+	tools/autotools/m4/Makefile
+
+	site/Makefile
+	site/in/Makefile
+
+	docs/Makefile
+	docs/info/Makefile
+	docs/man/Makefile
+
+	tests/Makefile
+])
+
+AC_OUTPUT

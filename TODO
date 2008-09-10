@@ -1,0 +1,12 @@
+NOTE:
+	TODOs are divided in three parts: TO-BE-DONE, DONE and DONE-RECHECK.
+	When a TODO item has been completed it should be moved to DONE or
+	DONE-RECHECK, if it needs further checking.
+	In DONE and DONE-RECHECK status a date or a release version tag should
+	be added too.
+
+TO-BE-DONE:
+
+DONE:
+
+DONE-RECHECK:
