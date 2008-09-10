@@ -66,18 +66,8 @@ AC_PATH_PROG([PERL],        [perl])
 #
 # Check for execinfo.h, backtrace() and backtrace_symbols(). They may be useful
 #
-
-AC_CHECK_HEADER([execinfo.h],[
-  AC_DEFINE([HAVE_EXECINFO_H], [1], [Define to 1 if you have <execinfo.h>])
-])
-AC_CHECK_FUNC(backtrace, [
-  AC_DEFINE([HAVE_BACKTRACE],[1],
-	    [Define if backtrace() is available])
-])
-AC_CHECK_FUNC(backtrace_symbols, [
-  AC_DEFINE([HAVE_BACKTRACE_SYMBOLS],[1],
-	    [Define if backtrace_symbols is available])
-])
+AC_CHECK_HEADERS([execinfo.h])
+AC_CHECK_FUNC([backtrace backtrace_symbols])
 
 #
 # The API version is the base version.  We must guarantee
