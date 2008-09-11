@@ -33,6 +33,7 @@ void version(void)
 		<< PACKAGE << " (" << PACKAGE_NAME  << ") " << PACKAGE_VERSION <<                    std::endl
 		<<                                                                                   std::endl
 		<< "Copyright (C) 2007, 2008 Francesco Salvestrini" <<                               std::endl
+		<<                                                                                   std::endl
 		<< "This is free software.  You may redistribute copies of it under the terms of" << std::endl
 		<< "the GNU General Public License <http://www.gnu.org/licenses/gpl.html>." <<       std::endl
 		<< "There is NO WARRANTY, to the extent permitted by law." <<                        std::endl;
@@ -41,19 +42,21 @@ void version(void)
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PACKAGE << " [OPTION]... "<<                           std::endl
-		<<                                                                     std::endl
-		<< "Options: " <<                                                      std::endl
-		<< "  -d, --debug      enable debugging traces" <<                     std::endl
-		<< "  -v, --verbose    verbosely report processing" <<                 std::endl
-		<< "  -h, --help       print this help, then exit" <<                  std::endl
-		<< "  -V, --version    print version number, then exit" <<             std::endl
-		<<                                                                     std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                   std::endl;
+		<< "Usage: " << PACKAGE << " [OPTION]... "<<               std::endl
+		<<                                                         std::endl
+		<< "Options: " <<                                          std::endl
+		<< "  -d, --debug      enable debugging traces" <<         std::endl
+		<< "  -v, --verbose    verbosely report processing" <<     std::endl
+		<< "  -h, --help       print this help, then exit" <<      std::endl
+		<< "  -V, --version    print version number, then exit" << std::endl
+		<<                                                         std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<       std::endl;
 }
 
 void hint(const std::string & message)
 {
+	BUG_ON(message.size() == 0);
+
 	std::cout
 		<< message <<                                            std::endl
 		<< "Try `" << PACKAGE << " -h' for more information." << std::endl;
@@ -111,8 +114,8 @@ int main(int argc, char * argv[])
 				break;
 
 			default:
-				hint("");
-				return 1;
+				BUG();
+				break;
 		}
 	}
 
