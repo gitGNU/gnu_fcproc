@@ -1,2 +1,2 @@
 [name]
-fcp \- insert comment here
+fcp \- tranform files using chains of filters
