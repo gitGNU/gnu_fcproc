@@ -21,7 +21,8 @@
 #include <cstdlib>
 #include <iostream>
 
-#if HAVE_EXECINFO_H && HAVE_BACKTRACE && HAVE_BACKTRACE_SYMBOLS
+// XXX FIXME: Ugly
+#if defined(HAVE_EXECINFO_H) && defined(HAVE_BACKTRACE) && defined(HAVE_BACKTRACE_SYMBOLS)
 #include <execinfo.h>
 
 #define BACKTRACE_SIZE 100
