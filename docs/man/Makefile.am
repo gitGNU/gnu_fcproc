@@ -32,7 +32,7 @@ EXTRA_DIST = $(man_aux)
 fcp.1: $(top_srcdir)/src/main.cxx $(top_srcdir)/configure.ac
 	$(HELP2MAN) \
 	    --include=$(srcdir)/fcp.x \
-	    --source="FSF" \
+	    --source="@PACKAGE_NAME@" \
 	    --manual="User Commands" \
 	    --section=1	\
 	    --output=fcp.1 \
