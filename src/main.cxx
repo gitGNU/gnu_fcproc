@@ -42,7 +42,7 @@ void version(void)
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PACKAGE << " [OPTION]... "<<               std::endl
+		<< "Usage: " << PACKAGE << " [OPTION]... [FILE]..."<<      std::endl
 		<<                                                         std::endl
 		<< "Options: " <<                                          std::endl
 		<< "  -d, --debug      enable debugging traces" <<         std::endl
