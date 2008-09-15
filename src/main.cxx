@@ -90,7 +90,7 @@ int main(int argc, char * argv[])
 			{ 0,         0, 0, 0   }
 		};
 
-		c = getopt_long(argc, argv, "dvh",
+		c = getopt_long(argc, argv, "dvVh",
 				long_options, &option_index);
 		if (c == -1) {
 			break;

@@ -30,6 +30,7 @@ src/scanner.cxx
 
 tools/maint/fetch
 tools/maint/whitespace-detect
+tools/maint/gitlog-to-committers
 
 tools/autotools/install-sh
 tools/autotools/missing
