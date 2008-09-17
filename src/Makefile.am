@@ -37,6 +37,8 @@ fcp_SOURCES =					\
 	job.h					\
 	parser.yxx				\
 	scanner.lxx
+fcp_CPPFLAGS =					\
+	$(EXTRA_CPPFLAGS)
 
 AM_LFLAGS = $(LEX_FLAGS)
 AM_YFLAGS = $(YACC_FLAGS) -d
