@@ -57,6 +57,13 @@ AC_PROG_CPP
 AC_PROG_CXX
 AC_PROG_CXX_C_O
 
+# Checks for preprocessor flags
+TEMP_FLAGS=""
+AX_CXXCPP_CHECK_FLAG([-Wall],  [],[],[ TEMP_FLAGS="$TEMP_FLAGS -Wall"  ])
+AX_CXXCPP_CHECK_FLAG([-Werror],[],[],[ TEMP_FLAGS="$TEMP_FLAGS -Werror"])
+AC_SUBST([EXTRA_CPPFLAGS],$TEMP_FLAGS)
+
+
 AX_PATH_MISSING([HELP2MAN], [help2man])
 AX_PATH_MISSING([SITETOOL], [sitetool])
 
