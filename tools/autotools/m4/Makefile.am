@@ -25,11 +25,10 @@ include $(top_srcdir)/Makefile.sub
 ##
 HOST = "http://autoconf-archive.cryp.to"
 
-DOWNLOAD = 					\
-	ax_compare_version.m4			\
+DOWNLOAD =					\
 	ax_missing_prog.m4			\
 	ax_path_missing.m4			\
-	ax_with_prog.m4
+        ax_cxxcpp_check_flag.m4
 
 MACROS =					\
 	$(DOWNLOAD)
