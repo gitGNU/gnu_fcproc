@@ -24,8 +24,7 @@
 #include <iostream>
 #include <vector>
 
-#include "debug.h"
-#include "globals.h"
+#include "misc/debug.h"
 
 void version(void)
 {
@@ -66,9 +65,7 @@ bool transform(const std::string & input)
 {
 	BUG_ON(input.size() == 0);
 
-	if (debug) {
-		std::cout << "Transforming " << input << std::endl;
-	}
+	TR_DBG("Transforming %s\n", input.c_str());
 
 	return true;
 }
@@ -97,10 +94,10 @@ int main(int argc, char * argv[])
 
 		switch (c) {
 			case 'd':
-				debug = true;
+				trace_level = TR_LVL_DEBUG;
 				break;
 			case 'v':
-				verbose = true;
+				trace_level = TR_LVL_NOTICE;
 				break;
 			case 'V':
 				version();
@@ -136,6 +133,9 @@ int main(int argc, char * argv[])
 		inputs[i - optind] = argv[i];
 	}
 
+	// Read configuration file
+
+	// Perform all transformations
 	std::vector<std::string>::iterator iter;
 	for (iter = inputs.begin(); iter != inputs.end(); iter++) {
 		if (!transform(*iter)) {
