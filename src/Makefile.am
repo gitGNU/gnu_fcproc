@@ -31,10 +31,6 @@ fcp_SOURCES =					\
 	main.cxx				\
 	log.cxx					\
 	log.h					\
-	debug.h					\
-	debug.cxx				\
-	globals.cxx				\
-	globals.h				\
 	graph.cxx				\
 	graph.h					\
 	job.cxx					\
