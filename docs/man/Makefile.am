@@ -29,7 +29,7 @@ EXTRA_DIST = $(man_aux)
 ## NOTE:
 ##     Distributed files should never depend on non-distributed built files
 ##
-fcp.1: $(top_srcdir)/src/main.cxx $(top_srcdir)/configure.ac
+fcp.1: $(top_srcdir)/src/fcp.cxx $(top_srcdir)/configure.ac
 	$(HELP2MAN) \
 	    --include=$(srcdir)/fcp.x \
 	    --source="@PACKAGE_NAME@" \

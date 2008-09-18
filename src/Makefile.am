@@ -28,7 +28,7 @@ bin_PROGRAMS =					\
 	fcp
 
 fcp_SOURCES =					\
-	main.cxx				\
+	fcp.cxx					\
 	log.cxx					\
 	log.h					\
 	graph.cxx				\
