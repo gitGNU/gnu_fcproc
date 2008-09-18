@@ -20,6 +20,10 @@
 
 include $(top_srcdir)/Makefile.sub
 
+AUTOMAKE_OPTIONS = subdir-objects
+
+## Programs
+
 bin_PROGRAMS =					\
 	fcp
 
@@ -39,12 +43,31 @@ fcp_SOURCES =					\
 	scanner.lxx
 fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
+fcp_LDADD =					\
+	libmisc.a
 
 AM_LFLAGS = $(LEX_FLAGS)
 AM_YFLAGS = $(YACC_FLAGS) -d
 
 BUILT_SOURCES =					\
 	parser.h
+
+## Libraries
+
+noinst_LIBRARIES =				\
+	libmisc.a
+
+libmisc_a_SOURCES =                             \
+        misc/debug.h                            \
+        misc/debug.cxx                          \
+        misc/trace.h                            \
+        misc/trace.cxx                          \
+        misc/constant.h                         \
+        misc/utility.h                          \
+        misc/thread.h                           \
+        misc/thread.cxx
+libmisc_a_CPPFLAGS =                            \
+        $(EXTRA_CPPFLAGS)
 
 ##
 ## Maintainer related targets
