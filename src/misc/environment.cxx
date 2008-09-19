@@ -17,3 +17,34 @@
 //
 
 #include "config.h"
+
+#include <string>
+#include <cstdlib>
+
+#include "misc/debug.h"
+#include "misc/environment.h"
+
+using namespace Environment;
+
+std::string get(const std::string & key)
+{
+	BUG_ON(key.size() == 0);
+
+	std::string tmp;
+
+	tmp = getenv(key.c_str());
+
+	return tmp;
+}
+
+bool set(const std::string & key,
+	 const std::string & value)
+{
+	BUG_ON(key.size() == 0);
+
+	if (setenv(key.c_str(), value.c_str(), 1) != 0) {
+		return false;
+	}
+
+	return true;
+}

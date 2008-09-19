@@ -21,4 +21,13 @@
 
 #include "config.h"
 
+#include <string>
+#include <cstdlib>
+
+namespace Environment {
+	std::string get(const std::string & key);
+	bool        set(const std::string & key,
+			const std::string & value);
+};
+
 #endif // ENVIRONMENT_H
