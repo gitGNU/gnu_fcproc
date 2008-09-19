@@ -137,13 +137,14 @@ int main(int argc, char * argv[])
 
 	// Build configuration file path
 	std::string homedir = Environment::get("HOME");
-	TR_DBG("Home directory:     '%s'\n", homedir.c_str());
-
 	std::string conffile =
 		homedir +
 		std::string("/") +
 		std::string(".") +
 		std::string(PACKAGE_TARNAME);
+
+	// Dump (acquired and derived) infos
+	TR_DBG("Home directory:     '%s'\n", homedir.c_str());
 	TR_DBG("Configuration file: '%s'\n", conffile.c_str());
 
 	// Build dependency DAG
