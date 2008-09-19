@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "misc/debug.h"
+#include "misc/environment.h"
 
 void version(void)
 {
@@ -115,6 +116,7 @@ int main(int argc, char * argv[])
 		}
 	}
 
+	// Gather input file names
 	if (optind >= argc) {
 		hint("Missing input file name(s)");
 		return 1;
@@ -133,7 +135,18 @@ int main(int argc, char * argv[])
 		inputs[i - optind] = argv[i];
 	}
 
-	// Read configuration file
+	// Build configuration file path
+	std::string homedir = Environment::get("HOME");
+	TR_DBG("Home directory:     '%s'\n", homedir.c_str());
+
+	std::string conffile =
+		homedir +
+		std::string("/") +
+		std::string(".") +
+		std::string(PACKAGE_TARNAME);
+	TR_DBG("Configuration file: '%s'\n", conffile.c_str());
+
+	// Build dependency DAG
 
 	// Perform all transformations
 	std::vector<std::string>::iterator iter;
@@ -142,6 +155,8 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 	}
+
+	BUG();
 
 	return 0;
 }
