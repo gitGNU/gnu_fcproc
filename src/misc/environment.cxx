@@ -24,27 +24,34 @@
 #include "misc/debug.h"
 #include "misc/environment.h"
 
-using namespace Environment;
+namespace Environment {
+	std::string get(const std::string & key)
+	{
+		BUG_ON(key.size() == 0);
 
-std::string get(const std::string & key)
-{
-	BUG_ON(key.size() == 0);
+		std::string tmp;
 
-	std::string tmp;
+		tmp = getenv(key.c_str());
 
-	tmp = getenv(key.c_str());
-
-	return tmp;
-}
-
-bool set(const std::string & key,
-	 const std::string & value)
-{
-	BUG_ON(key.size() == 0);
-
-	if (setenv(key.c_str(), value.c_str(), 1) != 0) {
-		return false;
+		return tmp;
 	}
 
-	return true;
+	std::string get(const char * key)
+	{
+		BUG_ON(key == 0);
+
+		return get(std::string(key));
+	}
+
+	bool set(const std::string & key,
+		 const std::string & value)
+	{
+		BUG_ON(key.size() == 0);
+
+		if (setenv(key.c_str(), value.c_str(), 1) != 0) {
+			return false;
+		}
+
+		return true;
+	}
 }
