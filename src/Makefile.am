@@ -58,6 +58,8 @@ libmisc_a_SOURCES =                             \
         misc/debug.cxx                          \
         misc/trace.h                            \
         misc/trace.cxx                          \
+        misc/environment.h                      \
+        misc/environment.cxx                    \
         misc/constant.h                         \
         misc/utility.h                          \
         misc/thread.h                           \
