@@ -28,10 +28,8 @@ namespace Graph {
 	// Rule11: 1 input, 1 output
 	class Rule11 {
 	public:
-		Rule11(const std::string & command) :
-			command_(command) {
-		};
-		~Rule11(void) { };
+		Rule11(const std::string & command);
+		~Rule11(void);
 
 		bool run(std::string & input,
 			 std::string & output);

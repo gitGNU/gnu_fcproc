@@ -17,3 +17,28 @@
 //
 
 #include "config.h"
+
+#include <string>
+
+#include "misc/trace.h"
+#include "graph/rule.h"
+
+using namespace Graph;
+
+Rule11::Rule11(const std::string & command) :
+	command_(command)
+{
+}
+
+Rule11::~Rule11(void)
+{
+}
+
+bool Rule11::run(std::string & input,
+		 std::string & output)
+{
+	TR_DBG("Running command '%s' with input '%s' and output '%s'\n",
+	       command_.c_str(), input.c_str(), output.c_str());
+
+	return true;
+}
