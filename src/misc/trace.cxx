@@ -20,4 +20,5 @@
 
 #include "misc/trace.h"
 
-int trace_level = TR_LVL_DEFAULT;
+int    trace_level  = TR_LVL_DEFAULT;
+char * trace_prefix = PACKAGE_TARNAME;

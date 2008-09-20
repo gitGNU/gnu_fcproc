@@ -21,9 +21,13 @@
 
 #include <cstdio>
 
-#define MODULE "test"
+//
+// NOTE:
+//     This tracing interface is really awful. It will be replaced ASAP.
+//
 
-extern int trace_level;
+extern int     trace_level;
+extern char *  trace_prefix;
 
 // Trace levels
 #define TR_LVL_CRITICAL 4
@@ -34,16 +38,24 @@ extern int trace_level;
 
 #define TR_LVL_DEFAULT TR_LVL_NOTICE
 
-#define TRACE(LVL,FMT,ARGS...) {				\
-	if ((LVL) >= trace_level) {				\
-		fprintf(stdout, MODULE ": " FMT, ##ARGS);	\
-	}							\
+#define _TRACE(LVL,FMT,ARGS...)	{					   \
+	if ((LVL) >= trace_level) {					   \
+		if (trace_prefix) {					   \
+			fprintf(stdout, "%s: " FMT, trace_prefix, ##ARGS); \
+		} else {						   \
+			fprintf(stdout, FMT, ##ARGS);			   \
+		}							   \
+	}								   \
 }
 
+// Shortcuts for configuration
+#define TR_CONFIG_LVL(LVL)  { trace_level  = LVL; }
+#define TR_CONFIG_PFX(PFX)  { trace_prefix = PFX; }
+
 // Shortcuts for traces
-#define TR_DBG(FMT,ARGS...) TRACE(TR_LVL_DEBUG,    FMT, ##ARGS);
-#define TR_WRN(FMT,ARGS...) TRACE(TR_LVL_WARNING,  FMT, ##ARGS);
-#define TR_ERR(FMT,ARGS...) TRACE(TR_LVL_ERROR,    FMT, ##ARGS);
-#define TR_CRT(FMT,ARGS...) TRACE(TR_LVL_CRITICAL, FMT, ##ARGS);
+#define TR_DBG(FMT,ARGS...) _TRACE(TR_LVL_DEBUG,    FMT, ##ARGS);
+#define TR_WRN(FMT,ARGS...) _TRACE(TR_LVL_WARNING,  FMT, ##ARGS);
+#define TR_ERR(FMT,ARGS...) _TRACE(TR_LVL_ERROR,    FMT, ##ARGS);
+#define TR_CRT(FMT,ARGS...) _TRACE(TR_LVL_CRITICAL, FMT, ##ARGS);
 
 #endif // TRACES_H
