@@ -21,19 +21,29 @@
 
 #include "config.h"
 
+#include <vector>
+
 #include "graph/node.h"
+#include "graph/tree.h"
 
 namespace Graph {
-	class Tree {
+	class Tree : public Node {
 	public:
-		Tree(const Node & node) :
-			node_(node) { };
-		~Tree(void) { };
+		Tree(const std::string & tag,
+		     const std::string & command);
+		~Tree(void);
+
+		void                        father(Tree & tree);
+		Tree &                      father(void);
+		void                        child(Tree & tree);
+		const std::vector<Tree *> & children(void);
 
 	protected:
-		Node node_;
+		Tree(void);
 
 	private:
+		Tree *              father_;
+		std::vector<Tree *> children_;
 	};
 };
 

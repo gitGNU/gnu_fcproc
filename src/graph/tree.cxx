@@ -17,3 +17,38 @@
 //
 
 #include "config.h"
+
+#include "graph/node.h"
+#include "graph/tree.h"
+
+using namespace Graph;
+
+Tree::Tree(const std::string & tag,
+	   const std::string & command) :
+	Node(tag, command)
+{
+	father_ = 0;
+	children_.clear();
+}
+
+Tree::~Tree(void)
+{
+}
+
+void Tree::father(Tree & tree)
+{
+}
+
+Tree & Tree::father(void)
+{
+	return *father_;
+}
+
+void Tree::child(Tree & tree)
+{
+}
+
+const std::vector<Tree *> & Tree::children(void)
+{
+	return children_;
+}
