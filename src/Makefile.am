@@ -68,14 +68,14 @@ libmisc_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 libgraph_a_SOURCES =				\
-	graph/dag.h				\
-	graph/dag.cxx				\
-	graph/node.h				\
-	graph/node.cxx				\
 	graph/rule.h				\
 	graph/rule.cxx				\
+	graph/node.h				\
+	graph/node.cxx				\
 	graph/tree.h				\
-	graph/tree.cxx
+	graph/tree.cxx				\
+	graph/dag.h				\
+	graph/dag.cxx
 libgraph_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
