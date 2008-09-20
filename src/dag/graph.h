@@ -23,6 +23,22 @@
 
 #include <string>
 
+namespace DAG {
+
+class Rule {
+public:
+	Rule(std::string & command);
+	~Rule(void);
+
+	bool run(std::string & input,
+		 std::string & output);
+
+protected:
+	Rule(void);
+
+private:
+};
+
 class Node {
 public:
 	Node(const std::string & tag) :
@@ -35,9 +51,11 @@ public:
 	}
 
 protected:
+	Node(void);
 
 private:
 	std::string tag_;
+};
 };
 
 #endif // GRAPH_H

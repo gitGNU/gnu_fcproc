@@ -65,17 +65,17 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-Node readconfig(std::string configuration_file)
+DAG::Node readconfig(std::string configuration_file)
 {
 	TR_DBG("Reading configuration file '%s'\n",
 	       configuration_file.c_str());
 
-	return Node::Node("test");
+	return DAG::Node::Node("test");
 }
 
-bool transform(const std::string &       input,
-	       const std::vector<Node> & filters,
-	       const std::string &       output)
+bool transform(const std::string &            input,
+	       const std::vector<DAG::Node> & filters,
+	       const std::string &            output)
 {
 	BUG_ON(input.size()   == 0);
 	BUG_ON(filters.size() == 0);
@@ -173,7 +173,7 @@ int main(int argc, char * argv[])
 		// Perform all transformations
 		std::vector<std::string>::iterator iter;
 		for (iter = inputs.begin(); iter != inputs.end(); iter++) {
-			std::vector<Node> filters;
+			std::vector<DAG::Node> filters;
 
 			// Transform input file using filters
 			if (!transform(*iter, filters, "temp")) {
