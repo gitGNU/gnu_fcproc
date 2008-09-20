@@ -45,19 +45,41 @@ DAG::~DAG(void)
 bool DAG::add(const std::string & tag,
 	      const std::string & command)
 {
-	// Graph::Node * node = new Graph::Node(tag, command);
+#if 0
+	Graph::Tree * tree = new Graph::Tree(tag, command);
 
-	return true;
+	if (!root_) {
+		root_ = tree;
+		return true;
+	}
+
+	return root_->children(tree);
+#endif
+
+	return false;
 }
 
 bool DAG::remove(const std::string & tag)
 {
-	return true;
+#if 0
+	if (!root_) {
+		return root_->remove(tag);
+	}
+#endif
+
+	return false;
 }
 
 #if 0
 std::vector<const Node &> DAG::path(const std::string & tag_in,
 				    const std::string & tag_out)
 {
+	// Find tag-out node
+
+	// Go back till tag-in node found, filling the path
+
+	std::vector<const Node &> tmp;
+
+	return tmp;
 }
 #endif
