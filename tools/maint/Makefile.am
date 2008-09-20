@@ -23,7 +23,6 @@ include $(top_srcdir)/Makefile.sub
 EXTRA_DIST =					\
 	fetch.in				\
 	whitespace-detect.in			\
-	yaxx-to-grammar				\
 	gitlog-to-committers.in			\
 	\
 	git-version-gen				\
