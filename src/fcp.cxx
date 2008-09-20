@@ -70,7 +70,7 @@ DAG::Node readconfig(std::string configuration_file)
 	TR_DBG("Reading configuration file '%s'\n",
 	       configuration_file.c_str());
 
-	return DAG::Node::Node("test");
+	return DAG::Node::Node("test", "command");
 }
 
 bool transform(const std::string &            input,

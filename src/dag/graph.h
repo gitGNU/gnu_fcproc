@@ -25,37 +25,51 @@
 
 namespace DAG {
 
-class Rule {
-public:
-	Rule(std::string & command);
-	~Rule(void);
+	class Rule {
+	public:
+		Rule(const std::string & command) :
+			command_(command) {
+		};
+		~Rule(void) { };
 
-	bool run(std::string & input,
-		 std::string & output);
+		bool run(std::string & input,
+			 std::string & output);
 
-protected:
-	Rule(void);
+	protected:
+		Rule(void);
 
-private:
-};
+	private:
+		std::string command_;
+	};
 
-class Node {
-public:
-	Node(const std::string & tag) :
-		tag_(tag) {
-	}
-	~Node(void) {};
+	class Node : public Rule {
+	public:
+		Node(const std::string & tag,
+		     const std::string & command) :
+			Rule(command),
+			tag_(tag) { };
+		~Node(void) { };
 
-	const std::string & tag(void) {
-		return tag_;
-	}
+		const std::string & tag(void) {
+			return tag_;
+		}
 
-protected:
-	Node(void);
+	protected:
+		Node(void);
 
-private:
-	std::string tag_;
-};
+	private:
+		std::string tag_;
+	};
+
+	class DAG {
+	public:
+		DAG(void);
+		~DAG(void);
+
+	protected:
+
+	private:
+	};
 };
 
 #endif // GRAPH_H
