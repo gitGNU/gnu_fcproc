@@ -45,15 +45,16 @@ void version(void)
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [FILE]..."<< std::endl
-		<<                                                         std::endl
-		<< "Options: " <<                                          std::endl
-		<< "  -d, --debug      enable debugging traces" <<         std::endl
-		<< "  -v, --verbose    verbosely report processing" <<     std::endl
-		<< "  -h, --help       print this help, then exit" <<      std::endl
-		<< "  -V, --version    print version number, then exit" << std::endl
-		<<                                                         std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<       std::endl;
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [FILE]..."<<              std::endl
+		<<                                                                      std::endl
+		<< "Options: " <<                                                       std::endl
+		<< "  -n, --dry-run    display commands without modifying any files" << std::endl
+		<< "  -d, --debug      enable debugging traces" <<                      std::endl
+		<< "  -v, --verbose    verbosely report processing" <<                  std::endl
+		<< "  -h, --help       print this help, then exit" <<                   std::endl
+		<< "  -V, --version    print version number, then exit" <<              std::endl
+		<<                                                                      std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                    std::endl;
 }
 
 void hint(const std::string & message)
@@ -97,6 +98,8 @@ int main(int argc, char * argv[])
 	TR_CONFIG_PFX(PROGRAM_NAME);
 
 	try {
+		bool dry_run = false;
+
 		int c;
 		// int digit_optind = 0;
 		while (1) {
@@ -104,6 +107,7 @@ int main(int argc, char * argv[])
 			int option_index       = 0;
 
 			static struct option long_options[] = {
+				{ "dry-run", 0, 0, 'n' },
 				{ "debug",   0, 0, 'd' },
 				{ "verbose", 0, 0, 'v' },
 				{ "version", 0, 0, 'V' },
@@ -111,18 +115,21 @@ int main(int argc, char * argv[])
 				{ 0,         0, 0, 0   }
 			};
 
-			c = getopt_long(argc, argv, "dvVh",
+			c = getopt_long(argc, argv, "ndvVh",
 					long_options, &option_index);
 			if (c == -1) {
 				break;
 			}
 
 			switch (c) {
+				case 'n':
+					dry_run  = true;
+					break;
 				case 'd':
-					trace_level = TR_LVL_DEBUG;
+					TR_CONFIG_LVL(TR_LVL_DEBUG);
 					break;
 				case 'v':
-					trace_level = TR_LVL_NOTICE;
+					TR_CONFIG_LVL(TR_LVL_NOTICE);
 					break;
 				case 'V':
 					version();
