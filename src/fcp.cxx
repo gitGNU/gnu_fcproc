@@ -27,10 +27,12 @@
 #include "misc/debug.h"
 #include "misc/environment.h"
 
+#define PROGRAM_NAME "fcp"
+
 void version(void)
 {
 	std::cout
-		<< PACKAGE << " (" << PACKAGE_NAME  << ") " << PACKAGE_VERSION <<                    std::endl
+		<< PROGRAM_NAME << " (" << PACKAGE_NAME  << ") " << PACKAGE_VERSION <<               std::endl
 		<<                                                                                   std::endl
 		<< "Copyright (C) 2007, 2008 Francesco Salvestrini" <<                               std::endl
 		<<                                                                                   std::endl
@@ -42,7 +44,7 @@ void version(void)
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PACKAGE << " [OPTION]... [FILE]..."<<      std::endl
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [FILE]..."<< std::endl
 		<<                                                         std::endl
 		<< "Options: " <<                                          std::endl
 		<< "  -d, --debug      enable debugging traces" <<         std::endl
@@ -58,8 +60,8 @@ void hint(const std::string & message)
 	BUG_ON(message.size() == 0);
 
 	std::cout
-		<< message <<                                            std::endl
-		<< "Try `" << PACKAGE << " -h' for more information." << std::endl;
+		<< message <<                                                 std::endl
+		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
 bool transform(const std::string & input)
@@ -73,91 +75,98 @@ bool transform(const std::string & input)
 
 int main(int argc, char * argv[])
 {
-	int c;
-	// int digit_optind = 0;
-	while (1) {
-		// int this_option_optind = optind ? optind : 1;
-		int option_index       = 0;
+	TR_CONFIG_LVL(TR_LVL_DEFAULT);
+	TR_CONFIG_PFX(PROGRAM_NAME);
 
-		static struct option long_options[] = {
-			{ "debug",   0, 0, 'd' },
-			{ "verbose", 0, 0, 'v' },
-			{ "version", 0, 0, 'V' },
-			{ "help",    0, 0, 'h' },
-			{ 0,         0, 0, 0   }
-		};
+	try {
+		int c;
+		// int digit_optind = 0;
+		while (1) {
+			// int this_option_optind = optind ? optind : 1;
+			int option_index       = 0;
 
-		c = getopt_long(argc, argv, "dvVh",
-				long_options, &option_index);
-		if (c == -1) {
-			break;
+			static struct option long_options[] = {
+				{ "debug",   0, 0, 'd' },
+				{ "verbose", 0, 0, 'v' },
+				{ "version", 0, 0, 'V' },
+				{ "help",    0, 0, 'h' },
+				{ 0,         0, 0, 0   }
+			};
+
+			c = getopt_long(argc, argv, "dvVh",
+					long_options, &option_index);
+			if (c == -1) {
+				break;
+			}
+
+			switch (c) {
+				case 'd':
+					trace_level = TR_LVL_DEBUG;
+					break;
+				case 'v':
+					trace_level = TR_LVL_NOTICE;
+					break;
+				case 'V':
+					version();
+					return 0;
+				case 'h':
+					help();
+					return 0;
+				case '?':
+					hint("Unrecognized option");
+					break;
+
+				default:
+					BUG();
+					break;
+			}
 		}
 
-		switch (c) {
-			case 'd':
-				trace_level = TR_LVL_DEBUG;
-				break;
-			case 'v':
-				trace_level = TR_LVL_NOTICE;
-				break;
-			case 'V':
-				version();
-				return 0;
-			case 'h':
-				help();
-				return 0;
-			case '?':
-				hint("Unrecognized option");
-				break;
-
-			default:
-				BUG();
-				break;
-		}
-	}
-
-	// Gather input file names
-	if (optind >= argc) {
-		hint("Missing input file name(s)");
-		return 1;
-	}
-
-	std::vector<std::string> inputs;
-	int                      count;
-
-	count = argc - optind;
-	assert(count >= 0);
-
-	inputs.resize(count);
-
-	int i;
-	for (i = optind; i < argc; i++) {
-		inputs[i - optind] = argv[i];
-	}
-
-	// Build configuration file path
-	std::string homedir = Environment::get("HOME");
-	std::string conffile =
-		homedir +
-		std::string("/") +
-		std::string(".") +
-		std::string(PACKAGE_TARNAME);
-
-	// Dump (acquired and derived) infos
-	TR_DBG("Home directory:     '%s'\n", homedir.c_str());
-	TR_DBG("Configuration file: '%s'\n", conffile.c_str());
-
-	// Build dependency DAG
-
-	// Perform all transformations
-	std::vector<std::string>::iterator iter;
-	for (iter = inputs.begin(); iter != inputs.end(); iter++) {
-		if (!transform(*iter)) {
+		// Gather input file names
+		if (optind >= argc) {
+			hint("Missing input file name(s)");
 			return 1;
 		}
-	}
 
-	BUG();
+		std::vector<std::string> inputs;
+		int                      count;
+
+		count = argc - optind;
+		assert(count >= 0);
+
+		inputs.resize(count);
+
+		int i;
+		for (i = optind; i < argc; i++) {
+			inputs[i - optind] = argv[i];
+		}
+
+		// Build configuration file path
+		std::string homedir = Environment::get("HOME");
+		std::string conffile =
+			homedir +
+			std::string("/") +
+			std::string(".") +
+			std::string(PACKAGE_TARNAME);
+
+		// Dump (acquired and derived) infos
+		TR_DBG("Home directory:     '%s'\n", homedir.c_str());
+		TR_DBG("Configuration file: '%s'\n", conffile.c_str());
+
+		// Build dependency DAG
+
+		// Perform all transformations
+		std::vector<std::string>::iterator iter;
+		for (iter = inputs.begin(); iter != inputs.end(); iter++) {
+			if (!transform(*iter)) {
+				return 1;
+			}
+		}
+
+		BUG();
+	} catch (...) {
+		BUG();
+	};
 
 	return 0;
 }
