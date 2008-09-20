@@ -31,8 +31,6 @@ fcp_SOURCES =					\
 	fcp.cxx					\
 	log.cxx					\
 	log.h					\
-	graph.cxx				\
-	graph.h					\
 	job.cxx					\
 	job.h					\
 	parser.yxx				\
@@ -40,7 +38,8 @@ fcp_SOURCES =					\
 fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
 fcp_LDADD =					\
-	libmisc.a
+	libmisc.a				\
+	libdag.a
 
 AM_LFLAGS = $(LEX_FLAGS)
 AM_YFLAGS = $(YACC_FLAGS) -d
@@ -51,7 +50,8 @@ BUILT_SOURCES =					\
 ## Libraries
 
 noinst_LIBRARIES =				\
-	libmisc.a
+	libmisc.a				\
+	libdag.a
 
 libmisc_a_SOURCES =				\
 	misc/debug.h				\
@@ -65,6 +65,12 @@ libmisc_a_SOURCES =				\
 	misc/thread.h				\
 	misc/thread.cxx
 libmisc_a_CPPFLAGS =				\
+	$(EXTRA_CPPFLAGS)
+
+libdag_a_SOURCES =				\
+	dag/graph.h				\
+	dag/graph.cxx
+libdag_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 ##

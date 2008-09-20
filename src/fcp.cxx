@@ -64,11 +64,34 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-bool transform(const std::string & input)
-{
-	BUG_ON(input.size() == 0);
+class Node {
+public:
+	Node(void)  {};
+	~Node(void) {};
+private:
 
-	TR_DBG("Transforming %s\n", input.c_str());
+protected:
+};
+
+Node readconfig(std::string configuration_file)
+{
+	TR_DBG("Reading configuration file '%s'\n",
+	       configuration_file.c_str());
+
+	return Node::Node();
+}
+
+bool transform(const std::string &       input,
+	       const std::vector<Node> & filters,
+	       const std::string &       output)
+{
+	BUG_ON(input.size()   == 0);
+	BUG_ON(filters.size() == 0);
+	BUG_ON(output.size()  == 0);
+
+	TR_DBG("Transforming %s -> %s\n",
+	       input.c_str(),
+	       output.c_str());
 
 	return true;
 }
@@ -153,12 +176,15 @@ int main(int argc, char * argv[])
 		TR_DBG("Home directory:     '%s'\n", homedir.c_str());
 		TR_DBG("Configuration file: '%s'\n", conffile.c_str());
 
-		// Build dependency DAG
+		// Read configuration file and build dependency DAG
 
 		// Perform all transformations
 		std::vector<std::string>::iterator iter;
 		for (iter = inputs.begin(); iter != inputs.end(); iter++) {
-			if (!transform(*iter)) {
+			std::vector<Node> filters;
+
+			// Transform input file using filters
+			if (!transform(*iter, filters, "temp")) {
 				return 1;
 			}
 		}
