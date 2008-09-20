@@ -28,9 +28,11 @@
 
 extern void backtrace_dump(void);
 
-#define ABORT() {				\
-	backtrace_dump();			\
-	abort();				\
+#define ABORT() {						\
+	backtrace_dump();					\
+	TR_CRT("\n");						\
+	TR_CRT("Please report to <%s>\n", PACKAGE_BUGREPORT);	\
+	abort();						\
 }
 
 #define BUG() {							\
