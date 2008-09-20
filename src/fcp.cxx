@@ -79,7 +79,8 @@ Graph::DAG * readconfig(std::string configuration_file)
 
 bool transform(const std::string &              input,
 	       const std::vector<Graph::Node> & filters,
-	       const std::string &              output)
+	       const std::string &              output,
+	       bool                             dry_run)
 {
 	BUG_ON(input.size()   == 0);
 	BUG_ON(filters.size() == 0);
@@ -88,6 +89,11 @@ bool transform(const std::string &              input,
 	TR_DBG("Transforming %s -> %s\n",
 	       input.c_str(),
 	       output.c_str());
+
+	if (dry_run) {
+		// XXX FIXME: Dump command
+		return true;
+	}
 
 	return true;
 }
@@ -186,7 +192,7 @@ int main(int argc, char * argv[])
 			std::vector<Graph::Node> filters;
 
 			// Transform input file using filters
-			if (!transform(*iter, filters, "temp")) {
+			if (!transform(*iter, filters, "temp", dry_run)) {
 				return 1;
 			}
 		}
