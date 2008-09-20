@@ -32,20 +32,12 @@ fcp_SOURCES =					\
 	log.cxx					\
 	log.h					\
 	job.cxx					\
-	job.h					\
-	parser.yxx				\
-	scanner.lxx
+	job.h
 fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
 fcp_LDADD =					\
 	libmisc.a				\
 	libgraph.a
-
-AM_LFLAGS = $(LEX_FLAGS)
-AM_YFLAGS = $(YACC_FLAGS) -d
-
-BUILT_SOURCES =					\
-	parser.h
 
 ## Libraries
 
