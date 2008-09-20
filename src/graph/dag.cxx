@@ -22,21 +22,21 @@
 #include <vector>
 
 #include "misc/trace.h"
-#include "dag/graph.h"
+#include "graph/dag.h"
 
-using namespace DAG;
+using namespace Graph;
 
 DAG::DAG(void)
 {
-	head_ = 0;
+	root_ = 0;
 
 	TR_DBG("DAG %p created\n", this);
 }
 
 DAG::~DAG(void)
 {
-	if (head_) {
-		delete head_;
+	if (root_) {
+		delete root_;
 	}
 
 	TR_DBG("DAG %p destroyed\n", this);

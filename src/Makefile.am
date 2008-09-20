@@ -39,7 +39,7 @@ fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
 fcp_LDADD =					\
 	libmisc.a				\
-	libdag.a
+	libgraph.a
 
 AM_LFLAGS = $(LEX_FLAGS)
 AM_YFLAGS = $(YACC_FLAGS) -d
@@ -51,7 +51,7 @@ BUILT_SOURCES =					\
 
 noinst_LIBRARIES =				\
 	libmisc.a				\
-	libdag.a
+	libgraph.a
 
 libmisc_a_SOURCES =				\
 	misc/debug.h				\
@@ -67,10 +67,16 @@ libmisc_a_SOURCES =				\
 libmisc_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
-libdag_a_SOURCES =				\
-	dag/graph.h				\
-	dag/graph.cxx
-libdag_a_CPPFLAGS =				\
+libgraph_a_SOURCES =				\
+	graph/dag.h				\
+	graph/dag.cxx				\
+	graph/node.h				\
+	graph/node.cxx				\
+	graph/rule.h				\
+	graph/rule.cxx				\
+	graph/tree.h				\
+	graph/tree.cxx
+libgraph_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 ##

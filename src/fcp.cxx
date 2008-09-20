@@ -26,7 +26,7 @@
 
 #include "misc/debug.h"
 #include "misc/environment.h"
-#include "dag/graph.h"
+#include "graph/dag.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -65,17 +65,20 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-DAG::Node readconfig(std::string configuration_file)
+Graph::DAG * readconfig(std::string configuration_file)
 {
 	TR_DBG("Reading configuration file '%s'\n",
 	       configuration_file.c_str());
 
-	return DAG::Node::Node("test", "command");
+	Graph::DAG * dag;
+	dag = new Graph::DAG();
+
+	return dag;
 }
 
-bool transform(const std::string &            input,
-	       const std::vector<DAG::Node> & filters,
-	       const std::string &            output)
+bool transform(const std::string &              input,
+	       const std::vector<Graph::Node> & filters,
+	       const std::string &              output)
 {
 	BUG_ON(input.size()   == 0);
 	BUG_ON(filters.size() == 0);
@@ -173,7 +176,7 @@ int main(int argc, char * argv[])
 		// Perform all transformations
 		std::vector<std::string>::iterator iter;
 		for (iter = inputs.begin(); iter != inputs.end(); iter++) {
-			std::vector<DAG::Node> filters;
+			std::vector<Graph::Node> filters;
 
 			// Transform input file using filters
 			if (!transform(*iter, filters, "temp")) {
