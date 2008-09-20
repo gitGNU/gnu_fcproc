@@ -29,8 +29,6 @@ bin_PROGRAMS =					\
 
 fcp_SOURCES =					\
 	fcp.cxx					\
-	log.cxx					\
-	log.h					\
 	job.cxx					\
 	job.h
 fcp_CPPFLAGS =					\
