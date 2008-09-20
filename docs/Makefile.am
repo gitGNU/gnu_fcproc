@@ -27,8 +27,8 @@ SUBDIRS =					\
 EXTRA_DIST =					\
         grammar.txt
 
-grammar.txt: $(YAXX_TO_GRAMMAR) $(top_srcdir)/src/parser.yxx $(top_srcdir)/src/scanner.lxx
-	$(YAXX_TO_GRAMMAR) $(top_srcdir)/src/parser.yxx grammar.txt || { \
+grammar.txt: $(top_srcdir)/src/parser.yxx $(top_srcdir)/src/scanner.lxx
+	$(YACC_TO_GRAMMAR) $(top_srcdir)/src/parser.yxx grammar.txt || { \
 	        rm -f grammar.txt ; \
 	        exit 1 ; \
 	}
