@@ -22,31 +22,33 @@
 #include "config.h"
 
 #include <string>
+#include <vector>
 
 namespace DAG {
 
-	class Rule {
+	// Rule11: 1 input, 1 output
+	class Rule11 {
 	public:
-		Rule(const std::string & command) :
+		Rule11(const std::string & command) :
 			command_(command) {
 		};
-		~Rule(void) { };
+		~Rule11(void) { };
 
 		bool run(std::string & input,
 			 std::string & output);
 
 	protected:
-		Rule(void);
+		Rule11(void);
 
 	private:
 		std::string command_;
 	};
 
-	class Node : public Rule {
+	class Node : public Rule11 {
 	public:
 		Node(const std::string & tag,
 		     const std::string & command) :
-			Rule(command),
+			Rule11(command),
 			tag_(tag) { };
 		~Node(void) { };
 
@@ -61,14 +63,31 @@ namespace DAG {
 		std::string tag_;
 	};
 
+	class Tree {
+	public:
+		Tree(const Node & node) :
+			node_(node) { };
+		~Tree(void) { };
+
+	protected:
+		Node node_;
+
+	private:
+	};
+
 	class DAG {
 	public:
 		DAG(void);
 		~DAG(void);
 
+		void                      add(Node * node);
+		void                      remove(Node * node);
+		std::vector<const Node &> path(const std::string & tag_in,
+					       const std::string & tag_out);
 	protected:
 
 	private:
+		Tree * root_;
 	};
 };
 

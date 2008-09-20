@@ -17,3 +17,27 @@
 //
 
 #include "config.h"
+
+#include <string>
+#include <vector>
+
+#include "misc/trace.h"
+#include "dag/graph.h"
+
+using namespace DAG;
+
+DAG::DAG(void)
+{
+	head_ = 0;
+
+	TR_DBG("DAG %p created\n", this);
+}
+
+DAG::~DAG(void)
+{
+	if (head_) {
+		delete head_;
+	}
+
+	TR_DBG("DAG %p destroyed\n", this);
+}
