@@ -26,6 +26,7 @@
 
 #include "misc/debug.h"
 #include "misc/environment.h"
+#include "dag/graph.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -64,21 +65,12 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-class Node {
-public:
-	Node(void)  {};
-	~Node(void) {};
-private:
-
-protected:
-};
-
 Node readconfig(std::string configuration_file)
 {
 	TR_DBG("Reading configuration file '%s'\n",
 	       configuration_file.c_str());
 
-	return Node::Node();
+	return Node::Node("test");
 }
 
 bool transform(const std::string &       input,

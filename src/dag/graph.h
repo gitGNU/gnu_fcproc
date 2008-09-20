@@ -19,4 +19,25 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include "config.h"
+
+#include <string>
+
+class Node {
+public:
+	Node(const std::string & tag) :
+		tag_(tag) {
+	}
+	~Node(void) {};
+
+	const std::string & tag(void) {
+		return tag_;
+	}
+
+protected:
+
+private:
+	std::string tag_;
+};
+
 #endif // GRAPH_H
