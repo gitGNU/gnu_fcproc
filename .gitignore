@@ -24,9 +24,6 @@ src/fcp
 src/autoconfig.h
 src/autoconfig.h.in
 src/stamp-h1
-src/parser.cxx
-src/parser.h
-src/scanner.cxx
 
 tools/maint/fetch
 tools/maint/whitespace-detect
@@ -38,7 +35,6 @@ tools/autotools/mdate-sh
 tools/autotools/texinfo.tex
 tools/autotools/compile
 tools/autotools/depcomp
-tools/autotools/ylwrap
 tools/autotools/config.guess
 tools/autotools/config.sub
 
