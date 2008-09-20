@@ -33,11 +33,13 @@ namespace Graph {
 		DAG(void);
 		~DAG(void);
 
-		void                      add(Node * node);
-		void                      remove(Node * node);
+		bool                      add(const std::string & tag,
+					      const std::string & command);
+		bool                      remove(const std::string & tag);
+#if 0
 		std::vector<const Node &> path(const std::string & tag_in,
 					       const std::string & tag_out);
-		DAG & operator =(const Graph::DAG & dag);
+#endif
 
 	protected:
 

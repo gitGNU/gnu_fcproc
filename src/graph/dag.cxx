@@ -41,3 +41,23 @@ DAG::~DAG(void)
 
 	TR_DBG("DAG %p destroyed\n", this);
 }
+
+bool DAG::add(const std::string & tag,
+	      const std::string & command)
+{
+	// Graph::Node * node = new Graph::Node(tag, command);
+
+	return true;
+}
+
+bool DAG::remove(const std::string & tag)
+{
+	return true;
+}
+
+#if 0
+std::vector<const Node &> DAG::path(const std::string & tag_in,
+				    const std::string & tag_out)
+{
+}
+#endif
