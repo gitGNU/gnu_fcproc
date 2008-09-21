@@ -18,8 +18,11 @@
 
 #include "config.h"
 
+#include <string>
+
 #include "graph/node.h"
 #include "graph/tree.h"
+#include "misc/trace.h"
 
 using namespace Graph;
 
@@ -29,10 +32,14 @@ Tree::Tree(const std::string & tag,
 {
 	father_ = 0;
 	children_.clear();
+
+	TR_DBG("Tree %p created\n", this);
 }
 
 Tree::~Tree(void)
 {
+	TR_DBG("Tree %p destroyed\n", this);
+
 }
 
 void Tree::father(Tree & tree)
