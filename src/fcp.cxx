@@ -220,20 +220,26 @@ int main(int argc, char * argv[])
 			// Extract filters chain
 			filters = extract_chain(*dag, input_file, output_file);
 			if (filters.size() == 0) {
-				TR_ERR("No filter chain available for "
-				       "transforming '%s' into '%s'\n",
+				TR_ERR("No filter chain for '%s' to '%s' "
+				       "transformation\n",
 				       input_file.c_str(),
 				       output_file.c_str());
 				return 1;
 			}
 
 			// Transform input file using filters
-			if (!transform_file(*iter, filters, "temp", dry_run)) {
+			if (!transform_file(input_file,
+					    filters,
+					    output_file,
+					    dry_run)) {
 				return 1;
 			}
 		}
 
 		TR_DBG("Operation complete\n");
+	} catch (std::exception & e) {
+		TR_ERR("Got exception '%s'\n", e.what());
+		return 1;
 	} catch (...) {
 		BUG();
 	};
