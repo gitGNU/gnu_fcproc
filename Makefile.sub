@@ -63,7 +63,6 @@ FETCH               = $(top_builddir)/tools/maint/fetch
 GITLOG_TO_CHANGELOG = $(top_srcdir)/tools/maint/gitlog-to-changelog
 GIT_VERSION_GEN     = $(top_srcdir)/tools/maint/git-version-gen
 ANNOUNCE_GEN        = $(top_srcdir)/tools/maint/announce-gen
-YAXX_TO_GRAMMAR     = $(top_srcdir)/tools/maint/yaxx-to-grammar
 
 ##
 ## Maintainer related targets
