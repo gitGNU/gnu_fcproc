@@ -45,16 +45,17 @@ void version(void)
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [FILE]..."<<              std::endl
-		<<                                                                      std::endl
-		<< "Options: " <<                                                       std::endl
-		<< "  -n, --dry-run    display commands without modifying any files" << std::endl
-		<< "  -d, --debug      enable debugging traces" <<                      std::endl
-		<< "  -v, --verbose    verbosely report processing" <<                  std::endl
-		<< "  -h, --help       print this help, then exit" <<                   std::endl
-		<< "  -V, --version    print version number, then exit" <<              std::endl
-		<<                                                                      std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                    std::endl;
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [FILE]..."<<                  std::endl
+		<<                                                                          std::endl
+		<< "Options: " <<                                                           std::endl
+		<< "  -c, --config=FILE    use alternative configuration file" <<           std::endl
+		<< "  -n, --dry-run        display commands without modifying any files" << std::endl
+		<< "  -d, --debug          enable debugging traces" <<                      std::endl
+		<< "  -v, --verbose        verbosely report processing" <<                  std::endl
+		<< "  -h, --help           print this help, then exit" <<                   std::endl
+		<< "  -V, --version        print version number, then exit" <<              std::endl
+		<<                                                                          std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                        std::endl;
 }
 
 void hint(const std::string & message)
@@ -121,7 +122,8 @@ int main(int argc, char * argv[])
 	TR_CONFIG_PFX(PROGRAM_NAME);
 
 	try {
-		bool dry_run = false;
+		std::string conffile = "";
+		bool        dry_run  = false;
 
 		int c;
 		// int digit_optind = 0;
@@ -130,6 +132,7 @@ int main(int argc, char * argv[])
 			int option_index       = 0;
 
 			static struct option long_options[] = {
+				{ "config",  1, 0, 'c' },
 				{ "dry-run", 0, 0, 'n' },
 				{ "debug",   0, 0, 'd' },
 				{ "verbose", 0, 0, 'v' },
@@ -138,13 +141,16 @@ int main(int argc, char * argv[])
 				{ 0,         0, 0, 0   }
 			};
 
-			c = getopt_long(argc, argv, "ndvVh",
+			c = getopt_long(argc, argv, "c:ndvVh",
 					long_options, &option_index);
 			if (c == -1) {
 				break;
 			}
 
 			switch (c) {
+				case 'c':
+					conffile = optarg;
+					break;
 				case 'n':
 					dry_run  = true;
 					break;
@@ -193,15 +199,20 @@ int main(int argc, char * argv[])
 		}
 
 		// Build configuration file path
-		std::string homedir = Environment::get("HOME");
-		std::string conffile =
-			homedir +
-			std::string("/") +
-			std::string(".") +
-			std::string(PACKAGE_TARNAME);
+		if (conffile.size() == 0) {
+			TR_DBG("Building configuration file path\n");
+			std::string homedir = Environment::get("HOME");
+			conffile =
+				homedir +
+				std::string("/") +
+				std::string(".") +
+				std::string(PACKAGE_TARNAME);
 
-		// Dump (acquired and derived) infos
-		TR_DBG("Home directory:     '%s'\n", homedir.c_str());
+			// Dump (acquired and derived) infos
+			TR_DBG("Home directory:     '%s'\n", homedir.c_str());
+		} else {
+			TR_DBG("Configuration file overridden\n");
+		}
 		TR_DBG("Configuration file: '%s'\n", conffile.c_str());
 
 		// Read configuration file and build dependency DAG
