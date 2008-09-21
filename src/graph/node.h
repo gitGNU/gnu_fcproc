@@ -27,14 +27,10 @@ namespace Graph {
 	class Node : public Rule11 {
 	public:
 		Node(const std::string & tag,
-		     const std::string & command) :
-			Rule11(command),
-			tag_(tag) { };
-		~Node(void) { };
+		     const std::string & command);
+		~Node(void);
 
-		const std::string & tag(void) {
-			return tag_;
-		}
+		const std::string & tag(void);
 
 	protected:
 		Node(void);

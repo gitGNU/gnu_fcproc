@@ -17,3 +17,28 @@
 //
 
 #include "config.h"
+
+#include <string>
+
+#include "graph/node.h"
+#include "misc/trace.h"
+
+using namespace Graph;
+
+Node::Node(const std::string & tag,
+	   const std::string & command) :
+	Rule11(command),
+	tag_(tag)
+{
+	TR_DBG("Node %p created\n", this);
+}
+
+Node::~Node(void)
+{
+	TR_DBG("Node %p destroyed\n", this);
+}
+
+const std::string & Node::tag(void)
+{
+	return tag_;
+}
