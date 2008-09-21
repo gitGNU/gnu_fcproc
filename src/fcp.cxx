@@ -66,9 +66,9 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-Graph::DAG * readconfig(std::string configuration_file)
+Graph::DAG * read_config(std::string configuration_file)
 {
-	TR_DBG("Reading configuration file '%s'\n",
+	TR_DBG("Reading configuration from file '%s'\n",
 	       configuration_file.c_str());
 
 	Graph::DAG * dag;
@@ -77,10 +77,10 @@ Graph::DAG * readconfig(std::string configuration_file)
 	return dag;
 }
 
-bool transform(const std::string &              input,
-	       const std::vector<Graph::Node> & filters,
-	       const std::string &              output,
-	       bool                             dry_run)
+bool transform_file(const std::string &              input,
+		    const std::vector<Graph::Node> & filters,
+		    const std::string &              output,
+		    bool                             dry_run)
 {
 	BUG_ON(input.size()   == 0);
 	BUG_ON(filters.size() == 0);
@@ -96,6 +96,20 @@ bool transform(const std::string &              input,
 	}
 
 	return true;
+}
+
+std::vector<Graph::Node> extract_chain(const Graph::DAG & dag,
+				       std::string        tag_in,
+				       std::string        tag_out)
+{
+	TR_DBG("Extracting filter chain from '%s' to '%s'\n",
+	       tag_in.c_str(), tag_out.c_str());
+
+	std::vector<Graph::Node> tmp;
+
+	MISSING_CODE();
+
+	return tmp;
 }
 
 int main(int argc, char * argv[])
@@ -159,6 +173,9 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
+		TR_DBG("%s (%s) %s started\n",
+		       PROGRAM_NAME, PACKAGE_NAME, PACKAGE_VERSION);
+
 		std::vector<std::string> inputs;
 		int                      count;
 
@@ -185,19 +202,38 @@ int main(int argc, char * argv[])
 		TR_DBG("Configuration file: '%s'\n", conffile.c_str());
 
 		// Read configuration file and build dependency DAG
+		Graph::DAG * dag = read_config(conffile);
+		if (!dag) {
+			return 1;
+		}
 
 		// Perform all transformations
 		std::vector<std::string>::iterator iter;
 		for (iter = inputs.begin(); iter != inputs.end(); iter++) {
 			std::vector<Graph::Node> filters;
+			std::string              input_file;
+			std::string              output_file;
+
+			input_file  = *iter;
+			output_file = "temp";
+
+			// Extract filters chain
+			filters = extract_chain(*dag, input_file, output_file);
+			if (filters.size() == 0) {
+				TR_ERR("No filter chain available for "
+				       "transforming '%s' into '%s'\n",
+				       input_file.c_str(),
+				       output_file.c_str());
+				return 1;
+			}
 
 			// Transform input file using filters
-			if (!transform(*iter, filters, "temp", dry_run)) {
+			if (!transform_file(*iter, filters, "temp", dry_run)) {
 				return 1;
 			}
 		}
 
-		BUG();
+		TR_DBG("Operation complete\n");
 	} catch (...) {
 		BUG();
 	};
