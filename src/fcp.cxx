@@ -105,6 +105,9 @@ std::vector<Graph::Node> extract_chain(const Graph::DAG & dag,
 	TR_DBG("Extracting filter chain from '%s' to '%s'\n",
 	       tag_in.c_str(), tag_out.c_str());
 
+	BUG_ON(tag_in.size()  == 0);
+	BUG_ON(tag_out.size() == 0);
+
 	std::vector<Graph::Node> tmp;
 
 	MISSING_CODE();
@@ -210,14 +213,11 @@ int main(int argc, char * argv[])
 		// Perform all transformations
 		std::vector<std::string>::iterator iter;
 		for (iter = inputs.begin(); iter != inputs.end(); iter++) {
-			std::vector<Graph::Node> filters;
-			std::string              input_file;
-			std::string              output_file;
-
-			input_file  = *iter;
-			output_file = "temp";
+			std::string              input_file  = *iter;
+			std::string              output_file = "temp";
 
 			// Extract filters chain
+			std::vector<Graph::Node> filters;
 			filters = extract_chain(*dag, input_file, output_file);
 			if (filters.size() == 0) {
 				TR_ERR("No filter chain for '%s' to '%s' "
@@ -227,7 +227,7 @@ int main(int argc, char * argv[])
 				return 1;
 			}
 
-			// Transform input file using filters
+			// Transform input file using gathered filters
 			if (!transform_file(input_file,
 					    filters,
 					    output_file,
