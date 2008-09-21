@@ -208,11 +208,11 @@ int main(int argc, char * argv[])
 				std::string(".") +
 				std::string(PACKAGE_TARNAME);
 
-			// Dump (acquired and derived) infos
-			TR_DBG("Home directory:     '%s'\n", homedir.c_str());
 		} else {
 			TR_DBG("Configuration file overridden\n");
 		}
+
+		// Dump (acquired and derived) infos
 		TR_DBG("Configuration file: '%s'\n", conffile.c_str());
 
 		// Read configuration file and build dependency DAG
