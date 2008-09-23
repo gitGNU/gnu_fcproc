@@ -26,6 +26,8 @@
 
 #include "misc/debug.h"
 #include "misc/environment.h"
+#include "conf/reader.h"
+#include "conf/writer.h"
 #include "graph/dag.h"
 
 #define PROGRAM_NAME "fcp"
