@@ -28,9 +28,7 @@ bin_PROGRAMS =					\
 	fcp
 
 fcp_SOURCES =					\
-	fcp.cxx					\
-	job.cxx					\
-	job.h
+	fcp.cxx
 fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
 fcp_LDADD =					\
