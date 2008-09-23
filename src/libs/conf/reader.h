@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef CONF_READER_H
-#define CONF_READER_H
+#ifndef LIBS_CONF_READER_H
+#define LIBS_CONF_READER_H
 
 #include "config.h"
 
@@ -50,4 +50,4 @@ namespace Configuration {
 	};
 };
 
-#endif // CONF_READER_H
+#endif // LIBS_CONF_READER_H

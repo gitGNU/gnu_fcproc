@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef ENVIRONMENT_H
-#define ENVIRONMENT_H
+#ifndef LIBS_MISC_ENVIRONMENT_H
+#define LIBS_MISC_ENVIRONMENT_H
 
 #include "config.h"
 
@@ -31,4 +31,4 @@ namespace Environment {
 			const std::string & value);
 };
 
-#endif // ENVIRONMENT_H
+#endif // LIBS_MISC_ENVIRONMENT_H

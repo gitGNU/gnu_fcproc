@@ -18,9 +18,9 @@
 
 #include "config.h"
 
-#ifndef UTILITY_H
-#define UTILITY_H
+#ifndef LIBS_MISC_UTILITY_H
+#define LIBS_MISC_UTILITY_H
 
 #define PLURAL(X) (((X) > 1) ? "s" : "")
 
-#endif // UTILITY_H
+#endif // LIBS_MISC_UTILITY_H

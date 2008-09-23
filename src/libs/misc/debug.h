@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef LIBS_MISC_DEBUG_H
+#define LIBS_MISC_DEBUG_H
 
 #include "config.h"
 
@@ -56,4 +56,4 @@ extern void backtrace_dump(void);
 	       __PRETTY_FUNCTION__, __FILE__, __LINE__);	\
 }
 
-#endif // DEBUG_H
+#endif // LIBS_MISC_DEBUG_H

@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef NODE_H
-#define NODE_H
+#ifndef LIBS_MISC_NODE_H
+#define LIBS_MISC_NODE_H
 
 #include "config.h"
 
@@ -40,4 +40,4 @@ namespace Graph {
 	};
 };
 
-#endif // NODE_H
+#endif // LIBS_MISC_NODE_H

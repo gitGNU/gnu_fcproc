@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef TREE_H
-#define TREE_H
+#ifndef LIBS_GRAPH_TREE_H
+#define LIBS_GRAPH_TREE_H
 
 #include "config.h"
 
@@ -47,4 +47,4 @@ namespace Graph {
 	};
 };
 
-#endif // TREE_H
+#endif // LIBS_GRAPH_TREE_H

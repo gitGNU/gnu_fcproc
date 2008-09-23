@@ -18,12 +18,12 @@
 
 #include "config.h"
 
-#ifndef CONSTANT_H
-#define CONSTANT_H
+#ifndef LIBS_MISC_CONSTANT_H
+#define LIBS_MISC_CONSTANT_H
 
 #define KB             1024
 #define MB             1024 * KB
 #define GB             1024 * MB
 #define MIN_MEM_FOR_VM (64 * KB)
 
-#endif // CONSTANT_H
+#endif // LIBS_MISC_CONSTANT_H

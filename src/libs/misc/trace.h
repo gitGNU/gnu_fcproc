@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef TRACES_H
-#define TRACES_H
+#ifndef LIBS_MISC_TRACES_H
+#define LIBS_MISC_TRACES_H
 
 #include <cstdio>
 
@@ -58,4 +58,4 @@ extern char *  trace_prefix;
 #define TR_ERR(FMT,ARGS...) _TRACE(TR_LVL_ERROR,    FMT, ##ARGS);
 #define TR_CRT(FMT,ARGS...) _TRACE(TR_LVL_CRITICAL, FMT, ##ARGS);
 
-#endif // TRACES_H
+#endif // LIBS_MISC_TRACES_H

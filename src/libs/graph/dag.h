@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef DAG_H
-#define DAG_H
+#ifndef LIBS_GRAPH_DAG_H
+#define LIBS_GRAPH_DAG_H
 
 #include "config.h"
 
@@ -48,4 +48,4 @@ namespace Graph {
 	};
 };
 
-#endif // DAG_H
+#endif // LIBS_GRAPH_DAG_H
