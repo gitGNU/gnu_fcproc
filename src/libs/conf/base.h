@@ -46,8 +46,8 @@ namespace Configuration {
 			value_ = v;
 		}
 
-		virtual std::istream & operator <<(std::istream & is) = 0;
-		virtual std::ostream & operator >>(std::ostream & os) = 0;
+		virtual std::ostream & operator <<(std::ostream & os) = 0;
+		virtual std::istream & operator >>(std::istream & is) = 0;
 
 	protected:
 
