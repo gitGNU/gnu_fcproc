@@ -18,7 +18,7 @@
 
 #include "config.h"
 
-#include "misc/trace.h"
+#include "libs/misc/trace.h"
 
 int    trace_level  = TR_LVL_DEFAULT;
 char * trace_prefix = PACKAGE_TARNAME;

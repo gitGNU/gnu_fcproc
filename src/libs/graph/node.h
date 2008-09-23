@@ -16,29 +16,28 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
+#ifndef NODE_H
+#define NODE_H
+
 #include "config.h"
 
-#include <string>
+#include "libs/graph/rule.h"
 
-#include "misc/trace.h"
-#include "graph/rule.h"
+namespace Graph {
+	class Node : public Rule11 {
+	public:
+		Node(const std::string & tag,
+		     const std::string & command);
+		~Node(void);
 
-using namespace Graph;
+		const std::string & tag(void);
 
-Rule11::Rule11(const std::string & command) :
-	command_(command)
-{
-}
+	protected:
+		Node(void);
 
-Rule11::~Rule11(void)
-{
-}
+	private:
+		std::string tag_;
+	};
+};
 
-bool Rule11::run(std::string & input,
-		 std::string & output)
-{
-	TR_DBG("Running command '%s' with input '%s' and output '%s'\n",
-	       command_.c_str(), input.c_str(), output.c_str());
-
-	return true;
-}
+#endif // NODE_H

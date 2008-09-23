@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2008 Francesco Salvestrini
+// Copyright (C) 2007, 2008 Francesco Salvestrini
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,38 +16,29 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef CONF_READER_H
-#define CONF_READER_H
-
 #include "config.h"
 
 #include <string>
-#include <fstream>
 
-#include "conf/base.h"
+#include "libs/misc/trace.h"
+#include "libs/graph/rule.h"
 
-namespace Configuration {
-	template <typename K, typename V> class Reader : public Base<K, V> {
-	public:
-		Reader(const std::string & filename) {
-			stream_.open(filename.c_str());
-			if (!stream_.is_open()) {
-				// XXX FIXME: Throw an exception here ...
-			}
-		};
-		~Reader(void) {
-			if (stream_.is_open()) {
-				stream_.close();
-			}
-		};
+using namespace Graph;
 
-		virtual std::ostream & operator >>(std::ostream & os) = 0;
+Rule11::Rule11(const std::string & command) :
+	command_(command)
+{
+}
 
-	protected:
+Rule11::~Rule11(void)
+{
+}
 
-	private:
-		std::ifstream stream_;
-	};
-};
+bool Rule11::run(std::string & input,
+		 std::string & output)
+{
+	TR_DBG("Running command '%s' with input '%s' and output '%s'\n",
+	       command_.c_str(), input.c_str(), output.c_str());
 
-#endif // CONF_READER_H
+	return true;
+}

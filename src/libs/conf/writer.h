@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2007, 2008 Francesco Salvestrini
+// Copyright (C) 2008 Francesco Salvestrini
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,35 +16,39 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef TREE_H
-#define TREE_H
+#ifndef CONF_WRITER_H
+#define CONF_WRITER_H
 
 #include "config.h"
 
-#include <vector>
+#include <string>
+#include <fstream>
 
-#include "graph/node.h"
-#include "graph/tree.h"
+#include "libs/conf/base.h"
 
-namespace Graph {
-	class Tree : public Node {
+namespace Configuration {
+	template <typename K, typename V> class Writer : public Base<K, V> {
 	public:
-		Tree(const std::string & tag,
-		     const std::string & command);
-		~Tree(void);
+		Writer(const std::string & filename) {
+			stream_.open(filename.c_str());
+			if (stream_.is_open()) {
+				// XXX FIXME: Throw an exception here ...
+			}
+		};
+		~Writer(void) {
+			if (stream_.is_open()) {
+				stream_.close();
+			}
+		};
 
-		void                        father(Tree & tree);
-		Tree &                      father(void);
-		void                        child(Tree & tree);
-		const std::vector<Tree *> & children(void);
+		virtual std::istream & operator <<(std::istream & is) = 0;
 
 	protected:
-		Tree(void);
 
 	private:
-		Tree *              father_;
-		std::vector<Tree *> children_;
+		std::ofstream stream_;
+
 	};
 };
 
-#endif // TREE_H
+#endif // CONF_WRITER_H

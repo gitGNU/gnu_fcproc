@@ -24,8 +24,8 @@
 #include <string>
 #include <vector>
 
-#include "graph/node.h"
-#include "graph/tree.h"
+#include "libs/graph/node.h"
+#include "libs/graph/tree.h"
 
 namespace Graph {
 	class DAG {

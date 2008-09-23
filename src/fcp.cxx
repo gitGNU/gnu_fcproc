@@ -24,11 +24,11 @@
 #include <iostream>
 #include <vector>
 
-#include "misc/debug.h"
-#include "misc/environment.h"
-#include "conf/reader.h"
-#include "conf/writer.h"
-#include "graph/dag.h"
+#include "libs/misc/debug.h"
+#include "libs/misc/environment.h"
+#include "libs/conf/reader.h"
+#include "libs/conf/writer.h"
+#include "libs/graph/dag.h"
 
 #define PROGRAM_NAME "fcp"
 

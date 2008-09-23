@@ -46,35 +46,35 @@ noinst_LIBRARIES =				\
 	libgraph.a
 
 libmisc_a_SOURCES =				\
-	misc/debug.h				\
-	misc/debug.cxx				\
-	misc/trace.h				\
-	misc/trace.cxx				\
-	misc/environment.h			\
-	misc/environment.cxx			\
-	misc/constant.h				\
-	misc/utility.h				\
-	misc/thread.h				\
-	misc/thread.cxx
+	libs/misc/debug.h			\
+	libs/misc/debug.cxx			\
+	libs/misc/trace.h			\
+	libs/misc/trace.cxx			\
+	libs/misc/environment.h			\
+	libs/misc/environment.cxx		\
+	libs/misc/constant.h			\
+	libs/misc/utility.h			\
+	libs/misc/thread.h			\
+	libs/misc/thread.cxx
 libmisc_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 libconf_a_SOURCES =				\
-	conf/base.h				\
-	conf/reader.h				\
-	conf/writer.h
+	libs/conf/base.h			\
+	libs/conf/reader.h			\
+	libs/conf/writer.h
 libconf_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 libgraph_a_SOURCES =				\
-	graph/rule.h				\
-	graph/rule.cxx				\
-	graph/node.h				\
-	graph/node.cxx				\
-	graph/tree.h				\
-	graph/tree.cxx				\
-	graph/dag.h				\
-	graph/dag.cxx
+	libs/graph/rule.h			\
+	libs/graph/rule.cxx			\
+	libs/graph/node.h			\
+	libs/graph/node.cxx			\
+	libs/graph/tree.h			\
+	libs/graph/tree.cxx			\
+	libs/graph/dag.h			\
+	libs/graph/dag.cxx
 libgraph_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 

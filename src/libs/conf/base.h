@@ -16,39 +16,67 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef CONF_WRITER_H
-#define CONF_WRITER_H
+#ifndef CONF_BASE_H
+#define CONF_BASE_H
 
 #include "config.h"
 
 #include <string>
+#include <map>
 #include <fstream>
 
-#include "conf/base.h"
+#include "libs/misc/debug.h"
 
 namespace Configuration {
-	template <typename K, typename V> class Writer : public Base<K, V> {
+	template <typename K, typename V> class Entry {
 	public:
-		Writer(const std::string & filename) {
-			stream_.open(filename.c_str());
-			if (stream_.is_open()) {
-				// XXX FIXME: Throw an exception here ...
-			}
-		};
-		~Writer(void) {
-			if (stream_.is_open()) {
-				stream_.close();
-			}
-		};
+		Entry(void);
+		virtual ~Entry(void);
+
+		std::string key(void) {
+			return key_;
+		}
+		void        key(const K & k) {
+			key_ = k;
+		}
+		std::string value(void) {
+			return value_;
+		}
+		void        value(const V & v) {
+			value_ = v;
+		}
 
 		virtual std::istream & operator <<(std::istream & is) = 0;
+		virtual std::ostream & operator >>(std::ostream & os) = 0;
 
 	protected:
 
 	private:
-		std::ofstream stream_;
+		K key_;
+		V value_;
+	};
 
+	template <typename K, typename V> class Base {
+	public:
+		Base(void)  {
+			entries_.clear();
+		};
+		~Base(void) {
+			typename std::map<K, Entry<K, V > * >::iterator iter;
+
+			for (iter  = entries_.begin();
+			     iter != entries_.end();
+			     iter++) {
+				BUG_ON((*iter).second == 0);
+				delete (*iter).second;
+			}
+		};
+
+	private:
+
+	protected:
+		std::map<K, Entry<K, V> * > entries_;
 	};
 };
 
-#endif // CONF_WRITER_H
+#endif // CONF_BASE_H

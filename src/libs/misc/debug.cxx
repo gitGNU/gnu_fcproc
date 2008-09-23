@@ -29,7 +29,7 @@
 #include <execinfo.h>
 #endif
 
-#include "misc/trace.h"
+#include "libs/misc/trace.h"
 
 #ifdef  BACKTRACE_ENABLED
 #define BACKTRACE_SIZE 1024

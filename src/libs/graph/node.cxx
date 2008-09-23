@@ -16,28 +16,29 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef NODE_H
-#define NODE_H
-
 #include "config.h"
 
-#include "graph/rule.h"
+#include <string>
 
-namespace Graph {
-	class Node : public Rule11 {
-	public:
-		Node(const std::string & tag,
-		     const std::string & command);
-		~Node(void);
+#include "libs/graph/node.h"
+#include "libs/misc/trace.h"
 
-		const std::string & tag(void);
+using namespace Graph;
 
-	protected:
-		Node(void);
+Node::Node(const std::string & tag,
+	   const std::string & command) :
+	Rule11(command),
+	tag_(tag)
+{
+	TR_DBG("Node %p created\n", this);
+}
 
-	private:
-		std::string tag_;
-	};
-};
+Node::~Node(void)
+{
+	TR_DBG("Node %p destroyed\n", this);
+}
 
-#endif // NODE_H
+const std::string & Node::tag(void)
+{
+	return tag_;
+}

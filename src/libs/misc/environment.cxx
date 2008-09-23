@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2007, 2008 Francesco Salvestrini
+// Copyright (C) 2008 Francesco Salvestrini
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,26 +19,39 @@
 #include "config.h"
 
 #include <string>
+#include <cstdlib>
 
-#include "graph/node.h"
-#include "misc/trace.h"
+#include "libs/misc/debug.h"
+#include "libs/misc/environment.h"
 
-using namespace Graph;
+namespace Environment {
+	std::string get(const std::string & key)
+	{
+		BUG_ON(key.size() == 0);
 
-Node::Node(const std::string & tag,
-	   const std::string & command) :
-	Rule11(command),
-	tag_(tag)
-{
-	TR_DBG("Node %p created\n", this);
-}
+		std::string tmp;
 
-Node::~Node(void)
-{
-	TR_DBG("Node %p destroyed\n", this);
-}
+		tmp = getenv(key.c_str());
 
-const std::string & Node::tag(void)
-{
-	return tag_;
+		return tmp;
+	}
+
+	std::string get(const char * key)
+	{
+		BUG_ON(key == 0);
+
+		return get(std::string(key));
+	}
+
+	bool set(const std::string & key,
+		 const std::string & value)
+	{
+		BUG_ON(key.size() == 0);
+
+		if (setenv(key.c_str(), value.c_str(), 1) != 0) {
+			return false;
+		}
+
+		return true;
+	}
 }

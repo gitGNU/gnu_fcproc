@@ -16,42 +16,38 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
+#ifndef CONF_READER_H
+#define CONF_READER_H
+
 #include "config.h"
 
 #include <string>
-#include <cstdlib>
+#include <fstream>
 
-#include "misc/debug.h"
-#include "misc/environment.h"
+#include "libs/conf/base.h"
 
-namespace Environment {
-	std::string get(const std::string & key)
-	{
-		BUG_ON(key.size() == 0);
+namespace Configuration {
+	template <typename K, typename V> class Reader : public Base<K, V> {
+	public:
+		Reader(const std::string & filename) {
+			stream_.open(filename.c_str());
+			if (!stream_.is_open()) {
+				// XXX FIXME: Throw an exception here ...
+			}
+		};
+		~Reader(void) {
+			if (stream_.is_open()) {
+				stream_.close();
+			}
+		};
 
-		std::string tmp;
+		virtual std::ostream & operator >>(std::ostream & os) = 0;
 
-		tmp = getenv(key.c_str());
+	protected:
 
-		return tmp;
-	}
+	private:
+		std::ifstream stream_;
+	};
+};
 
-	std::string get(const char * key)
-	{
-		BUG_ON(key == 0);
-
-		return get(std::string(key));
-	}
-
-	bool set(const std::string & key,
-		 const std::string & value)
-	{
-		BUG_ON(key.size() == 0);
-
-		if (setenv(key.c_str(), value.c_str(), 1) != 0) {
-			return false;
-		}
-
-		return true;
-	}
-}
+#endif // CONF_READER_H

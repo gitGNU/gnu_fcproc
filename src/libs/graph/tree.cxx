@@ -19,67 +19,43 @@
 #include "config.h"
 
 #include <string>
-#include <vector>
 
-#include "misc/trace.h"
-#include "graph/dag.h"
+#include "libs/graph/node.h"
+#include "libs/graph/tree.h"
+#include "libs/misc/trace.h"
 
 using namespace Graph;
 
-DAG::DAG(void)
+Tree::Tree(const std::string & tag,
+	   const std::string & command) :
+	Node(tag, command)
 {
-	root_ = 0;
+	father_ = 0;
+	children_.clear();
 
-	TR_DBG("DAG %p created\n", this);
+	TR_DBG("Tree %p created\n", this);
 }
 
-DAG::~DAG(void)
+Tree::~Tree(void)
 {
-	if (root_) {
-		delete root_;
-	}
+	TR_DBG("Tree %p destroyed\n", this);
 
-	TR_DBG("DAG %p destroyed\n", this);
 }
 
-bool DAG::add(const std::string & tag,
-	      const std::string & command)
+void Tree::father(Tree & tree)
 {
-#if 0
-	Graph::Tree * tree = new Graph::Tree(tag, command);
-
-	if (!root_) {
-		root_ = tree;
-		return true;
-	}
-
-	return root_->children(tree);
-#endif
-
-	return false;
 }
 
-bool DAG::remove(const std::string & tag)
+Tree & Tree::father(void)
 {
-#if 0
-	if (!root_) {
-		return root_->remove(tag);
-	}
-#endif
-
-	return false;
+	return *father_;
 }
 
-#if 0
-std::vector<const Node &> DAG::path(const std::string & tag_in,
-				    const std::string & tag_out)
+void Tree::child(Tree & tree)
 {
-	// Find tag-out node
-
-	// Go back till tag-in node found, filling the path
-
-	std::vector<const Node &> tmp;
-
-	return tmp;
 }
-#endif
+
+const std::vector<Tree *> & Tree::children(void)
+{
+	return children_;
+}

@@ -24,7 +24,7 @@
 #include <cassert>
 #include <cstdlib>
 
-#include "misc/trace.h"
+#include "libs/misc/trace.h"
 
 extern void backtrace_dump(void);
 
