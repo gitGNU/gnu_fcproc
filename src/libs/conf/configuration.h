@@ -59,7 +59,7 @@ namespace Configuration {
 		std::string            whites_;
 		std::map<std::string,
 			 std::string>  tuples_;
-		
+
 		static std::string     trim_left(const std::string & s,
 						 const std::string & t);
 		static std::string     trim_right(const std::string & s,
