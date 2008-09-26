@@ -58,9 +58,8 @@ libmisc_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 libconf_a_SOURCES =				\
-	libs/conf/base.h			\
-	libs/conf/reader.h			\
-	libs/conf/writer.h
+	libs/conf/configuration.h		\
+	libs/conf/configuration.cxx
 libconf_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
