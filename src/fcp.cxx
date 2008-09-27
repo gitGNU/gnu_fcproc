@@ -28,6 +28,7 @@
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
 #include "libs/graph/dag.h"
+#include "libs/file/utils.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -246,24 +247,26 @@ int main(int argc, char * argv[])
 		// Perform all transformations
 		std::vector<std::string>::iterator iter;
 		for (iter = inputs.begin(); iter != inputs.end(); iter++) {
-			std::string              input_file  = *iter;
-			std::string              output_file = "temp";
+			std::string input_filename  = *iter;
+			std::string output_filename = "temp";
 
 			// Extract filters chain
 			std::vector<Graph::Node> filters;
-			filters = extract_chain(*dag, input_file, output_file);
+			filters = extract_chain(*dag,
+						input_filename,
+						output_filename);
 			if (filters.size() == 0) {
 				TR_ERR("No filter chain for '%s' to '%s' "
 				       "transformation\n",
-				       input_file.c_str(),
-				       output_file.c_str());
+				       input_filename.c_str(),
+				       output_filename.c_str());
 				return 1;
 			}
 
 			// Transform input file using gathered filters
-			if (!transform_file(input_file,
+			if (!transform_file(input_filename,
 					    filters,
-					    output_file,
+					    output_filename,
 					    dry_run)) {
 				return 1;
 			}
