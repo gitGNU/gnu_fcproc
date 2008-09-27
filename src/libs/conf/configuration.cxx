@@ -84,9 +84,9 @@ namespace Configuration {
 
 		while (is) {
 			std::string line;
-			
+
 			std::getline(is, line);
-			
+
 			// Remove comments
 			line = line.substr(0, line.find(cf.comment_));
 			line = File::trim_both(line, cf.whites_);
