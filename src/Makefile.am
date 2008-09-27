@@ -34,6 +34,7 @@ fcp_CPPFLAGS =					\
 fcp_LDADD =					\
 	libmisc.a				\
 	libconf.a				\
+	libfile.a				\
 	libgraph.a
 
 ## Libraries
@@ -41,6 +42,7 @@ fcp_LDADD =					\
 noinst_LIBRARIES =				\
 	libmisc.a				\
 	libconf.a				\
+	libfile.a				\
 	libgraph.a
 
 libmisc_a_SOURCES =				\
@@ -61,6 +63,12 @@ libconf_a_SOURCES =				\
 	libs/conf/configuration.h		\
 	libs/conf/configuration.cxx
 libconf_a_CPPFLAGS =				\
+	$(EXTRA_CPPFLAGS)
+
+libfile_a_SOURCES =				\
+	libs/file/utils.h			\
+	libs/file/utils.cxx
+libfile_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 libgraph_a_SOURCES =				\
