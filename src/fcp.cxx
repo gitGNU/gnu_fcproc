@@ -183,9 +183,6 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		TR_DBG("%s (%s) %s started\n",
-		       PROGRAM_NAME, PACKAGE_NAME, PACKAGE_VERSION);
-
 		std::vector<std::string> inputs;
 		int                      count;
 
@@ -213,49 +210,32 @@ int main(int argc, char * argv[])
 			TR_DBG("Configuration file overridden\n");
 		}
 
-		// Dump (acquired and derived) infos
-		TR_DBG("Configuration file: '%s'\n", conffile.c_str());
+		BUG_ON(conffile.size() == 0);
 
-		// Read configuration file
+		TR_DBG("Initial (configuration file) values:\n");
+
+		// Read configuration file (if available)
 		try {
-			Configuration::File config;
+			TR_DBG("Reading configuration file from '%s'\n",
+			       conffile.c_str());
 
-			std::ifstream instream(conffile.c_str());
+			Configuration::File config;
+			std::ifstream       instream(conffile.c_str());
 
 			instream >> config;
 
-			int    atoms;
-			double length;
-			bool   testt, testf;
-
-			(void) config.get<int>(atoms,    "atoms", 12);
-			(void) config.get<double>(length,"length",2.0);
-			(void) config.get<bool>(testt,   "testt");
-			(void) config.get<bool>(testf,   "testf");
-
-			config.set<int>("atoms",     15);
-			config.set<double>("length", 1.0);
-			config.set<bool>("testt", false);
-			config.set<bool>("testf", true);
-
-			std::string author, title;
-
-			(void) config.get<std::string>(author, "name");
-			(void) config.get(author, "name");
-			(void) config.get(title, "title",
-					  std::string("Untitled"));
-
-			TR_DBG("%d %f %s %s %s %s\n",
-			       atoms,
-			       length,
-			       author.c_str(),
-			       title.c_str(),
-			       testt ? "true" : "false",
-			       testf ? "true" : "false");
+		} catch (std::exception & e) {
+			TR_ERR("%s\n", e.what());
 		} catch (...) {
-			TR_WRN("Cannot read configuration file '%s'\n",
-			       conffile.c_str());
+			BUG();
 		}
+
+		// Options related checks
+
+		TR_DBG("Final (configuration file) values:\n");
+
+		// Dump (acquired and derived) infos
+		TR_DBG("Configuration file: '%s'\n", conffile.c_str());
 
 		// Build the dependency graph
 		Graph::DAG * dag = read_config(conffile);
