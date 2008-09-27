@@ -18,21 +18,30 @@
 
 #include "config.h"
 
+#include <iostream>
+
 #include "libs/file/utils.h"
 
 namespace File {
 	std::string dirname(const std::string & s)
 	{
-		return "";
+		return s.substr(0, s.rfind("/"));
 	}
-	
+
 	std::string basename(const std::string & s)
 	{
-		return "";
+		std::string::size_type p;
+
+		p = s.rfind("/");
+		return (p != std::string::npos) ? s.substr(p + 1) : "";
 	}
-	
+
 	std::string extension(const std::string & s)
 	{
-		return "";
+		std::string::size_type p;
+
+		p = s.rfind(".");
+
+		return (p != std::string::npos) ? s.substr(p + 1) : "";
 	}
 }
