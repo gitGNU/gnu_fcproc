@@ -135,4 +135,5 @@ namespace Configuration {
 			trim_both(as_string(value), whites_);
 	}
 }
+
 #endif // LIBS_CONF_CONFIGURATION_H
