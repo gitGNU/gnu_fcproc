@@ -250,6 +250,15 @@ int main(int argc, char * argv[])
 			std::string input_filename  = *iter;
 			std::string output_filename = "temp";
 
+			TR_DBG("File '%s':\n", input_filename.c_str());
+			TR_DBG("  dirname   = '%s'\n",
+			       File::dirname(input_filename).c_str());
+			TR_DBG("  basename  = '%s'\n",
+			       File::basename(input_filename).c_str());
+			TR_DBG("  extension = '%s'\n",
+			       File::extension(input_filename).c_str());
+
+#if 0
 			// Extract filters chain
 			std::vector<Graph::Node> filters;
 			filters = extract_chain(*dag,
@@ -270,6 +279,7 @@ int main(int argc, char * argv[])
 					    dry_run)) {
 				return 1;
 			}
+#endif
 		}
 
 		TR_DBG("Operation complete\n");
