@@ -311,6 +311,18 @@ int main(int argc, char * argv[])
 				return 1;
 			}
 
+			if (input_tag == output_tag) {
+				//
+				// XXX FIXME:
+				//   Add code to support copy operations
+				//
+				TR_ERR("Transformation %s%c%s is a copy\n",
+				       input_filename.c_str(),
+				       separator,
+				       output_filename.c_str());
+				return 1;
+			}
+
 #if 0
 			// Extract filters chain
 			std::vector<Graph::Node> filters;
