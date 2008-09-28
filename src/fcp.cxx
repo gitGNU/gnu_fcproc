@@ -271,9 +271,7 @@ int main(int argc, char * argv[])
 
 		// Build the dependency graph
 		Graph::DAG * dag = read_config(conffile);
-		if (!dag) {
-			return 1;
-		}
+		BUG_ON(!dag);
 
 		// Perform all transformations
 		std::map<std::string, std::string>::iterator iter;
@@ -285,12 +283,33 @@ int main(int argc, char * argv[])
 
 			TR_DBG("Transforming '%s' -> '%s':\n",
 			       input_filename.c_str(), output_filename.c_str());
-			TR_DBG("  dirname   = '%s'\n",
-			       File::dirname(input_filename).c_str());
-			TR_DBG("  basename  = '%s'\n",
-			       File::basename(input_filename).c_str());
-			TR_DBG("  extension = '%s'\n",
+
+			TR_DBG("  Input  = ['%s','%s','%s']\n",
+			       File::dirname(input_filename).c_str(),
+			       File::basename(input_filename).c_str(),
 			       File::extension(input_filename).c_str());
+
+			TR_DBG("  Output = ['%s','%s','%s']\n",
+			       File::dirname(output_filename).c_str(),
+			       File::basename(output_filename).c_str(),
+			       File::extension(output_filename).c_str());
+
+			std::string input_tag;
+			std::string output_tag;
+
+			input_tag  = File::extension(input_filename).c_str();
+			if (input_tag == "") {
+				TR_ERR("Cannot detect '%s' file type\n",
+				       input_filename.c_str());
+				return 1;
+			}
+
+			output_tag = File::extension(output_filename).c_str();
+			if (output_tag == "") {
+				TR_ERR("Cannot detect '%s' file type\n",
+				       output_filename.c_str());
+				return 1;
+			}
 
 #if 0
 			// Extract filters chain
