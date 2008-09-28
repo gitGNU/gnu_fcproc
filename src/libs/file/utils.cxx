@@ -33,7 +33,7 @@ namespace File {
 		std::string::size_type p;
 
 		p = s.rfind("/");
-		return (p != std::string::npos) ? s.substr(p + 1) : "";
+		return (p != std::string::npos) ? s.substr(p + 1) : s;
 	}
 
 	std::string extension(const std::string & s)
@@ -49,8 +49,12 @@ namespace File {
 				// No extension, file is ".something"
 				return "";
 			}
+			if (p == std::string::npos) {
+				// No extension
+				return "";
+			}
 
-			return (p != std::string::npos) ? s.substr(p + 1) : "";
+			return t.substr(p + 1);
 		}
 
 		return t;
