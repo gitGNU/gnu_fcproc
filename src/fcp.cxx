@@ -205,31 +205,25 @@ int main(int argc, char * argv[])
 		transformations.resize(argc - optind);
 
 		TR_DBG("Separator = '%c'\n", separator);
+		TR_DBG("Transformations:\n");
 
-		int i;
+		int i, j;
 		for (i = optind; i < argc; i++) {
+			j = i - optind;
 			try {
-				transformations[i - optind] =
+				transformations[j] =
 					new Transformation(argv[i], separator);
 			} catch (std::exception & e) {
 				TR_ERR("%s", e.what());
 				return 1;
 			}
 
-			BUG_ON(transformations[i - optind] == 0);
-		}
+			BUG_ON(transformations[j] == 0);
 
-		{
-			TR_DBG("Transformations:\n");
-			std::vector<Transformation *>::iterator iter;
-			for (iter  = transformations.begin();
-			     iter != transformations.end();
-			     iter++) {
-				TR_DBG("  %s = '%s' -> '%s'\n",
-				       (*iter)->tag().c_str(),
-				       (*iter)->input().name().c_str(),
-				       (*iter)->output().name().c_str());
-			}
+			TR_DBG("  %s = '%s' -> '%s'\n",
+			       transformations[j]->tag().c_str(),
+			       transformations[j]->input().name().c_str(),
+			       transformations[j]->output().name().c_str());
 		}
 
 		// Build configuration file path
@@ -274,13 +268,12 @@ int main(int argc, char * argv[])
 		Graph::DAG * dag = read_config(conffile);
 		BUG_ON(!dag);
 
-		// Perform all transformations
 		std::vector<Transformation *>::iterator iter;
+
+		// Fill in transformations with their filter-chains
 		for (iter  = transformations.begin();
 		     iter != transformations.end();
 		     iter++) {
-			(*iter)->execute();
-
 			// Extract filters chain
 			std::vector<Graph::Node> filters;
 			filters = extract_chain(*dag,
@@ -299,6 +292,16 @@ int main(int argc, char * argv[])
 				       (*iter)->output().name(),
 				       dry_run)) {
 				return 1;
+			}
+		}
+
+		// Perform all transformations
+		for (iter  = transformations.begin();
+		     iter != transformations.end();
+		     iter++) {
+			if (!(*iter)->execute()) {
+				TR_ERR("Cannot perform transformation '%s'\n",
+				       (*iter)->tag().c_str());
 			}
 		}
 
