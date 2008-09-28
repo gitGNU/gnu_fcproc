@@ -38,10 +38,21 @@ namespace File {
 
 	std::string extension(const std::string & s)
 	{
-		std::string::size_type p;
+		std::string t;
 
-		p = s.rfind(".");
+		t = basename(s);
+		if (t != "") {
+			std::string::size_type p;
 
-		return (p != std::string::npos) ? s.substr(p + 1) : "";
+			p = t.rfind(".");
+			if (p == 0) {
+				// No extension, file is ".something"
+				return "";
+			}
+
+			return (p != std::string::npos) ? s.substr(p + 1) : "";
+		}
+
+		return t;
 	}
 }
