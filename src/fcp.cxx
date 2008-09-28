@@ -282,18 +282,16 @@ int main(int argc, char * argv[])
 			std::string input_filename  = (*iter).first;
 			std::string output_filename = (*iter).second;
 
-			if (input_filename == output_filename) {
-				TR_ERR("Input and output file are the same in "
-				       "'%s%c%s' transformation\n",
-				       input_filename.c_str(),
-				       separator,
-				       output_filename.c_str());
-				return 1;
-			}
-
 			Transformation t(input_filename,
 					 separator,
 					 output_filename);
+
+			if (input_filename == output_filename) {
+				TR_ERR("Input and output file are the same in "
+				       "'%s' transformation\n",
+				       t.c_str());
+				return 1;
+			}
 
 			TR_DBG("Transforming '%s' -> '%s':\n",
 			       t.input().c_str(), t.output().c_str());
@@ -331,11 +329,9 @@ int main(int argc, char * argv[])
 				//   Add code in order to support copy
 				//   operations too
 				//
-				TR_ERR("Useless transformation '%s%c%s', "
+				TR_ERR("Useless transformation '%s', "
 				       "files have the same type\n",
-				       input_filename.c_str(),
-				       separator,
-				       output_filename.c_str());
+				       t.c_str());
 				return 1;
 			}
 
@@ -344,10 +340,8 @@ int main(int argc, char * argv[])
 			filters = extract_chain(*dag, input_tag, output_tag);
 			if (filters.size() == 0) {
 				TR_ERR("No filter chain available "
-				       "for '%s%c%s' transformation\n",
-				       input_filename.c_str(),
-				       separator,
-				       output_filename.c_str());
+				       "for '%s' transformation\n",
+				       t.c_str());
 				return 1;
 			}
 
