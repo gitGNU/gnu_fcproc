@@ -225,10 +225,10 @@ int main(int argc, char * argv[])
 			for (iter  = transformations.begin();
 			     iter != transformations.end();
 			     iter++) {
-				TR_DBG("  %s: '%s' -> '%s'\n",
+				TR_DBG("  %s = '%s' -> '%s'\n",
 				       (*iter)->tag().c_str(),
-				       (*iter)->input().c_str(),
-				       (*iter)->output().c_str());
+				       (*iter)->input().name().c_str(),
+				       (*iter)->output().name().c_str());
 			}
 		}
 
@@ -279,54 +279,13 @@ int main(int argc, char * argv[])
 		for (iter  = transformations.begin();
 		     iter != transformations.end();
 		     iter++) {
-			std::string input_filename  = (*iter)->input();
-			std::string output_filename = (*iter)->output();
-
-			TR_DBG("Transforming '%s' -> '%s':\n",
-			       input_filename.c_str(), output_filename.c_str());
-
-			TR_DBG("  Input  = ['%s','%s','%s']\n",
-			       File::dirname(input_filename).c_str(),
-			       File::basename(input_filename).c_str(),
-			       File::extension(input_filename).c_str());
-
-			TR_DBG("  Output = ['%s','%s','%s']\n",
-			       File::dirname(output_filename).c_str(),
-			       File::basename(output_filename).c_str(),
-			       File::extension(output_filename).c_str());
-
-			std::string input_tag;
-			std::string output_tag;
-
-			input_tag  = File::extension(input_filename).c_str();
-			if (input_tag == "") {
-				TR_ERR("Cannot detect '%s' file type\n",
-				       input_filename.c_str());
-				return 1;
-			}
-
-			output_tag = File::extension(output_filename).c_str();
-			if (output_tag == "") {
-				TR_ERR("Cannot detect '%s' file type\n",
-				       output_filename.c_str());
-				return 1;
-			}
-
-			if (input_tag == output_tag) {
-				//
-				// XXX FIXME:
-				//   Add code in order to support copy
-				//   operations too
-				//
-				TR_ERR("Useless transformation '%s', "
-				       "files have the same type\n",
-				       (*iter)->tag().c_str());
-				return 1;
-			}
+			(*iter)->execute();
 
 			// Extract filters chain
 			std::vector<Graph::Node> filters;
-			filters = extract_chain(*dag, input_tag, output_tag);
+			filters = extract_chain(*dag,
+						(*iter)->input().type(),
+						(*iter)->output().type());
 			if (filters.size() == 0) {
 				TR_ERR("No filter chain available "
 				       "for '%s' transformation\n",
@@ -335,9 +294,9 @@ int main(int argc, char * argv[])
 			}
 
 			// Transform input file using gathered filters
-			if (!transform(input_filename,
+			if (!transform((*iter)->input().name(),
 				       filters,
-				       output_filename,
+				       (*iter)->output().name(),
 				       dry_run)) {
 				return 1;
 			}
