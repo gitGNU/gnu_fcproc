@@ -199,37 +199,37 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		std::map<std::string, std::string> transformations;
+		std::vector<Transformation *> transformations;
 
 		assert((argc - optind) >= 0);
+		transformations.resize(argc - optind);
 
-		TR_DBG("Separator = '%c'\n", separator)
-		TR_DBG("Transformations:\n");
+		TR_DBG("Separator = '%c'\n", separator);
 
 		int i;
 		for (i = optind; i < argc; i++) {
-			std::string t;
-
-			t = argv[i];
-
-			std::string::size_type p;
-			std::string            input;
-			std::string            output;
-
-			p = t.find(separator);
-			if ((p < 0) || (p > t.size())) {
-				TR_ERR("Missing separator in '%s'\n",
-				       t.c_str());
+			try {
+				transformations[i - optind] =
+					new Transformation(argv[i], separator);
+			} catch (std::exception & e) {
+				TR_ERR("%s", e.what());
 				return 1;
 			}
 
-			input  = t.substr(0, p);
-			output = t.substr(p + 1);
+			BUG_ON(transformations[i - optind] == 0);
+		}
 
-			TR_DBG("  '%s' -> '%s'\n",
-			       input.c_str(), output.c_str());
-
-			transformations[input] = output;
+		{
+			TR_DBG("Transformations:\n");
+			std::vector<Transformation *>::iterator iter;
+			for (iter  = transformations.begin();
+			     iter != transformations.end();
+			     iter++) {
+				TR_DBG("  %s: '%s' -> '%s'\n",
+				       (*iter)->tag().c_str(),
+				       (*iter)->input().c_str(),
+				       (*iter)->output().c_str());
+			}
 		}
 
 		// Build configuration file path
@@ -275,26 +275,15 @@ int main(int argc, char * argv[])
 		BUG_ON(!dag);
 
 		// Perform all transformations
-		std::map<std::string, std::string>::iterator iter;
+		std::vector<Transformation *>::iterator iter;
 		for (iter  = transformations.begin();
 		     iter != transformations.end();
 		     iter++) {
-			std::string input_filename  = (*iter).first;
-			std::string output_filename = (*iter).second;
-
-			Transformation t(input_filename,
-					 separator,
-					 output_filename);
-
-			if (input_filename == output_filename) {
-				TR_ERR("Input and output file are the same in "
-				       "'%s' transformation\n",
-				       t.c_str());
-				return 1;
-			}
+			std::string input_filename  = (*iter)->input();
+			std::string output_filename = (*iter)->output();
 
 			TR_DBG("Transforming '%s' -> '%s':\n",
-			       t.input().c_str(), t.output().c_str());
+			       input_filename.c_str(), output_filename.c_str());
 
 			TR_DBG("  Input  = ['%s','%s','%s']\n",
 			       File::dirname(input_filename).c_str(),
@@ -331,7 +320,7 @@ int main(int argc, char * argv[])
 				//
 				TR_ERR("Useless transformation '%s', "
 				       "files have the same type\n",
-				       t.c_str());
+				       (*iter)->tag().c_str());
 				return 1;
 			}
 
@@ -341,7 +330,7 @@ int main(int argc, char * argv[])
 			if (filters.size() == 0) {
 				TR_ERR("No filter chain available "
 				       "for '%s' transformation\n",
-				       t.c_str());
+				       (*iter)->tag().c_str());
 				return 1;
 			}
 
