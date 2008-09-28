@@ -202,6 +202,7 @@ int main(int argc, char * argv[])
 
 		assert((argc - optind) >= 0);
 
+		TR_DBG("Separator = '%c'\n", separator)
 		TR_DBG("Transformations:\n");
 
 		int i;
