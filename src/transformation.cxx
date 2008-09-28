@@ -22,36 +22,57 @@
 
 #include "transformation.h"
 
-Transformation::Transformation(const std::string & input_filename,
-			       char                separator,
-			       const std::string & output_filename) :
-	input_(input_filename),
-	separator_(separator),
-	output_(output_filename)
+Transformation::Transformation(const std::string & tag,
+			       char                separator) :
+	tag_(tag),
+	separator_(separator)
 {
-	char tmp[2];
-	
-	tmp[0] = separator_;
-	tmp[1] = 0;
+	std::string::size_type p;
+	p = tag_.find(separator);
+	if ((p < 0) || (p > tag_.size())) {
+		throw Transformation::Exception("Missing separator in "
+						"transformation " + tag_);
+	}
 
-	id_ = input_ + std::string(tmp) + output_;
+	input_ = tag_.substr(0, p);
+	if (input_.size() == 0) {
+		throw Transformation::Exception("Missing input filename in "
+						"transformation " + tag_);
+	}
+
+	output_ = tag_.substr(p + 1);
+	if (output_.size() == 0) {
+		throw Transformation::Exception("Missing output filename in "
+						"transformation " + tag_);
+	}
+
+	if (input_ == output_) {
+		throw Transformation::Exception("Input and output file are "
+						"the same in "
+						"transformation " + tag_);
+	}
 }
 
 Transformation::~Transformation(void)
 {
 }
 
-std::string Transformation::input(void)
+const std::string & Transformation::input(void)
 {
 	return input_;
 }
 
-std::string Transformation::output(void)
+const std::string & Transformation::output(void)
 {
 	return output_;
 }
 
-const char * Transformation::c_str(void)
+const std::string & Transformation::tag(void)
 {
-	return id_.c_str();
+	return tag_;
+}
+
+bool Transformation::execute(void)
+{
+	return true;
 }

@@ -25,24 +25,47 @@
 
 class Transformation {
 public:
-	Transformation(const std::string & input_filename,
-		       char                separator,
-		       const std::string & output_filename);
+	class Exception : public std::exception {
+	public:
+	Exception(const std::string & description) :
+		description_(description) {
+		};
+		~Exception(void) throw() { };
+
+		virtual const char * what(void) const throw() {
+			return description_.c_str();
+		};
+
+	protected:
+		Exception(void);
+
+	private:
+		std::string description_;
+	};
+
+	Transformation(const std::string & tag,
+		       char                separator);
 	~Transformation(void);
 
-	std::string  input(void);
-	std::string  output(void);
-	const char * c_str(void);
+	const std::string & input(void);
+	const std::string & output(void);
+	const std::string & tag(void);
+
+	bool                execute(void);
 
 protected:
 	Transformation(void);
 
-private:
-	std::string input_;
-	char        separator_;
-	std::string output_;
+	// No copy
+	Transformation(const Transformation & t);
+	Transformation & operator =(const Transformation & t);
 
-	std::string id_;
+private:
+	std::string tag_;
+	char        separator_;
+
+	std::string input_;
+	std::string output_;
 };
 
 #endif // TRANSFORMATION_H
