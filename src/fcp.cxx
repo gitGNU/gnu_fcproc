@@ -323,7 +323,8 @@ int main(int argc, char * argv[])
 			if (input_tag == output_tag) {
 				//
 				// XXX FIXME:
-				//   Add code to support copy operations
+				//   Add code in order to support copy
+				//   operations too
 				//
 				TR_ERR("Useless transformation '%s%c%s', "
 				       "files have the same type\n",
@@ -333,16 +334,14 @@ int main(int argc, char * argv[])
 				return 1;
 			}
 
-#if 0
 			// Extract filters chain
 			std::vector<Graph::Node> filters;
-			filters = extract_chain(*dag,
-						input_filename,
-						output_filename);
+			filters = extract_chain(*dag, input_tag, output_tag);
 			if (filters.size() == 0) {
-				TR_ERR("No filter chain for '%s' to '%s' "
-				       "transformation\n",
+				TR_ERR("No filter chain available "
+				       "for '%s%c%s' transformation\n",
 				       input_filename.c_str(),
+				       separator,
 				       output_filename.c_str());
 				return 1;
 			}
@@ -354,7 +353,6 @@ int main(int argc, char * argv[])
 				       dry_run)) {
 				return 1;
 			}
-#endif
 		}
 
 		TR_DBG("Operation complete\n");
