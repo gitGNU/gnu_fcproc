@@ -281,6 +281,15 @@ int main(int argc, char * argv[])
 			std::string input_filename  = (*iter).first;
 			std::string output_filename = (*iter).second;
 
+			if (input_filename == output_filename) {
+				TR_ERR("Input and output file are the same in "
+				       "'%s%c%s' transformation\n",
+				       input_filename.c_str(),
+				       separator,
+				       output_filename.c_str());
+				return 1;
+			}
+
 			TR_DBG("Transforming '%s' -> '%s':\n",
 			       input_filename.c_str(), output_filename.c_str());
 
@@ -316,7 +325,8 @@ int main(int argc, char * argv[])
 				// XXX FIXME:
 				//   Add code to support copy operations
 				//
-				TR_ERR("Transformation %s%c%s is a copy\n",
+				TR_ERR("Useless transformation '%s%c%s', "
+				       "files have the same type\n",
 				       input_filename.c_str(),
 				       separator,
 				       output_filename.c_str());
