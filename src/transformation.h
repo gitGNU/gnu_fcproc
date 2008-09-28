@@ -27,8 +27,8 @@ class Transformation {
 public:
 	class Exception : public std::exception {
 	public:
-	Exception(const std::string & description) :
-		description_(description) {
+		Exception(const std::string & description) :
+			description_(description) {
 		};
 		~Exception(void) throw() { };
 
@@ -43,15 +43,34 @@ public:
 		std::string description_;
 	};
 
+	class File {
+	public:
+		File(const std::string & name);
+		~File(void);
+
+		const std::string & type(void) const;
+		const std::string & name(void) const;
+
+	protected:
+		File(void);
+
+	private:
+		std::string name_;
+
+		std::string dirname_;
+		std::string basename_;
+		std::string extension_;
+	};
+
 	Transformation(const std::string & tag,
 		       char                separator);
 	~Transformation(void);
 
-	const std::string & input(void);
-	const std::string & output(void);
-	const std::string & tag(void);
+	const Transformation::File & input(void);
+	const Transformation::File & output(void);
+	const std::string &          tag(void);
 
-	bool                execute(void);
+	bool                         execute(void);
 
 protected:
 	Transformation(void);
@@ -61,11 +80,11 @@ protected:
 	Transformation & operator =(const Transformation & t);
 
 private:
-	std::string tag_;
-	char        separator_;
+	std::string            tag_;
+	char                   separator_;
 
-	std::string input_;
-	std::string output_;
+	Transformation::File * input_;
+	Transformation::File * output_;
 };
 
 #endif // TRANSFORMATION_H

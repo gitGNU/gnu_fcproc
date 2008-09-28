@@ -21,6 +21,8 @@
 #include <string>
 
 #include "transformation.h"
+#include "libs/misc/debug.h"
+#include "libs/file/utils.h"
 
 Transformation::Transformation(const std::string & tag,
 			       char                separator) :
@@ -34,19 +36,24 @@ Transformation::Transformation(const std::string & tag,
 						"transformation " + tag_);
 	}
 
-	input_ = tag_.substr(0, p);
-	if (input_.size() == 0) {
+	std::string tmp;
+	tmp = tag_.substr(0, p);
+	if (tmp.size() == 0) {
 		throw Transformation::Exception("Missing input filename in "
 						"transformation " + tag_);
 	}
+	input_ = new Transformation::File(tmp);
+	BUG_ON(input_ == 0);
 
-	output_ = tag_.substr(p + 1);
-	if (output_.size() == 0) {
+	tmp = tag_.substr(p + 1);
+	if (tmp.size() == 0) {
 		throw Transformation::Exception("Missing output filename in "
 						"transformation " + tag_);
 	}
+	output_ = new Transformation::File(tmp);
+	BUG_ON(output_ == 0);
 
-	if (input_ == output_) {
+	if (input_->name() == output_->name()) {
 		throw Transformation::Exception("Input and output file are "
 						"the same in "
 						"transformation " + tag_);
@@ -55,16 +62,18 @@ Transformation::Transformation(const std::string & tag,
 
 Transformation::~Transformation(void)
 {
+	delete input_;
+	delete output_;
 }
 
-const std::string & Transformation::input(void)
+const Transformation::File & Transformation::input(void)
 {
-	return input_;
+	return *input_;
 }
 
-const std::string & Transformation::output(void)
+const Transformation::File & Transformation::output(void)
 {
-	return output_;
+	return *output_;
 }
 
 const std::string & Transformation::tag(void)
@@ -74,5 +83,83 @@ const std::string & Transformation::tag(void)
 
 bool Transformation::execute(void)
 {
+#if 0
+	std::string input_filename  = input_;
+	std::string output_filename = output_;
+
+	TR_DBG("Transforming '%s' -> '%s':\n",
+	       input_filename.c_str(), output_filename.c_str());
+
+	TR_DBG("  Input  = ['%s','%s','%s']\n",
+	       File::dirname(input_filename).c_str(),
+	       File::basename(input_filename).c_str(),
+	       File::extension(input_filename).c_str());
+
+	TR_DBG("  Output = ['%s','%s','%s']\n",
+	       File::dirname(output_filename).c_str(),
+	       File::basename(output_filename).c_str(),
+	       File::extension(output_filename).c_str());
+
+	std::string input_tag;
+	std::string output_tag;
+
+	input_tag  = File::extension(input_filename).c_str();
+	if (input_tag == "") {
+		TR_ERR("Cannot detect '%s' file type\n",
+		       input_filename.c_str());
+		return false;
+	}
+
+	output_tag = File::extension(output_filename).c_str();
+	if (output_tag == "") {
+		TR_ERR("Cannot detect '%s' file type\n",
+		       output_filename.c_str());
+		return false;
+	}
+
+	if (input_tag == output_tag) {
+		//
+		// XXX FIXME:
+		//   Add code in order to support copy
+		//   operations too
+		//
+		TR_ERR("Useless transformation '%s', "
+		       "files have the same type\n",
+		       (*iter)->tag().c_str());
+		return false;
+	}
+#endif
+
 	return true;
+}
+
+Transformation::File::File(const std::string & name) :
+	name_(name)
+{
+	if (name_ == "") {
+		throw Transformation::Exception("Missing file name");
+	}
+
+	dirname_   = ::File::dirname(name_);
+	basename_  = ::File::basename(name_);
+	extension_ = ::File::extension(name_);
+
+	if (extension_ == "") {
+		throw Transformation::Exception("Missing extension in "
+						"filename " + name_);
+	}
+}
+
+Transformation::File::~File(void)
+{
+}
+
+const std::string & Transformation::File::type(void) const
+{
+	return extension_;
+}
+
+const std::string & Transformation::File::name(void) const
+{
+	return name_;
 }
