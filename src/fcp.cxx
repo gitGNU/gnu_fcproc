@@ -44,20 +44,26 @@ void version(void)
 		<< "There is NO WARRANTY, to the extent permitted by law." <<                        std::endl;
 }
 
+# define DEFAULT_SEPARATOR ':'
+
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [FILE]..."<<                  std::endl
-		<<                                                                          std::endl
-		<< "Options: " <<                                                           std::endl
-		<< "  -c, --config=FILE    use alternative configuration file" <<           std::endl
-		<< "  -n, --dry-run        display commands without modifying any files" << std::endl
-		<< "  -d, --debug          enable debugging traces" <<                      std::endl
-		<< "  -v, --verbose        verbosely report processing" <<                  std::endl
-		<< "  -h, --help           print this help, then exit" <<                   std::endl
-		<< "  -V, --version        print version number, then exit" <<              std::endl
-		<<                                                                          std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                        std::endl;
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<           std::endl
+		<<                                                                             std::endl
+		<< "Options: " <<                                                              std::endl
+		<< "  -c, --config=FILE       use alternative configuration file" <<           std::endl
+		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<   std::endl
+		<< "  -n, --dry-run           display commands without modifying any files" << std::endl
+		<< "  -d, --debug             enable debugging traces" <<                      std::endl
+		<< "  -v, --verbose           verbosely report processing" <<                  std::endl
+		<< "  -h, --help              print this help, then exit" <<                   std::endl
+		<< "  -V, --version           print version number, then exit" <<              std::endl
+		<<                                                                             std::endl
+		<< "Transformations:"                                                       << std::endl
+		<< "  Specify transformations using the format INPUTFILE:OUTPUTFILE"        << std::endl
+		<<                                                                             std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                           std::endl;
 }
 
 void hint(const std::string & message)
@@ -124,8 +130,9 @@ int main(int argc, char * argv[])
 	TR_CONFIG_PFX(PROGRAM_NAME);
 
 	try {
-		std::string conffile = "";
-		bool        dry_run  = false;
+		std::string conffile  = "";
+		bool        dry_run   = false;
+		char        separator = DEFAULT_SEPARATOR;
 
 		int c;
 		// int digit_optind = 0;
@@ -134,16 +141,17 @@ int main(int argc, char * argv[])
 			int option_index       = 0;
 
 			static struct option long_options[] = {
-				{ "config",  1, 0, 'c' },
-				{ "dry-run", 0, 0, 'n' },
-				{ "debug",   0, 0, 'd' },
-				{ "verbose", 0, 0, 'v' },
-				{ "version", 0, 0, 'V' },
-				{ "help",    0, 0, 'h' },
-				{ 0,         0, 0, 0   }
+				{ "config",    1, 0, 'c' },
+				{ "separator", 1, 0, 's' },
+				{ "dry-run",   0, 0, 'n' },
+				{ "debug",     0, 0, 'd' },
+				{ "verbose",   0, 0, 'v' },
+				{ "version",   0, 0, 'V' },
+				{ "help",      0, 0, 'h' },
+				{ 0,           0, 0, 0   }
 			};
 
-			c = getopt_long(argc, argv, "c:ndvVh",
+			c = getopt_long(argc, argv, "c:s:ndvVh",
 					long_options, &option_index);
 			if (c == -1) {
 				break;
@@ -152,6 +160,13 @@ int main(int argc, char * argv[])
 			switch (c) {
 				case 'c':
 					conffile = optarg;
+					break;
+				case 's':
+					if (strlen(optarg) > 1) {
+						hint("Separator too long");
+						return 1;
+					}
+					separator = optarg[0];
 					break;
 				case 'n':
 					dry_run  = true;
@@ -170,11 +185,10 @@ int main(int argc, char * argv[])
 					return 0;
 				case '?':
 					hint("Unrecognized option");
-					break;
-
+					return 1;
 				default:
 					BUG();
-					break;
+					return 1;
 			}
 		}
 
@@ -184,17 +198,28 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		std::vector<std::string> inputs;
-		int                      count;
+		std::map<std::string, std::string> transformations;
 
-		count = argc - optind;
-		assert(count >= 0);
+		assert((argc - optind) >= 0);
 
-		inputs.resize(count);
+		TR_DBG("Transformations:\n");
 
 		int i;
 		for (i = optind; i < argc; i++) {
-			inputs[i - optind] = argv[i];
+			std::string t;
+
+			t = argv[i];
+
+			std::string input;
+			std::string output;
+
+			input  = t.substr(0, t.rfind(separator));
+			output = t.substr(t.rfind(separator) + 1);
+
+			TR_DBG("  '%s' -> '%s'\n",
+			       input.c_str(), output.c_str());
+
+			transformations[input] = output;
 		}
 
 		// Build configuration file path
@@ -245,12 +270,15 @@ int main(int argc, char * argv[])
 		}
 
 		// Perform all transformations
-		std::vector<std::string>::iterator iter;
-		for (iter = inputs.begin(); iter != inputs.end(); iter++) {
-			std::string input_filename  = *iter;
-			std::string output_filename = "temp";
+		std::map<std::string, std::string>::iterator iter;
+		for (iter  = transformations.begin();
+		     iter != transformations.end();
+		     iter++) {
+			std::string input_filename  = (*iter).first;
+			std::string output_filename = (*iter).second;
 
-			TR_DBG("File '%s':\n", input_filename.c_str());
+			TR_DBG("Transforming file '%s':\n",
+			       input_filename.c_str());
 			TR_DBG("  dirname   = '%s'\n",
 			       File::dirname(input_filename).c_str());
 			TR_DBG("  basename  = '%s'\n",
