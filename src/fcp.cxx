@@ -24,6 +24,7 @@
 #include <iostream>
 #include <vector>
 
+#include "transformation.h"
 #include "libs/misc/debug.h"
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
@@ -290,8 +291,12 @@ int main(int argc, char * argv[])
 				return 1;
 			}
 
+			Transformation t(input_filename,
+					 separator,
+					 output_filename);
+
 			TR_DBG("Transforming '%s' -> '%s':\n",
-			       input_filename.c_str(), output_filename.c_str());
+			       t.input().c_str(), t.output().c_str());
 
 			TR_DBG("  Input  = ['%s','%s','%s']\n",
 			       File::dirname(input_filename).c_str(),
