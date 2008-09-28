@@ -49,21 +49,21 @@ void version(void)
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<           std::endl
-		<<                                                                             std::endl
-		<< "Options: " <<                                                              std::endl
-		<< "  -c, --config=FILE       use alternative configuration file" <<           std::endl
-		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<   std::endl
-		<< "  -n, --dry-run           display commands without modifying any files" << std::endl
-		<< "  -d, --debug             enable debugging traces" <<                      std::endl
-		<< "  -v, --verbose           verbosely report processing" <<                  std::endl
-		<< "  -h, --help              print this help, then exit" <<                   std::endl
-		<< "  -V, --version           print version number, then exit" <<              std::endl
-		<<                                                                             std::endl
-		<< "Transformations:"                                                       << std::endl
-		<< "  Specify transformations using the format INPUTFILE:OUTPUTFILE"        << std::endl
-		<<                                                                             std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                           std::endl;
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<            std::endl
+		<<                                                                              std::endl
+		<< "Options: " <<                                                               std::endl
+		<< "  -c, --config=FILE       use alternative configuration file" <<            std::endl
+		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<    std::endl
+		<< "  -n, --dry-run           display commands without modifying any files" <<  std::endl
+		<< "  -d, --debug             enable debugging traces" <<                       std::endl
+		<< "  -v, --verbose           verbosely report processing" <<                   std::endl
+		<< "  -h, --help              print this help, then exit" <<                    std::endl
+		<< "  -V, --version           print version number, then exit" <<               std::endl
+		<<                                                                              std::endl
+		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." << std::endl
+		<< "Default SEPARATOR is '" << DEFAULT_SEPARATOR << "'." <<                     std::endl
+		<<                                                                              std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                            std::endl;
 }
 
 void hint(const std::string & message)
@@ -86,16 +86,16 @@ Graph::DAG * read_config(std::string configuration_file)
 	return dag;
 }
 
-bool transform_file(const std::string &              input,
-		    const std::vector<Graph::Node> & filters,
-		    const std::string &              output,
-		    bool                             dry_run)
+bool transform(const std::string &              input,
+	       const std::vector<Graph::Node> & filters,
+	       const std::string &              output,
+	       bool                             dry_run)
 {
 	BUG_ON(input.size()   == 0);
 	BUG_ON(filters.size() == 0);
 	BUG_ON(output.size()  == 0);
 
-	TR_DBG("Transforming %s -> %s\n",
+	TR_DBG("Transforming '%s' to '%s'\n",
 	       input.c_str(),
 	       output.c_str());
 
@@ -211,11 +211,19 @@ int main(int argc, char * argv[])
 
 			t = argv[i];
 
-			std::string input;
-			std::string output;
+			std::string::size_type p;
+			std::string            input;
+			std::string            output;
 
-			input  = t.substr(0, t.rfind(separator));
-			output = t.substr(t.rfind(separator) + 1);
+			p = t.find(separator);
+			if ((p < 0) || (p > t.size())) {
+				TR_ERR("Missing separator in '%s'\n",
+				       t.c_str());
+				return 1;
+			}
+
+			input  = t.substr(0, p);
+			output = t.substr(p + 1);
 
 			TR_DBG("  '%s' -> '%s'\n",
 			       input.c_str(), output.c_str());
@@ -243,9 +251,6 @@ int main(int argc, char * argv[])
 
 		// Read configuration file (if available)
 		try {
-			TR_DBG("Reading configuration file from '%s'\n",
-			       conffile.c_str());
-
 			Configuration::File config;
 			std::ifstream       instream(conffile.c_str());
 
@@ -278,8 +283,8 @@ int main(int argc, char * argv[])
 			std::string input_filename  = (*iter).first;
 			std::string output_filename = (*iter).second;
 
-			TR_DBG("Transforming file '%s':\n",
-			       input_filename.c_str());
+			TR_DBG("Transforming '%s' -> '%s':\n",
+			       input_filename.c_str(), output_filename.c_str());
 			TR_DBG("  dirname   = '%s'\n",
 			       File::dirname(input_filename).c_str());
 			TR_DBG("  basename  = '%s'\n",
@@ -302,10 +307,10 @@ int main(int argc, char * argv[])
 			}
 
 			// Transform input file using gathered filters
-			if (!transform_file(input_filename,
-					    filters,
-					    output_filename,
-					    dry_run)) {
+			if (!transform(input_filename,
+				       filters,
+				       output_filename,
+				       dry_run)) {
 				return 1;
 			}
 #endif
