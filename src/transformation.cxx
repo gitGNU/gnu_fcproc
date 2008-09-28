@@ -23,12 +23,18 @@
 #include "transformation.h"
 
 Transformation::Transformation(const std::string & input_filename,
-	       char                separator,
-	       const std::string & output_filename) :
+			       char                separator,
+			       const std::string & output_filename) :
 	input_(input_filename),
 	separator_(separator),
 	output_(output_filename)
 {
+	char tmp[2];
+	
+	tmp[0] = separator_;
+	tmp[1] = 0;
+
+	id_ = input_ + std::string(tmp) + output_;
 }
 
 Transformation::~Transformation(void)
@@ -43,4 +49,9 @@ std::string Transformation::input(void)
 std::string Transformation::output(void)
 {
 	return output_;
+}
+
+const char * Transformation::c_str(void)
+{
+	return id_.c_str();
 }

@@ -30,9 +30,9 @@ public:
 		       const std::string & output_filename);
 	~Transformation(void);
 
-	std::string input(void);
-	std::string output(void);
-	char *      c_str(void);
+	std::string  input(void);
+	std::string  output(void);
+	const char * c_str(void);
 
 protected:
 	Transformation(void);
@@ -41,6 +41,8 @@ private:
 	std::string input_;
 	char        separator_;
 	std::string output_;
+
+	std::string id_;
 };
 
 #endif // TRANSFORMATION_H
