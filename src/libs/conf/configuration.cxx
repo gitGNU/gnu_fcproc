@@ -16,6 +16,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
+#include "libs/misc/string.h"
 #include "libs/conf/configuration.h"
 
 namespace Configuration {
@@ -36,32 +37,6 @@ namespace Configuration {
 	bool File::exists(const std::string & key) const
 	{
 		return (tuples_.find(key) != tuples_.end());
-	}
-
-	std::string File::trim_left(const std::string & s,
-				    const std::string & t)
-	{
-		static std::string tmp;
-
-		tmp = s;
-
-		return tmp.erase(0, tmp.find_first_not_of(t));
-	}
-
-	std::string File::trim_right(const std::string & s,
-				     const std::string & t)
-	{
-		static std::string tmp;
-
-		tmp = s;
-
-		return tmp.erase(tmp.find_last_not_of(t) + 1);
-	}
-
-	std::string File::trim_both(const std::string & s,
-				    const std::string & t)
-	{
-		return File::trim_left(File::trim_right(s, t), t);
 	}
 
 	std::ostream & operator <<(std::ostream & os, const File & cf)
@@ -89,7 +64,7 @@ namespace Configuration {
 
 			// Remove comments
 			line = line.substr(0, line.find(cf.comment_));
-			line = File::trim_both(line, cf.whites_);
+			line = String::trim_both(line, cf.whites_);
 			if (line == "") {
 				// Empty line
 				continue;
@@ -112,13 +87,13 @@ namespace Configuration {
 			std::string value;
 			value = line;
 
-			key   = File::trim_right(key, cf.whites_);
+			key   = String::trim_right(key, cf.whites_);
 			if (key == "") {
 				// XXX FIXME: Error, empty key
 				continue;
 			}
 
-			value = File::trim_left(value, cf.whites_);
+			value = String::trim_left(value, cf.whites_);
 			if (value == "") {
 				// XXX FIXME: Error, empty value
 				continue;

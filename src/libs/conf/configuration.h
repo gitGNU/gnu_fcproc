@@ -27,6 +27,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "libs/misc/string.h"
+
 namespace Configuration {
 	class File {
 	public:
@@ -59,13 +61,6 @@ namespace Configuration {
 		std::string            whites_;
 		std::map<std::string,
 			 std::string>  tuples_;
-
-		static std::string     trim_left(const std::string & s,
-						 const std::string & t);
-		static std::string     trim_right(const std::string & s,
-						  const std::string & t);
-		static std::string     trim_both(const std::string & s,
-						 const std::string & t);
 
 		template<class T>
 		static std::string     as_string(const T & t);
@@ -131,8 +126,8 @@ namespace Configuration {
 	void File::set(std::string key,
 		       const T &   value)
 	{
-		tuples_[trim_both(key, whites_)] =
-			trim_both(as_string(value), whites_);
+		tuples_[String::trim_both(key, whites_)] =
+			String::trim_both(as_string(value), whites_);
 	}
 }
 
