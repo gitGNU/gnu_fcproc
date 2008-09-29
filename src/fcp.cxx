@@ -99,12 +99,18 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
+void clean_line(std::string & line)
+{
+	line = line.substr(0, line.find("#"));
+}
+
 Graph::DAG * read_rules(const std::string & filename)
 {
 	TR_DBG("Reading rules from file '%s'\n", filename.c_str());
 
 	Graph::DAG * dag;
-	dag = 0;//new Graph::DAG();
+
+	dag = new Graph::DAG();
 
 	std::ifstream stream;
 	std::string   line;
@@ -114,9 +120,12 @@ Graph::DAG * read_rules(const std::string & filename)
 		throw Exception("Cannot open '" + filename + "' for reading");
 	}
 
+	size_t number;
 	while (std::getline(stream, line)) {
+		number++;
+
 		// Remove comments
-		line = line.substr(0, line.find("#"));
+		clean_line(line);
 
 		if (line == "") {
 			// Discard empty lines
