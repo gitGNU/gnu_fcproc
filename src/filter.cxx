@@ -84,23 +84,18 @@ Tree::~Tree(void)
 
 }
 
-void Tree::father(Tree * tree)
+void Tree::parent(Tree * tree)
 {
 	father_ = tree;
 }
 
-Tree * Tree::father(void)
+const Tree * Tree::parent(void)
 {
 	return father_;
 }
 
 void Tree::child(Tree * tree)
 {
-}
-
-const std::vector<Tree *> & Tree::children(void)
-{
-	return children_;
 }
 
 DAG::DAG(void)

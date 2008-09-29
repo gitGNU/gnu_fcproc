@@ -31,9 +31,9 @@ namespace Graph {
 		Rule11(const std::string & command);
 		~Rule11(void);
 
+		const std::string & command(void);
 		bool                run(std::string & input,
 					std::string & output);
-		const std::string & command(void);
 
 	protected:
 		Rule11(void);
@@ -63,10 +63,9 @@ namespace Graph {
 		     const std::string & command);
 		~Tree(void);
 
-		void                        father(Tree * tree);
-		Tree *                      father(void);
+		void                        parent(Tree * tree);
+		const Tree *                parent(void);
 		void                        child(Tree * tree);
-		const std::vector<Tree *> & children(void);
 
 	protected:
 		Tree(void);
