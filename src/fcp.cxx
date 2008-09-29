@@ -45,7 +45,10 @@ void version(void)
 		<< "There is NO WARRANTY, to the extent permitted by law." <<                        std::endl;
 }
 
+#define USE_CONFIGURATION_FILE 0
+
 char        separator           = ':';
+#if USE_CONFIGURATION_FILE
 std::string configuration_file  =
      Environment::get("HOME") +
      std::string("/") +
@@ -53,7 +56,7 @@ std::string configuration_file  =
      std::string(PACKAGE_TARNAME) +
      std::string("/") +
      std::string("rules");
-
+#endif
 std::string rules_file          = Environment::get("HOME") +
      std::string("/") +
      std::string(".") +
@@ -67,8 +70,10 @@ void help(void)
 		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<            std::endl
 		<<                                                                              std::endl
 		<< "Options: " <<                                                               std::endl
+#if USE_CONFIGURATION_FILE
 		<< "  -c, --config=FILE       use alternate configuration file" <<              std::endl
 		<< "                          [" << configuration_file << "]" <<                std::endl
+#endif
 		<< "  -r, --rules=FILE        use alternate rules file" <<                      std::endl
 		<< "                          [" << rules_file << "]" <<                        std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<    std::endl
@@ -93,10 +98,9 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-Graph::DAG * read_rules(std::string configuration_file)
+Graph::DAG * read_rules(const std::string & filename)
 {
-	TR_DBG("Reading configuration from file '%s'\n",
-	       configuration_file.c_str());
+	TR_DBG("Reading rules from file '%s'\n", filename.c_str());
 
 	Graph::DAG * dag;
 	dag = new Graph::DAG();
@@ -130,16 +134,23 @@ int main(int argc, char * argv[])
 				{ 0,           0, 0, 0   }
 			};
 
+#if USE_CONFIGURATION_FILE
 			c = getopt_long(argc, argv, "c:s:ndvVh",
 					long_options, &option_index);
+#else
+			c = getopt_long(argc, argv, "s:ndvVh",
+					long_options, &option_index);
+#endif
 			if (c == -1) {
 				break;
 			}
 
 			switch (c) {
+#if USE_CONFIGURATION_FILE
 				case 'c':
 					configuration_file = optarg;
 					break;
+#endif
 				case 'r':
 					rules_file = optarg;
 					break;
@@ -180,11 +191,13 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		TR_DBG("Separator          = '%c'\n", separator);
-		TR_DBG("Configuration file = '%s'\n",
+		TR_DBG("Separator          '%c'\n", separator);
+#if USE_CONFIGURATION_FILE
+		TR_DBG("Configuration file '%s'\n",
 		       configuration_file.c_str());
 		BUG_ON(configuration_file.size() == 0);
-		TR_DBG("Rules file         = '%s'\n",
+#endif
+		TR_DBG("Rules file         '%s'\n",
 		       rules_file.c_str());
 		BUG_ON(rules_file.size() == 0);
 
@@ -214,6 +227,7 @@ int main(int argc, char * argv[])
 			       transformations[j]->output().name().c_str());
 		}
 
+#if USE_CONFIGURATION_FILE
 		// Read configuration file
 		try {
 			Configuration::File config;
@@ -226,17 +240,17 @@ int main(int argc, char * argv[])
 		} catch (...) {
 			BUG();
 		}
+#endif
 
 		// Read rules file
+		Graph::DAG * dag = 0;
 		try {
+			dag = read_rules(rules_file);
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 		} catch (...) {
 			BUG();
 		}
-
-		// Build the dependency graph
-		Graph::DAG * dag = read_rules(rules_file);
 		BUG_ON(!dag);
 
 		std::vector<Transformation *>::iterator iter;
