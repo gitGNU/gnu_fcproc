@@ -24,12 +24,12 @@
 #include <iostream>
 #include <vector>
 
-#include "transformation.h"
 #include "libs/misc/debug.h"
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
-#include "libs/graph/dag.h"
 #include "libs/file/utils.h"
+#include "transformation.h"
+#include "filter.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -85,44 +85,6 @@ Graph::DAG * read_config(std::string configuration_file)
 	dag = new Graph::DAG();
 
 	return dag;
-}
-
-bool transform(const std::string &              input,
-	       const std::vector<Graph::Node> & filters,
-	       const std::string &              output,
-	       bool                             dry_run)
-{
-	BUG_ON(input.size()   == 0);
-	BUG_ON(filters.size() == 0);
-	BUG_ON(output.size()  == 0);
-
-	TR_DBG("Transforming '%s' to '%s'\n",
-	       input.c_str(),
-	       output.c_str());
-
-	if (dry_run) {
-		// XXX FIXME: Dump command
-		return true;
-	}
-
-	return true;
-}
-
-std::vector<Graph::Node> extract_chain(const Graph::DAG & dag,
-				       std::string        tag_in,
-				       std::string        tag_out)
-{
-	TR_DBG("Extracting filter chain from '%s' to '%s'\n",
-	       tag_in.c_str(), tag_out.c_str());
-
-	BUG_ON(tag_in.size()  == 0);
-	BUG_ON(tag_out.size() == 0);
-
-	std::vector<Graph::Node> tmp;
-
-	MISSING_CODE();
-
-	return tmp;
 }
 
 int main(int argc, char * argv[])
@@ -270,15 +232,16 @@ int main(int argc, char * argv[])
 
 		std::vector<Transformation *>::iterator iter;
 
-		// Fill in transformations with their filter-chains
+		// Inject filter-chains into each transformation
 		for (iter  = transformations.begin();
 		     iter != transformations.end();
 		     iter++) {
 			// Extract filters chain
-			std::vector<Graph::Node> filters;
-			filters = extract_chain(*dag,
-						(*iter)->input().type(),
-						(*iter)->output().type());
+			std::vector<Graph::Node *> filters;
+			filters = dag->chain((*iter)->input().type(),
+					     (*iter)->output().type());
+
+			// Check filter chain size before starting execution
 			if (filters.size() == 0) {
 				TR_ERR("No filter chain available "
 				       "for '%s' transformation\n",
@@ -286,13 +249,8 @@ int main(int argc, char * argv[])
 				return 1;
 			}
 
-			// Transform input file using gathered filters
-			if (!transform((*iter)->input().name(),
-				       filters,
-				       (*iter)->output().name(),
-				       dry_run)) {
-				return 1;
-			}
+			// Inject it, finally
+			(*iter)->inject(filters);
 		}
 
 		// Perform all transformations

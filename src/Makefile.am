@@ -30,22 +30,22 @@ bin_PROGRAMS =					\
 fcp_SOURCES =					\
 	fcp.cxx					\
 	transformation.h			\
-	transformation.cxx
+	transformation.cxx			\
+	filter.h				\
+	filter.cxx
 fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
 fcp_LDADD =					\
 	libmisc.a				\
 	libconf.a				\
-	libfile.a				\
-	libgraph.a
+	libfile.a
 
 ## Libraries
 
 noinst_LIBRARIES =				\
 	libmisc.a				\
 	libconf.a				\
-	libfile.a				\
-	libgraph.a
+	libfile.a
 
 libmisc_a_SOURCES =				\
 	libs/misc/debug.h			\
@@ -71,18 +71,6 @@ libfile_a_SOURCES =				\
 	libs/file/utils.h			\
 	libs/file/utils.cxx
 libfile_a_CPPFLAGS =				\
-	$(EXTRA_CPPFLAGS)
-
-libgraph_a_SOURCES =				\
-	libs/graph/rule.h			\
-	libs/graph/rule.cxx			\
-	libs/graph/node.h			\
-	libs/graph/node.cxx			\
-	libs/graph/tree.h			\
-	libs/graph/tree.cxx			\
-	libs/graph/dag.h			\
-	libs/graph/dag.cxx
-libgraph_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 ##

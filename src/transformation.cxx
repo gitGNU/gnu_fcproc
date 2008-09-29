@@ -33,14 +33,16 @@ Transformation::Transformation(const std::string & tag,
 	p = tag_.find(separator);
 	if ((p < 0) || (p > tag_.size())) {
 		throw Transformation::Exception("Missing separator in "
-						"transformation " + tag_);
+						"transformation "
+						"'" + tag_ + "'");
 	}
 
 	std::string tmp;
 	tmp = tag_.substr(0, p);
 	if (tmp.size() == 0) {
 		throw Transformation::Exception("Missing input filename in "
-						"transformation " + tag_);
+						"transformation "
+						"'" + tag_ + "'");
 	}
 	input_ = new Transformation::File(tmp);
 	BUG_ON(input_ == 0);
@@ -48,21 +50,25 @@ Transformation::Transformation(const std::string & tag,
 	tmp = tag_.substr(p + 1);
 	if (tmp.size() == 0) {
 		throw Transformation::Exception("Missing output filename in "
-						"transformation " + tag_);
+						"transformation " 
+						"'" + tag_ + "'");
 	}
 	output_ = new Transformation::File(tmp);
 	BUG_ON(output_ == 0);
 
 	if (input_->name() == output_->name()) {
 		throw Transformation::Exception("Input and output file are "
-						"the same in "
-						"transformation " + tag_);
+						"the same in transformation "
+						"'" + tag_ + "'");
 	}
 }
 
 Transformation::~Transformation(void)
 {
+	BUG_ON(input_ == 0);
 	delete input_;
+
+	BUG_ON(output_ == 0);
 	delete output_;
 }
 
@@ -81,54 +87,16 @@ const std::string & Transformation::tag(void)
 	return tag_;
 }
 
+void Transformation::inject(const std::vector<Graph::Node *> & n)
+{
+	filters_ = n;
+}
+
 bool Transformation::execute(void)
 {
-#if 0
-	std::string input_filename  = input_;
-	std::string output_filename = output_;
-
-	TR_DBG("Transforming '%s' -> '%s':\n",
-	       input_filename.c_str(), output_filename.c_str());
-
-	TR_DBG("  Input  = ['%s','%s','%s']\n",
-	       File::dirname(input_filename).c_str(),
-	       File::basename(input_filename).c_str(),
-	       File::extension(input_filename).c_str());
-
-	TR_DBG("  Output = ['%s','%s','%s']\n",
-	       File::dirname(output_filename).c_str(),
-	       File::basename(output_filename).c_str(),
-	       File::extension(output_filename).c_str());
-
-	std::string input_tag;
-	std::string output_tag;
-
-	input_tag  = File::extension(input_filename).c_str();
-	if (input_tag == "") {
-		TR_ERR("Cannot detect '%s' file type\n",
-		       input_filename.c_str());
-		return false;
+	std::vector<Graph::Node *>::iterator iter;
+	for (iter = filters_.begin(); iter != filters_.end(); iter++) {
 	}
-
-	output_tag = File::extension(output_filename).c_str();
-	if (output_tag == "") {
-		TR_ERR("Cannot detect '%s' file type\n",
-		       output_filename.c_str());
-		return false;
-	}
-
-	if (input_tag == output_tag) {
-		//
-		// XXX FIXME:
-		//   Add code in order to support copy
-		//   operations too
-		//
-		TR_ERR("Useless transformation '%s', "
-		       "files have the same type\n",
-		       (*iter)->tag().c_str());
-		return false;
-	}
-#endif
 
 	return true;
 }
@@ -142,11 +110,16 @@ Transformation::File::File(const std::string & name) :
 
 	dirname_   = ::File::dirname(name_);
 	basename_  = ::File::basename(name_);
+
+	if (basename_ == "") {
+		throw Transformation::Exception("Malformed filename");
+	}
+
 	extension_ = ::File::extension(name_);
 
 	if (extension_ == "") {
 		throw Transformation::Exception("Missing extension in "
-						"filename " + name_);
+						"filename '" + name_ + "'");
 	}
 }
 

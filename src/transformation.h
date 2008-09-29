@@ -22,6 +22,9 @@
 #include "config.h"
 
 #include <string>
+#include <vector>
+
+#include "filter.h"
 
 class Transformation {
 public:
@@ -70,6 +73,7 @@ public:
 	const Transformation::File & output(void);
 	const std::string &          tag(void);
 
+	void                         inject(const std::vector<Graph::Node *> & n);
 	bool                         execute(void);
 
 protected:
@@ -80,11 +84,13 @@ protected:
 	Transformation & operator =(const Transformation & t);
 
 private:
-	std::string            tag_;
-	char                   separator_;
+	std::string                tag_;
+	char                       separator_;
 
-	Transformation::File * input_;
-	Transformation::File * output_;
+	Transformation::File *     input_;
+	Transformation::File *     output_;
+
+	std::vector<Graph::Node *> filters_;
 };
 
 #endif // TRANSFORMATION_H
