@@ -20,6 +20,7 @@
 
 #include <string>
 
+#include "exception.h"
 #include "transformation.h"
 #include "libs/misc/debug.h"
 #include "libs/file/utils.h"
@@ -32,34 +33,34 @@ Transformation::Transformation(const std::string & tag,
 	std::string::size_type p;
 	p = tag_.find(separator);
 	if ((p < 0) || (p > tag_.size())) {
-		throw Transformation::Exception("Missing separator in "
-						"transformation "
-						"'" + tag_ + "'");
+		throw Exception("Missing separator in "
+				"transformation "
+				"'" + tag_ + "'");
 	}
 
 	std::string tmp;
 	tmp = tag_.substr(0, p);
 	if (tmp.size() == 0) {
-		throw Transformation::Exception("Missing input filename in "
-						"transformation "
-						"'" + tag_ + "'");
+		throw Exception("Missing input filename in "
+				"transformation "
+				"'" + tag_ + "'");
 	}
 	input_ = new Transformation::File(tmp);
 	BUG_ON(input_ == 0);
 
 	tmp = tag_.substr(p + 1);
 	if (tmp.size() == 0) {
-		throw Transformation::Exception("Missing output filename in "
-						"transformation "
-						"'" + tag_ + "'");
+		throw Exception("Missing output filename in "
+				"transformation "
+				"'" + tag_ + "'");
 	}
 	output_ = new Transformation::File(tmp);
 	BUG_ON(output_ == 0);
 
 	if (input_->name() == output_->name()) {
-		throw Transformation::Exception("Input and output file are "
-						"the same in transformation "
-						"'" + tag_ + "'");
+		throw Exception("Input and output file are "
+				"the same in transformation "
+				"'" + tag_ + "'");
 	}
 }
 
@@ -110,21 +111,21 @@ Transformation::File::File(const std::string & name) :
 	name_(name)
 {
 	if (name_ == "") {
-		throw Transformation::Exception("Missing file name");
+		throw Exception("Missing file name");
 	}
 
 	dirname_   = ::File::dirname(name_);
 	basename_  = ::File::basename(name_);
 
 	if (basename_ == "") {
-		throw Transformation::Exception("Malformed filename");
+		throw Exception("Malformed filename");
 	}
 
 	extension_ = ::File::extension(name_);
 
 	if (extension_ == "") {
-		throw Transformation::Exception("Missing extension in "
-						"filename '" + name_ + "'");
+		throw Exception("Missing extension in "
+				"filename '" + name_ + "'");
 	}
 }
 
