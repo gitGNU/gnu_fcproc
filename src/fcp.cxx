@@ -29,6 +29,7 @@
 #include "libs/conf/configuration.h"
 #include "libs/file/utils.h"
 #include "transformation.h"
+#include "exception.h"
 #include "filter.h"
 
 #define PROGRAM_NAME "fcp"
@@ -55,14 +56,14 @@ std::string configuration_file  =
      std::string(".") +
      std::string(PACKAGE_TARNAME) +
      std::string("/") +
-     std::string("rules");
+     std::string("configuration");
 #endif
 std::string rules_file          = Environment::get("HOME") +
      std::string("/") +
      std::string(".") +
      std::string(PACKAGE_TARNAME) +
      std::string("/") +
-     std::string("conf");
+     std::string("rules");
 
 void help(void)
 {
@@ -103,7 +104,21 @@ Graph::DAG * read_rules(const std::string & filename)
 	TR_DBG("Reading rules from file '%s'\n", filename.c_str());
 
 	Graph::DAG * dag;
-	dag = new Graph::DAG();
+	dag = 0;//new Graph::DAG();
+
+	std::ifstream stream;
+	std::string   line;
+
+	stream.open(filename.c_str());
+	if (!stream) {
+		throw Exception("Cannot open '" + filename + "' for reading");
+	}
+
+	while (std::getline(stream, line)) {
+		TR_DBG("line = '%s'\n", line.c_str());
+	}
+
+	stream.close();
 
 	return dag;
 }
@@ -231,9 +246,9 @@ int main(int argc, char * argv[])
 		// Read configuration file
 		try {
 			Configuration::File config;
-			std::ifstream       instream(configuration_file.c_str());
+			std::ifstream       stream(configuration_file.c_str());
 
-			instream >> config;
+			stream >> config;
 
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
