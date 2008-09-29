@@ -45,7 +45,21 @@ void version(void)
 		<< "There is NO WARRANTY, to the extent permitted by law." <<                        std::endl;
 }
 
-# define DEFAULT_SEPARATOR ':'
+char        separator           = ':';
+std::string configuration_file  =
+     Environment::get("HOME") +
+     std::string("/") +
+     std::string(".") +
+     std::string(PACKAGE_TARNAME) +
+     std::string("/") +
+     std::string("rules");
+
+std::string rules_file          = Environment::get("HOME") +
+     std::string("/") +
+     std::string(".") +
+     std::string(PACKAGE_TARNAME) +
+     std::string("/") +
+     std::string("conf");
 
 void help(void)
 {
@@ -53,7 +67,10 @@ void help(void)
 		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<            std::endl
 		<<                                                                              std::endl
 		<< "Options: " <<                                                               std::endl
-		<< "  -c, --config=FILE       use alternative configuration file" <<            std::endl
+		<< "  -c, --config=FILE       use alternate configuration file" <<              std::endl
+		<< "                          [" << configuration_file << "]" <<                std::endl
+		<< "  -r, --rules=FILE        use alternate rules file" <<                      std::endl
+		<< "                          [" << rules_file << "]" <<                        std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<    std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<  std::endl
 		<< "  -d, --debug             enable debugging traces" <<                       std::endl
@@ -62,7 +79,7 @@ void help(void)
 		<< "  -V, --version           print version number, then exit" <<               std::endl
 		<<                                                                              std::endl
 		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." << std::endl
-		<< "Default SEPARATOR is '" << DEFAULT_SEPARATOR << "'." <<                     std::endl
+		<< "Default SEPARATOR is '" << separator << "'." <<                             std::endl
 		<<                                                                              std::endl
 		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                            std::endl;
 }
@@ -76,7 +93,7 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-Graph::DAG * read_config(std::string configuration_file)
+Graph::DAG * read_rules(std::string configuration_file)
 {
 	TR_DBG("Reading configuration from file '%s'\n",
 	       configuration_file.c_str());
@@ -93,9 +110,7 @@ int main(int argc, char * argv[])
 	TR_CONFIG_PFX(PROGRAM_NAME);
 
 	try {
-		std::string conffile  = "";
-		bool        dry_run   = false;
-		char        separator = DEFAULT_SEPARATOR;
+		bool dry_run   = false;
 
 		int c;
 		// int digit_optind = 0;
@@ -105,6 +120,7 @@ int main(int argc, char * argv[])
 
 			static struct option long_options[] = {
 				{ "config",    1, 0, 'c' },
+				{ "rules",     1, 0, 'r' },
 				{ "separator", 1, 0, 's' },
 				{ "dry-run",   0, 0, 'n' },
 				{ "debug",     0, 0, 'd' },
@@ -122,7 +138,10 @@ int main(int argc, char * argv[])
 
 			switch (c) {
 				case 'c':
-					conffile = optarg;
+					configuration_file = optarg;
+					break;
+				case 'r':
+					rules_file = optarg;
 					break;
 				case 's':
 					if (strlen(optarg) > 1) {
@@ -161,12 +180,19 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
+		TR_DBG("Separator          = '%c'\n", separator);
+		TR_DBG("Configuration file = '%s'\n",
+		       configuration_file.c_str());
+		BUG_ON(configuration_file.size() == 0);
+		TR_DBG("Rules file         = '%s'\n",
+		       rules_file.c_str());
+		BUG_ON(rules_file.size() == 0);
+
 		std::vector<Transformation *> transformations;
 
 		assert((argc - optind) >= 0);
 		transformations.resize(argc - optind);
 
-		TR_DBG("Separator = '%c'\n", separator);
 		TR_DBG("Transformations:\n");
 
 		int i, j;
@@ -176,7 +202,7 @@ int main(int argc, char * argv[])
 				transformations[j] =
 					new Transformation(argv[i], separator);
 			} catch (std::exception & e) {
-				TR_ERR("%s", e.what());
+				TR_ERR("%s\n", e.what());
 				return 1;
 			}
 
@@ -188,28 +214,10 @@ int main(int argc, char * argv[])
 			       transformations[j]->output().name().c_str());
 		}
 
-		// Build configuration file path
-		if (conffile.size() == 0) {
-			TR_DBG("Building configuration file path\n");
-			std::string homedir = Environment::get("HOME");
-			conffile =
-				homedir +
-				std::string("/") +
-				std::string(".") +
-				std::string(PACKAGE_TARNAME);
-
-		} else {
-			TR_DBG("Configuration file overridden\n");
-		}
-
-		BUG_ON(conffile.size() == 0);
-
-		TR_DBG("Initial (configuration file) values:\n");
-
-		// Read configuration file (if available)
+		// Read configuration file
 		try {
 			Configuration::File config;
-			std::ifstream       instream(conffile.c_str());
+			std::ifstream       instream(configuration_file.c_str());
 
 			instream >> config;
 
@@ -219,15 +227,16 @@ int main(int argc, char * argv[])
 			BUG();
 		}
 
-		// Options related checks
-
-		TR_DBG("Final (configuration file) values:\n");
-
-		// Dump (acquired and derived) infos
-		TR_DBG("Configuration file: '%s'\n", conffile.c_str());
+		// Read rules file
+		try {
+		} catch (std::exception & e) {
+			TR_ERR("%s\n", e.what());
+		} catch (...) {
+			BUG();
+		}
 
 		// Build the dependency graph
-		Graph::DAG * dag = read_config(conffile);
+		Graph::DAG * dag = read_rules(rules_file);
 		BUG_ON(!dag);
 
 		std::vector<Transformation *>::iterator iter;
