@@ -50,7 +50,7 @@ Transformation::Transformation(const std::string & tag,
 	tmp = tag_.substr(p + 1);
 	if (tmp.size() == 0) {
 		throw Transformation::Exception("Missing output filename in "
-						"transformation " 
+						"transformation "
 						"'" + tag_ + "'");
 	}
 	output_ = new Transformation::File(tmp);
@@ -87,9 +87,14 @@ const std::string & Transformation::tag(void)
 	return tag_;
 }
 
-void Transformation::inject(const std::vector<Graph::Node *> & n)
+void Transformation::filters(const std::vector<Graph::Node *> & n)
 {
 	filters_ = n;
+}
+
+const std::vector<Graph::Node *> & Transformation::filters(void)
+{
+	return filters_;
 }
 
 bool Transformation::execute(void)

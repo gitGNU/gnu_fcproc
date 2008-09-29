@@ -69,12 +69,13 @@ public:
 		       char                separator);
 	~Transformation(void);
 
-	const Transformation::File & input(void);
-	const Transformation::File & output(void);
-	const std::string &          tag(void);
+	const Transformation::File &       input(void);
+	const Transformation::File &       output(void);
+	const std::string &                tag(void);
 
-	void                         inject(const std::vector<Graph::Node *> & n);
-	bool                         execute(void);
+	void                               filters(const std::vector<Graph::Node *> & n);
+	const std::vector<Graph::Node *> & filters(void);
+	bool                               execute(void);
 
 protected:
 	Transformation(void);
