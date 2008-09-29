@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "libs/misc/debug.h"
+#include "libs/misc/string.h"
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
 #include "libs/file/utils.h"
@@ -102,6 +103,35 @@ void hint(const std::string & message)
 void clean_line(std::string & line)
 {
 	line = line.substr(0, line.find("#"));
+	line = String::trim_right(line, " \t");
+}
+
+void read_rule_header(const std::string & line,
+		      std::string &       tag_in,
+		      std::string &       tag_out)
+{
+	std::string l;
+
+	l = line;
+
+	std::string::size_type delimiter_pos;
+
+	delimiter_pos = l.find(":");
+	if (delimiter_pos >= std::string::npos) {
+		throw Exception("No delimiter found in line '" + line + "'");
+	}
+
+	tag_in = l.substr(0, delimiter_pos);
+	if (tag_in == "") {
+		throw Exception("Missing input tag in line '" + line + "'");
+	}
+
+	l.replace(0, delimiter_pos + 1, "");
+
+	tag_out = l;
+	if (tag_out == "") {
+		throw Exception("Missing output tag in line '" + line + "'");
+	}
 }
 
 Graph::DAG * read_rules(const std::string & filename)
@@ -113,14 +143,16 @@ Graph::DAG * read_rules(const std::string & filename)
 	dag = new Graph::DAG();
 
 	std::ifstream stream;
-	std::string   line;
 
 	stream.open(filename.c_str());
 	if (!stream) {
 		throw Exception("Cannot open '" + filename + "' for reading");
 	}
 
-	size_t number;
+	std::string line;
+	size_t      number;
+
+	number = 0;
 	while (std::getline(stream, line)) {
 		number++;
 
@@ -132,7 +164,19 @@ Graph::DAG * read_rules(const std::string & filename)
 			continue;
 		}
 
-		TR_DBG("line = '%s'\n", line.c_str());
+		TR_DBG("line %d = '%s'\n", number, line.c_str());
+
+		std::string tag_in;
+		std::string tag_out;
+
+		read_rule_header(line, tag_in, tag_out);
+
+		BUG_ON(tag_in  == "");
+		BUG_ON(tag_out == "");
+
+		TR_DBG("tag in  = '%s'\n", tag_in.c_str());
+		TR_DBG("tag out = '%s'\n", tag_out.c_str());
+
 	}
 
 	stream.close();
