@@ -29,6 +29,7 @@ bin_PROGRAMS =					\
 
 fcp_SOURCES =					\
 	fcp.cxx					\
+	exception.h				\
 	transformation.h			\
 	transformation.cxx			\
 	filter.h				\
