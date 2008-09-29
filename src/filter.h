@@ -31,8 +31,9 @@ namespace Graph {
 		Rule11(const std::string & command);
 		~Rule11(void);
 
-		bool run(std::string & input,
-			 std::string & output);
+		bool                run(std::string & input,
+					std::string & output);
+		const std::string & command(void);
 
 	protected:
 		Rule11(void);

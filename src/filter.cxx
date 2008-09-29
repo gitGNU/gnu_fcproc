@@ -45,6 +45,11 @@ bool Rule11::run(std::string & input,
 	return true;
 }
 
+const std::string & Rule11::command(void)
+{
+	return command_;
+}
+
 Node::Node(const std::string & tag,
 	   const std::string & command) :
 	Rule11(command),
