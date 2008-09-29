@@ -115,6 +115,14 @@ Graph::DAG * read_rules(const std::string & filename)
 	}
 
 	while (std::getline(stream, line)) {
+		// Remove comments
+		line = line.substr(0, line.find("#"));
+
+		if (line == "") {
+			// Discard empty lines
+			continue;
+		}
+
 		TR_DBG("line = '%s'\n", line.c_str());
 	}
 
