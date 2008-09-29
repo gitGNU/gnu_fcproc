@@ -244,19 +244,32 @@ int main(int argc, char * argv[])
 			// Check filter chain size before starting execution
 			if (filters.size() == 0) {
 				TR_ERR("No filter chain available "
-				       "for '%s' transformation\n",
+				       "for transformation '%s'\n",
 				       (*iter)->tag().c_str());
 				return 1;
 			}
 
-			// Inject it, finally
-			(*iter)->inject(filters);
+			// Inject the chain, finally
+			(*iter)->filters(filters);
 		}
 
 		// Perform all transformations
 		for (iter  = transformations.begin();
 		     iter != transformations.end();
 		     iter++) {
+			if (dry_run) {
+				std::vector<Graph::Node *> filters;
+				filters = (*iter)->filters();
+
+				std::vector<Graph::Node *>::iterator it;
+				for (it  = filters.begin();
+				     it != filters.end();
+				     it++) {
+					std::cout << (*it)->command()
+						  << std::endl;
+				}
+			}
+
 			if (!(*iter)->execute()) {
 				TR_ERR("Cannot perform transformation '%s'\n",
 				       (*iter)->tag().c_str());
