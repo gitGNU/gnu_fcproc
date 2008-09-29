@@ -53,6 +53,8 @@ libmisc_a_SOURCES =				\
 	libs/misc/debug.cxx			\
 	libs/misc/trace.h			\
 	libs/misc/trace.cxx			\
+	libs/misc/string.h			\
+	libs/misc/string.cxx			\
 	libs/misc/environment.h			\
 	libs/misc/environment.cxx		\
 	libs/misc/constant.h			\
