@@ -20,6 +20,7 @@
 
 #include <iostream>
 
+#include "libs/misc/string.h"
 #include "libs/file/utils.h"
 
 namespace File {
