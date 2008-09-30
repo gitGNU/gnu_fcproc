@@ -114,7 +114,8 @@ DAG::~DAG(void)
 	TR_DBG("DAG %p destroyed\n", this);
 }
 
-bool DAG::add(const std::string & tag,
+void DAG::add(const std::string & tag_from,
+	      const std::string & tag_to,
 	      const std::string & command)
 {
 #if 0
@@ -127,19 +128,16 @@ bool DAG::add(const std::string & tag,
 
 	return root_->children(tree);
 #endif
-
-	return false;
 }
 
-bool DAG::remove(const std::string & tag)
+void DAG::remove(const std::string & tag_from,
+		 const std::string & tag_to)
 {
 #if 0
 	if (!root_) {
 		return root_->remove(tag);
 	}
 #endif
-
-	return false;
 }
 
 std::vector<Graph::Node *> DAG::chain(std::string tag_from,

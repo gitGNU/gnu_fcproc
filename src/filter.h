@@ -80,9 +80,11 @@ namespace Graph {
 		DAG(void);
 		~DAG(void);
 
-		bool                       add(const std::string & tag,
+		void                       add(const std::string & tag_from,
+					       const std::string & tag_to,
 					       const std::string & command);
-		bool                       remove(const std::string & tag);
+		void                       remove(const std::string & tag_from,
+						  const std::string & tag_to);
 
 		std::vector<Graph::Node *> chain(std::string tag_from,
 						 std::string tag_to);
