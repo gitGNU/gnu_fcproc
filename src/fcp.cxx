@@ -115,7 +115,6 @@ Graph::DAG * read_rules(const std::string & filename)
 		throw Exception("Cannot open '" + filename + "' for reading");
 	}
 
-
 	std::string line   = "";
 	size_t      number = 0;
 	enum {
@@ -134,14 +133,14 @@ Graph::DAG * read_rules(const std::string & filename)
 			// Read a new line
 			std::getline(stream, line);
 			number++;
-			TR_DBG("State %d, number %d, line '%s'\n",
+			TR_DBG("  State %d, number %d, line '%s'\n",
 			       state, number, line.c_str());
 
 			// Remove comments
 			line = line.substr(0, line.find("#"));
 			line = String::trim_right(line, " \t");
 
-			TR_DBG("line %d = '%s'\n", number, line.c_str());
+			TR_DBG("  line %d = '%s'\n", number, line.c_str());
 
 			if (line == "") {
 				// Discard empty lines
@@ -174,8 +173,8 @@ Graph::DAG * read_rules(const std::string & filename)
 			BUG_ON(tag_in  == "");
 			BUG_ON(tag_out == "");
 
-			TR_DBG("tag in  = '%s'\n", tag_in.c_str());
-			TR_DBG("tag out = '%s'\n", tag_out.c_str());
+			TR_DBG("  tag in  = '%s'\n", tag_in.c_str());
+			TR_DBG("  tag out = '%s'\n", tag_out.c_str());
 
 			// Header read, start reading body
 			state = S_BODY;
@@ -183,7 +182,7 @@ Graph::DAG * read_rules(const std::string & filename)
 			// Read a new line
 			std::getline(stream, line);
 			number++;
-			TR_DBG("State %d, number %d, line '%s'\n",
+			TR_DBG("  State %d, number %d, line '%s'\n",
 			       state, number, line.c_str());
 
 			// Empty lines complete the body part
@@ -203,8 +202,8 @@ Graph::DAG * read_rules(const std::string & filename)
 			BUG_ON(tag_out == "");
 			BUG_ON(command == "");
 
-			TR_DBG("%s -> %s\n", tag_in.c_str(), tag_out.c_str());
-			TR_DBG("%s\n",       command.c_str());
+			TR_DBG("  %s -> %s\n", tag_in.c_str(), tag_out.c_str());
+			TR_DBG("  %s\n",       command.c_str());
 
 			// Add the filter to the DAG
 			dag->add(tag_in, tag_out, command);
