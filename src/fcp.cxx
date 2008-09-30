@@ -206,6 +206,9 @@ Graph::DAG * read_rules(const std::string & filename)
 			TR_DBG("%s -> %s\n", tag_in.c_str(), tag_out.c_str());
 			TR_DBG("%s\n",       command.c_str());
 
+			// Add the filter to the DAG
+			dag->add(tag_in, tag_out, command);
+
 			state = S_IDLE;
 
 			tag_in  = "";
