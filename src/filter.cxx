@@ -118,6 +118,9 @@ void DAG::add(const std::string & tag_from,
 	      const std::string & tag_to,
 	      const std::string & command)
 {
+	TR_DBG("Adding filter '%s' -> '%s'\n",
+	       tag_from.c_str(), tag_to.c_str());
+
 #if 0
 	Graph::Tree * tree = new Graph::Tree(tag, command);
 
@@ -133,6 +136,9 @@ void DAG::add(const std::string & tag_from,
 void DAG::remove(const std::string & tag_from,
 		 const std::string & tag_to)
 {
+	TR_DBG("Removing filter '%s' -> '%s'\n",
+	       tag_from.c_str(), tag_to.c_str());
+
 #if 0
 	if (!root_) {
 		return root_->remove(tag);
