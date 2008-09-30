@@ -100,40 +100,6 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-void clean_line(std::string & line)
-{
-	line = line.substr(0, line.find("#"));
-	line = String::trim_right(line, " \t");
-}
-
-void read_rule_header(const std::string & line,
-		      std::string &       tag_in,
-		      std::string &       tag_out)
-{
-	std::string l;
-
-	l = line;
-
-	std::string::size_type delimiter_pos;
-
-	delimiter_pos = l.find(":");
-	if (delimiter_pos >= std::string::npos) {
-		throw Exception("No delimiter found in line '" + line + "'");
-	}
-
-	tag_in = l.substr(0, delimiter_pos);
-	if (tag_in == "") {
-		throw Exception("Missing input tag in line '" + line + "'");
-	}
-
-	l.replace(0, delimiter_pos + 1, "");
-
-	tag_out = l;
-	if (tag_out == "") {
-		throw Exception("Missing output tag in line '" + line + "'");
-	}
-}
-
 Graph::DAG * read_rules(const std::string & filename)
 {
 	TR_DBG("Reading rules from file '%s'\n", filename.c_str());
@@ -149,34 +115,105 @@ Graph::DAG * read_rules(const std::string & filename)
 		throw Exception("Cannot open '" + filename + "' for reading");
 	}
 
-	std::string line;
-	size_t      number;
 
-	number = 0;
-	while (std::getline(stream, line)) {
-		number++;
+	std::string line   = "";
+	size_t      number = 0;
+	enum {
+		S_IDLE,
+		S_HEADER,
+		S_BODY,
+		S_COMPLETE,
+	}           state = S_IDLE;
 
-		// Remove comments
-		clean_line(line);
+	std::string tag_in  = "";
+	std::string tag_out = "";
+	std::string command = "";
 
-		if (line == "") {
-			// Discard empty lines
-			continue;
+	while (!stream.eof()) {
+		if (state == S_IDLE) {
+			// Read a new line
+			std::getline(stream, line);
+			number++;
+			TR_DBG("State %d, number %d, line '%s'\n",
+			       state, number, line.c_str());
+
+			// Remove comments
+			line = line.substr(0, line.find("#"));
+			line = String::trim_right(line, " \t");
+
+			TR_DBG("line %d = '%s'\n", number, line.c_str());
+
+			if (line == "") {
+				// Discard empty lines
+				continue;
+			}
+
+			// Line is not empty, start reading header
+			state = S_HEADER;
+		} else if (state == S_HEADER) {
+			std::string::size_type delimiter_pos;
+
+			delimiter_pos = line.find(":");
+			if (delimiter_pos >= std::string::npos) {
+				throw Exception("No delimiter found "
+						"at line '" + line + "'");
+			}
+
+			tag_in = line.substr(0, delimiter_pos);
+			if (tag_in == "") {
+				throw Exception("Missing input tag "
+						"at line '" + line + "'");
+			}
+
+			tag_out = line.substr(delimiter_pos + 1);
+			if (tag_out == "") {
+				throw Exception("Missing output tag "
+						"at line '" + line + "'");
+			}
+
+			BUG_ON(tag_in  == "");
+			BUG_ON(tag_out == "");
+
+			TR_DBG("tag in  = '%s'\n", tag_in.c_str());
+			TR_DBG("tag out = '%s'\n", tag_out.c_str());
+
+			// Header read, start reading body
+			state = S_BODY;
+		} else if (state == S_BODY) {
+			// Read a new line
+			std::getline(stream, line);
+			number++;
+			TR_DBG("State %d, number %d, line '%s'\n",
+			       state, number, line.c_str());
+
+			// Empty lines complete the body part
+			if (line.size() == 0) {
+				state = S_COMPLETE;
+				continue;
+			}
+			if (line[0] != '\t') {
+				throw Exception("Wrong body "
+						"at line '" + line + "'");
+			}
+
+			command += line;
+
+		} else if (state == S_COMPLETE) {
+			BUG_ON(tag_in  == "");
+			BUG_ON(tag_out == "");
+			BUG_ON(command == "");
+
+			TR_DBG("%s -> %s\n", tag_in.c_str(), tag_out.c_str());
+			TR_DBG("%s\n",       command.c_str());
+
+			state = S_IDLE;
+
+			tag_in  = "";
+			tag_out = "";
+			command = "";
+		} else {
+			BUG();
 		}
-
-		TR_DBG("line %d = '%s'\n", number, line.c_str());
-
-		std::string tag_in;
-		std::string tag_out;
-
-		read_rule_header(line, tag_in, tag_out);
-
-		BUG_ON(tag_in  == "");
-		BUG_ON(tag_out == "");
-
-		TR_DBG("tag in  = '%s'\n", tag_in.c_str());
-		TR_DBG("tag out = '%s'\n", tag_out.c_str());
-
 	}
 
 	stream.close();
