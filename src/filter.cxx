@@ -19,146 +19,82 @@
 #include "config.h"
 
 #include <string>
-#include <vector>
 
-#include "libs/misc/trace.h"
 #include "libs/misc/debug.h"
+#include "libs/file/utils.h"
+#include "exception.h"
 #include "filter.h"
 
-using namespace Graph;
+namespace FCP {
 
-Rule11::Rule11(const std::string & command) :
-	command_(command)
-{
-}
+	//
+	// File
+	//
 
-Rule11::~Rule11(void)
-{
-}
+	File::File(const std::string & name) :
+		name_(name)
+	{
+		if (name_ == "") {
+			throw Exception("Missing file name");
+		}
 
-bool Rule11::run(std::string & input,
-		 std::string & output)
-{
-	TR_DBG("Running command '%s' with input '%s' and output '%s'\n",
-	       command_.c_str(), input.c_str(), output.c_str());
+		dirname_   = ::File::dirname(name_);
+		basename_  = ::File::basename(name_);
 
-	return true;
-}
+		if (basename_ == "") {
+			throw Exception("Malformed filename");
+		}
 
-const std::string & Rule11::command(void)
-{
-	return command_;
-}
+		extension_ = ::File::extension(name_);
 
-Node::Node(const std::string & tag,
-	   const std::string & command) :
-	Rule11(command),
-	tag_(tag)
-{
-	TR_DBG("Node %p created\n", this);
-}
-
-Node::~Node(void)
-{
-	TR_DBG("Node %p destroyed\n", this);
-}
-
-const std::string & Node::tag(void)
-{
-	return tag_;
-}
-
-Tree::Tree(const std::string & tag,
-	   const std::string & command) :
-	Node(tag, command)
-{
-	father_ = 0;
-	children_.clear();
-
-	TR_DBG("Tree %p created\n", this);
-}
-
-Tree::~Tree(void)
-{
-	TR_DBG("Tree %p destroyed\n", this);
-
-}
-
-void Tree::parent(Tree * tree)
-{
-	father_ = tree;
-}
-
-const Tree * Tree::parent(void)
-{
-	return father_;
-}
-
-void Tree::child(Tree * tree)
-{
-}
-
-DAG::DAG(void)
-{
-	root_ = 0;
-
-	TR_DBG("DAG %p created\n", this);
-}
-
-DAG::~DAG(void)
-{
-	if (root_) {
-		delete root_;
+		if (extension_ == "") {
+			throw Exception("Missing extension in "
+					"filename '" + name_ + "'");
+		}
 	}
 
-	TR_DBG("DAG %p destroyed\n", this);
-}
+	File::~File(void)
+	{
+	}
 
-void DAG::add(const std::string & tag_from,
-	      const std::string & tag_to,
-	      const std::string & command)
-{
-	TR_DBG("Adding filter '%s' -> '%s'\n",
-	       tag_from.c_str(), tag_to.c_str());
+	const std::string & File::name(void) const
+	{
+		return name_;
+	}
 
-#if 0
-	Graph::Tree * tree = new Graph::Tree(tag, command);
+	const std::string & File::dirname(void) const
+	{
+		return extension_;
+	}
+	const std::string & File::basename(void) const
+	{
+		return extension_;
+	}
+	const std::string & File::extension(void) const
+	{
+		return extension_;
+	}
 
-	if (!root_) {
-		root_ = tree;
+	//
+	// Filter
+	//
+
+	Filter::Filter(const File &        input,
+		       const File &        output,
+		       const std::string & command) :
+		input_(input),
+		output_(output),
+		command_(command)
+	{
+	}
+
+	Filter::~Filter(void)
+	{
+	}
+
+	bool Filter::execute(void)
+	{
 		return true;
 	}
 
-	return root_->children(tree);
-#endif
-}
-
-void DAG::remove(const std::string & tag_from,
-		 const std::string & tag_to)
-{
-	TR_DBG("Removing filter '%s' -> '%s'\n",
-	       tag_from.c_str(), tag_to.c_str());
-
-#if 0
-	if (!root_) {
-		return root_->remove(tag);
-	}
-#endif
-}
-
-std::vector<Graph::Node *> DAG::chain(std::string tag_from,
-				      std::string tag_to)
-{
-	TR_DBG("Extracting filter chain from '%s' to '%s'\n",
-	       tag_from.c_str(), tag_to.c_str());
-
-	BUG_ON(tag_from.size() == 0);
-	BUG_ON(tag_to.size() == 0);
-
-	//	Graph::Node *              node;
-	std::vector<Graph::Node *> filters;
-	//	node = dag.find(tag_out);
-
-
-	return filters;
-}
+};

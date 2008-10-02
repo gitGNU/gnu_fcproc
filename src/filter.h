@@ -22,77 +22,44 @@
 #include "config.h"
 
 #include <string>
-#include <vector>
 
-namespace Graph {
-	// Rule11: 1 input, 1 output
-	class Rule11 {
+namespace FCP {
+	class File {
 	public:
-		Rule11(const std::string & command);
-		~Rule11(void);
+		File(const std::string & name);
+		~File(void);
 
-		const std::string & command(void);
-		bool                run(std::string & input,
-					std::string & output);
+		const std::string & name(void)      const;
+		const std::string & dirname(void)   const;
+		const std::string & basename(void)  const;
+		const std::string & extension(void) const;
 
 	protected:
-		Rule11(void);
+		File(void);
 
 	private:
-		std::string command_;
+		std::string name_;
+		std::string dirname_;
+		std::string basename_;
+		std::string extension_;
 	};
 
-	class Node : public Rule11 {
+	class Filter {
 	public:
-		Node(const std::string & tag,
-		     const std::string & command);
-		~Node(void);
+		Filter(const FCP::File &   input,
+		       const FCP::File &   output,
+		       const std::string & command);
+		~Filter(void);
 
-		const std::string & tag(void);
+		bool         execute(void);
 
 	protected:
-		Node(void);
+		Filter(void);
 
 	private:
-		std::string tag_;
-	};
-
-	class Tree : public Node {
-	public:
-		Tree(const std::string & tag,
-		     const std::string & command);
-		~Tree(void);
-
-		void                        parent(Tree * tree);
-		const Tree *                parent(void);
-		void                        child(Tree * tree);
-
-	protected:
-		Tree(void);
-
-	private:
-		Tree *              father_;
-		std::vector<Tree *> children_;
-	};
-
-	class DAG {
-	public:
-		DAG(void);
-		~DAG(void);
-
-		void                       add(const std::string & tag_from,
-					       const std::string & tag_to,
-					       const std::string & command);
-		void                       remove(const std::string & tag_from,
-						  const std::string & tag_to);
-
-		std::vector<Graph::Node *> chain(std::string tag_from,
-						 std::string tag_to);
-
-	protected:
-
-	private:
-		Tree * root_;
+		FCP::File    input_;
+		FCP::File    output_;
+		std::string  command_;
 	};
 };
 
