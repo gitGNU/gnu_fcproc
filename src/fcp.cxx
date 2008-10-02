@@ -23,15 +23,16 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <list>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
 #include "libs/file/utils.h"
-#include "transformation.h"
 #include "exception.h"
 #include "filter.h"
+#include "rule.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -69,26 +70,26 @@ std::string rules_file          = Environment::get("HOME") +
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<            std::endl
-		<<                                                                              std::endl
-		<< "Options: " <<                                                               std::endl
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<                            std::endl
+		<<                                                                                              std::endl
+		<< "Options: " <<                                                                               std::endl
 #if USE_CONFIGURATION_FILE
-		<< "  -c, --config=FILE       use alternate configuration file" <<              std::endl
-		<< "                          [" << configuration_file << "]" <<                std::endl
+		<< "  -c, --config=FILE       use alternate configuration file" <<                              std::endl
+		<< "                          [" << configuration_file << "]" <<                                std::endl
 #endif
-		<< "  -r, --rules=FILE        use alternate rules file" <<                      std::endl
-		<< "                          [" << rules_file << "]" <<                        std::endl
-		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<    std::endl
-		<< "  -n, --dry-run           display commands without modifying any files" <<  std::endl
-		<< "  -d, --debug             enable debugging traces" <<                       std::endl
-		<< "  -v, --verbose           verbosely report processing" <<                   std::endl
-		<< "  -h, --help              print this help, then exit" <<                    std::endl
-		<< "  -V, --version           print version number, then exit" <<               std::endl
-		<<                                                                              std::endl
-		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." << std::endl
-		<< "Default SEPARATOR is '" << separator << "'." <<                             std::endl
-		<<                                                                              std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                            std::endl;
+		<< "  -r, --rules=FILE        use alternate rules file" <<                                      std::endl
+		<< "                          [" << rules_file << "]" <<                                        std::endl
+		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                    std::endl
+		<< "  -n, --dry-run           display commands without modifying any files" <<                  std::endl
+		<< "  -d, --debug             enable debugging traces" <<                                       std::endl
+		<< "  -v, --verbose           verbosely report processing" <<                                   std::endl
+		<< "  -h, --help              print this help, then exit" <<                                    std::endl
+		<< "  -V, --version           print version number, then exit" <<                               std::endl
+		<<                                                                                              std::endl
+		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." <<                 std::endl
+		<< "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." << std::endl
+		<<                                                                                              std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                                            std::endl;
 }
 
 void hint(const std::string & message)
@@ -100,13 +101,10 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-Graph::DAG * read_rules(const std::string & filename)
+void read_rules(const std::string &    filename,
+		std::list<FCP::Rule> & rules)
 {
 	TR_DBG("Reading rules from file '%s'\n", filename.c_str());
-
-	Graph::DAG * dag;
-
-	dag = new Graph::DAG();
 
 	std::ifstream stream;
 
@@ -205,22 +203,55 @@ Graph::DAG * read_rules(const std::string & filename)
 			TR_DBG("  %s -> %s\n", tag_in.c_str(), tag_out.c_str());
 			TR_DBG("  %s\n",       command.c_str());
 
-			// Add the filter to the DAG
-			dag->add(tag_in, tag_out, command);
-
-			state = S_IDLE;
+			FCP::Rule rule(tag_in, tag_out, command);
+			rules.push_front(rule);
 
 			tag_in  = "";
 			tag_out = "";
 			command = "";
+
+			state = S_IDLE;
 		} else {
 			BUG();
 		}
 	}
 
 	stream.close();
+}
 
-	return dag;
+void transformation_split(const std::string & tag,
+			  char                separator,
+			  std::string &       in,
+			  std::string &       out)
+{
+	std::string::size_type p;
+
+	p = tag.find(separator);
+	if ((p < 0) || (p > tag.size())) {
+		throw Exception("Missing separator in "
+				"transformation "
+				"'" + tag + "'");
+	}
+
+	std::string tmp;
+
+	tmp = tag.substr(0, p);
+	if (tmp.size() == 0) {
+		throw Exception("Missing input "
+				"in transformation "
+				"'" + tag + "'");
+	}
+	BUG_ON(tmp == "");
+	in = tmp;
+
+	tmp = tag.substr(p + 1);
+	if (tmp.size() == 0) {
+		throw Exception("Missing output "
+				"in transformation "
+				"'" + tag + "'");
+	}
+	BUG_ON(tmp == "");
+	out = tmp;
 }
 
 int main(int argc, char * argv[])
@@ -316,30 +347,39 @@ int main(int argc, char * argv[])
 		       rules_file.c_str());
 		BUG_ON(rules_file.size() == 0);
 
-		std::vector<Transformation *> transformations;
-
 		assert((argc - optind) >= 0);
+
+		std::vector<std::pair<std::string,
+			std::string> > transformations;
 		transformations.resize(argc - optind);
 
 		TR_DBG("Transformations:\n");
-
-		int i, j;
+		int i;
 		for (i = optind; i < argc; i++) {
-			j = i - optind;
 			try {
-				transformations[j] =
-					new Transformation(argv[i], separator);
+				std::string in;
+				std::string out;
+
+				transformation_split(argv[i], separator,
+						     in, out);
+
+				if (in == out) {
+					TR_ERR("Input and output "
+					       "must be different "
+					       "in transformation '%s'\n",
+					       argv[i]);
+					return 1;
+				}
+
+				TR_DBG("  %s = '%s' -> '%s'\n",
+				       argv[i],
+				       in.c_str(),
+				       out.c_str());
+
 			} catch (std::exception & e) {
 				TR_ERR("%s\n", e.what());
 				return 1;
 			}
-
-			BUG_ON(transformations[j] == 0);
-
-			TR_DBG("  %s = '%s' -> '%s'\n",
-			       transformations[j]->tag().c_str(),
-			       transformations[j]->input().name().c_str(),
-			       transformations[j]->output().name().c_str());
 		}
 
 #if USE_CONFIGURATION_FILE
@@ -358,16 +398,26 @@ int main(int argc, char * argv[])
 #endif
 
 		// Read rules file
-		Graph::DAG * dag = 0;
+		std::list<FCP::Rule> rules;
 		try {
-			dag = read_rules(rules_file);
+			read_rules(rules_file, rules);
+
+			TR_DBG("Known rules (%d):\n", rules.size());
+			std::list<FCP::Rule>::iterator iter;
+			for (iter  = rules.begin();
+			     iter != rules.end();
+			     iter++) {
+				TR_DBG("  '%s' -> '%s'\n",
+				       (*iter).input().c_str(),
+				       (*iter).output().c_str())
+			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 		} catch (...) {
 			BUG();
 		}
-		BUG_ON(!dag);
 
+#if 0
 		std::vector<Transformation *>::iterator iter;
 
 		// Inject filter-chains into each transformation
@@ -413,6 +463,7 @@ int main(int argc, char * argv[])
 				       (*iter)->tag().c_str());
 			}
 		}
+#endif
 
 		TR_DBG("Operation complete\n");
 	} catch (std::exception & e) {
