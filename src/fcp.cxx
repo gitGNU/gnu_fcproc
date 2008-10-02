@@ -111,8 +111,8 @@ void hint(const std::string & message)
 #define P_DBG(FMT,ARGS...)
 #endif
 
-void read_rules(const std::string &    filename,
-		std::list<FCP::Rule> & rules)
+void read_rules(const std::string &      filename,
+		std::list<FCP::Rule *> & rules)
 {
 	P_DBG("Reading rules from file '%s'\n", filename.c_str());
 
@@ -213,8 +213,12 @@ void read_rules(const std::string &    filename,
 			P_DBG("  %s -> %s\n", tag_in.c_str(), tag_out.c_str());
 			P_DBG("  %s\n",       command.c_str());
 
-			FCP::Rule rule(tag_in, tag_out, command);
-			rules.push_front(rule);
+			FCP::Rule * r;
+
+			r = new FCP::Rule(tag_in, tag_out, command);
+			BUG_ON(r == 0);
+
+			rules.push_front(r);
 
 			tag_in  = "";
 			tag_out = "";
@@ -324,7 +328,9 @@ int main(int argc, char * argv[])
 
 		assert((argc - optind) >= 0);
 
-		std::vector<FCP::Transformation *> transformations;
+		std::vector<FCP::Transformation *>           transformations;
+		std::vector<FCP::Transformation *>::iterator it;
+
 		transformations.resize(argc - optind);
 
 		TR_DBG("Transformations:\n");
@@ -370,80 +376,72 @@ int main(int argc, char * argv[])
 
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
-		} catch (...) {
-			BUG();
 		}
 #endif
 
 		// Read rules file
-		std::list<FCP::Rule> rules;
+		std::list<FCP::Rule *>           rules;
+		std::list<FCP::Rule *>::iterator ir;
+
 		try {
 			read_rules(rules_file, rules);
 
 			TR_DBG("Known rules (%d):\n", rules.size());
-			std::list<FCP::Rule>::iterator iter;
-			for (iter  = rules.begin();
-			     iter != rules.end();
-			     iter++) {
+			for (ir  = rules.begin();
+			     ir != rules.end();
+			     ir++) {
 				TR_DBG("  '%s' -> '%s'\n",
-				       (*iter).input().c_str(),
-				       (*iter).output().c_str())
+				       (*ir)->input().c_str(),
+				       (*ir)->output().c_str())
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
-		} catch (...) {
-			BUG();
 		}
 
 #if 0
-		std::vector<Transformation *>::iterator iter;
 
 		// Inject filter-chains into each transformation
-		for (iter  = transformations.begin();
-		     iter != transformations.end();
-		     iter++) {
+		for (it  = transformations.begin();
+		     it != transformations.end();
+		     it++) {
 			// Extract filters chain
 			std::vector<Graph::Node *> filters;
-			filters = dag->chain((*iter)->input().type(),
-					     (*iter)->output().type());
+			filters = dag->chain((*it)->input().type(),
+					     (*it)->output().type());
 
 			// Check filter chain size before starting execution
 			if (filters.size() == 0) {
 				TR_ERR("No filter chain available "
 				       "for transformation '%s'\n",
-				       (*iter)->tag().c_str());
+				       (*it)->tag().c_str());
 				return 1;
 			}
 
 			// Inject the chain, finally
-			(*iter)->filters(filters);
+			(*it)->filters(filters);
 		}
 
 		// Perform all transformations
-		for (iter  = transformations.begin();
-		     iter != transformations.end();
-		     iter++) {
-			if (dry_run) {
-				std::vector<Graph::Node *> filters;
-				filters = (*iter)->filters();
-
-				std::vector<Graph::Node *>::iterator it;
-				for (it  = filters.begin();
-				     it != filters.end();
-				     it++) {
-					std::cout << (*it)->command()
-						  << std::endl;
-				}
-			}
-
-			if (!(*iter)->execute()) {
-				TR_ERR("Cannot perform transformation '%s'\n",
-				       (*iter)->tag().c_str());
-			}
+		for (it  = transformations.begin();
+		     it != transformations.end();
+		     it++) {
 		}
 #endif
 
 		TR_DBG("Operation complete\n");
+
+		// Clean up everything
+		for (it  = transformations.begin();
+		     it != transformations.end();
+		     it++) {
+			delete (*it);
+		}
+		for (ir  = rules.begin();
+		     ir != rules.end();
+		     ir++) {
+			delete (*ir);
+		}
+
 	} catch (std::exception & e) {
 		TR_ERR("Got exception '%s'\n", e.what());
 		return 1;
