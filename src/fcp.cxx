@@ -33,6 +33,7 @@
 #include "exception.h"
 #include "filter.h"
 #include "rule.h"
+#include "transformation.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -97,14 +98,23 @@ void hint(const std::string & message)
 	BUG_ON(message.size() == 0);
 
 	std::cout
-		<< message <<                                                 std::endl
-		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
+		<< message
+		<< std::endl
+		<< "Try `" << PROGRAM_NAME << " -h' for more information."
+		<< std::endl;
 }
+
+#define PARSER_DEBUGS 0
+#if PARSER_DEBUGS
+#define P_DBG(FMT,ARGS...) TR_DBG(FMT, ##ARGS);
+#else
+#define P_DBG(FMT,ARGS...)
+#endif
 
 void read_rules(const std::string &    filename,
 		std::list<FCP::Rule> & rules)
 {
-	TR_DBG("Reading rules from file '%s'\n", filename.c_str());
+	P_DBG("Reading rules from file '%s'\n", filename.c_str());
 
 	std::ifstream stream;
 
@@ -131,14 +141,14 @@ void read_rules(const std::string &    filename,
 			// Read a new line
 			std::getline(stream, line);
 			number++;
-			TR_DBG("  State %d, number %d, line '%s'\n",
+			P_DBG("  State %d, number %d, line '%s'\n",
 			       state, number, line.c_str());
 
 			// Remove comments
 			line = line.substr(0, line.find("#"));
 			line = String::trim_right(line, " \t");
 
-			TR_DBG("  line %d = '%s'\n", number, line.c_str());
+			P_DBG("  line %d = '%s'\n", number, line.c_str());
 
 			if (line == "") {
 				// Discard empty lines
@@ -171,8 +181,8 @@ void read_rules(const std::string &    filename,
 			BUG_ON(tag_in  == "");
 			BUG_ON(tag_out == "");
 
-			TR_DBG("  tag in  = '%s'\n", tag_in.c_str());
-			TR_DBG("  tag out = '%s'\n", tag_out.c_str());
+			P_DBG("  tag in  = '%s'\n", tag_in.c_str());
+			P_DBG("  tag out = '%s'\n", tag_out.c_str());
 
 			// Header read, start reading body
 			state = S_BODY;
@@ -180,7 +190,7 @@ void read_rules(const std::string &    filename,
 			// Read a new line
 			std::getline(stream, line);
 			number++;
-			TR_DBG("  State %d, number %d, line '%s'\n",
+			P_DBG("  State %d, number %d, line '%s'\n",
 			       state, number, line.c_str());
 
 			// Empty lines complete the body part
@@ -200,8 +210,8 @@ void read_rules(const std::string &    filename,
 			BUG_ON(tag_out == "");
 			BUG_ON(command == "");
 
-			TR_DBG("  %s -> %s\n", tag_in.c_str(), tag_out.c_str());
-			TR_DBG("  %s\n",       command.c_str());
+			P_DBG("  %s -> %s\n", tag_in.c_str(), tag_out.c_str());
+			P_DBG("  %s\n",       command.c_str());
 
 			FCP::Rule rule(tag_in, tag_out, command);
 			rules.push_front(rule);
@@ -217,41 +227,6 @@ void read_rules(const std::string &    filename,
 	}
 
 	stream.close();
-}
-
-void transformation_split(const std::string & tag,
-			  char                separator,
-			  std::string &       in,
-			  std::string &       out)
-{
-	std::string::size_type p;
-
-	p = tag.find(separator);
-	if ((p < 0) || (p > tag.size())) {
-		throw Exception("Missing separator in "
-				"transformation "
-				"'" + tag + "'");
-	}
-
-	std::string tmp;
-
-	tmp = tag.substr(0, p);
-	if (tmp.size() == 0) {
-		throw Exception("Missing input "
-				"in transformation "
-				"'" + tag + "'");
-	}
-	BUG_ON(tmp == "");
-	in = tmp;
-
-	tmp = tag.substr(p + 1);
-	if (tmp.size() == 0) {
-		throw Exception("Missing output "
-				"in transformation "
-				"'" + tag + "'");
-	}
-	BUG_ON(tmp == "");
-	out = tmp;
 }
 
 int main(int argc, char * argv[])
@@ -349,32 +324,35 @@ int main(int argc, char * argv[])
 
 		assert((argc - optind) >= 0);
 
-		std::vector<std::pair<std::string,
-			std::string> > transformations;
+		std::vector<FCP::Transformation *> transformations;
 		transformations.resize(argc - optind);
 
 		TR_DBG("Transformations:\n");
 		int i;
 		for (i = optind; i < argc; i++) {
+			int j;
+
+			j = i - optind;
 			try {
-				std::string in;
-				std::string out;
+				FCP::Transformation * t;
 
-				transformation_split(argv[i], separator,
-						     in, out);
+				t = new FCP::Transformation(argv[i], separator);
+				BUG_ON(t == 0);
 
-				if (in == out) {
-					TR_ERR("Input and output "
-					       "must be different "
-					       "in transformation '%s'\n",
-					       argv[i]);
+				if (t->input() == t->output()) {
+					TR_ERR("Transformation '%s' "
+					       "input and output "
+					       "must be different\n",
+					       t->tag().c_str());
 					return 1;
 				}
 
-				TR_DBG("  %s = '%s' -> '%s'\n",
-				       argv[i],
-				       in.c_str(),
-				       out.c_str());
+				transformations[j] = t;
+
+				TR_DBG("  '%s' = '%s' -> '%s'\n",
+				       transformations[j]->tag().c_str(),
+				       transformations[j]->input().c_str(),
+				       transformations[j]->output().c_str());
 
 			} catch (std::exception & e) {
 				TR_ERR("%s\n", e.what());
