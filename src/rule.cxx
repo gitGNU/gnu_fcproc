@@ -46,5 +46,3 @@ namespace FCP {
 	{
 	}
 };
-
-#include "config.h"
