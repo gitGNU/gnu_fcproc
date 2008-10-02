@@ -30,10 +30,10 @@ bin_PROGRAMS =					\
 fcp_SOURCES =					\
 	fcp.cxx					\
 	exception.h				\
-	transformation.h			\
-	transformation.cxx			\
 	filter.h				\
-	filter.cxx
+	filter.cxx				\
+	rule.h					\
+	rule.cxx
 fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
 fcp_LDADD =					\
