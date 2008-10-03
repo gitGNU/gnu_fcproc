@@ -33,6 +33,7 @@
 #include "exception.h"
 #include "filter.h"
 #include "rule.h"
+#include "dependency.h"
 #include "transformation.h"
 
 #define PROGRAM_NAME "fcp"
@@ -98,10 +99,8 @@ void hint(const std::string & message)
 	BUG_ON(message.size() == 0);
 
 	std::cout
-		<< message
-		<< std::endl
-		<< "Try `" << PROGRAM_NAME << " -h' for more information."
-		<< std::endl;
+		<< message <<                                                 std::endl
+		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
 #define PARSER_DEBUGS 0
@@ -397,6 +396,8 @@ int main(int argc, char * argv[])
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 		}
+
+
 
 #if 0
 
