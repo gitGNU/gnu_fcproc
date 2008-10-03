@@ -19,8 +19,32 @@
 #include "config.h"
 
 #include <string>
+#include <list>
 
+#include "libs/misc/debug.h"
 #include "dependency.h"
 
 namespace FCP {
+	Dependency::Dependency(void)
+	{
+	}
+
+	Dependency::~Dependency(void)
+	{
+	}
+
+	Dependency * Dependency::parent(void)
+	{
+		return parent_;
+	}
+
+	std::list<Dependency *> Dependency::children(void)
+	{
+		return children_;
+	}
+
+	void Dependency::child(Dependency * c)
+	{
+		BUG_ON(c == 0);
+	}
 };

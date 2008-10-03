@@ -24,6 +24,21 @@
 #include <string>
 
 namespace FCP {
+	class Dependency {
+	public:
+		Dependency(void);
+		~Dependency(void);
+
+		Dependency *            parent(void);
+		std::list<Dependency *> children(void);
+		void                    child(Dependency * c);
+
+	protected:
+
+	private:
+		Dependency *            parent_;
+		std::list<Dependency *> children_;
+	};
 };
 
 #endif // DEPENDENCY_H

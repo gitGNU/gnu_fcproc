@@ -391,13 +391,22 @@ int main(int argc, char * argv[])
 			     ir++) {
 				TR_DBG("  '%s' -> '%s'\n",
 				       (*ir)->input().c_str(),
-				       (*ir)->output().c_str())
+				       (*ir)->output().c_str());
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 		}
 
 
+		// Place each rule in the dependency tree
+		TR_DBG("Building dependency graph\n");
+		for (ir  = rules.begin();
+		     ir != rules.end();
+		     ir++) {
+			TR_DBG("Adding rule '%s' -> '%s'\n",
+			       (*ir)->input().c_str(),
+			       (*ir)->output().c_str());
+		}
 
 #if 0
 
