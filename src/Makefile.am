@@ -34,6 +34,8 @@ fcp_SOURCES =					\
 	filter.cxx				\
 	transformation.h			\
 	transformation.cxx			\
+	file.h					\
+	file.cxx				\
 	rule.h					\
 	rule.cxx
 fcp_CPPFLAGS =					\

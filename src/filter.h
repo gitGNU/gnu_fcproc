@@ -23,27 +23,9 @@
 
 #include <string>
 
+#include "file.h"
+
 namespace FCP {
-	class File {
-	public:
-		File(const std::string & name);
-		~File(void);
-
-		const std::string & name(void)      const;
-		const std::string & dirname(void)   const;
-		const std::string & basename(void)  const;
-		const std::string & extension(void) const;
-
-	protected:
-		File(void);
-
-	private:
-		std::string name_;
-		std::string dirname_;
-		std::string basename_;
-		std::string extension_;
-	};
-
 	class Filter {
 	public:
 		Filter(const FCP::File &   input,

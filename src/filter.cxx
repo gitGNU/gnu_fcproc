@@ -26,61 +26,8 @@
 #include "filter.h"
 
 namespace FCP {
-
-	//
-	// File
-	//
-
-	File::File(const std::string & name) :
-		name_(name)
-	{
-		if (name_ == "") {
-			throw Exception("Missing file name");
-		}
-
-		dirname_   = ::File::dirname(name_);
-		basename_  = ::File::basename(name_);
-
-		if (basename_ == "") {
-			throw Exception("Malformed filename");
-		}
-
-		extension_ = ::File::extension(name_);
-
-		if (extension_ == "") {
-			throw Exception("Missing extension in "
-					"filename '" + name_ + "'");
-		}
-	}
-
-	File::~File(void)
-	{
-	}
-
-	const std::string & File::name(void) const
-	{
-		return name_;
-	}
-
-	const std::string & File::dirname(void) const
-	{
-		return extension_;
-	}
-	const std::string & File::basename(void) const
-	{
-		return extension_;
-	}
-	const std::string & File::extension(void) const
-	{
-		return extension_;
-	}
-
-	//
-	// Filter
-	//
-
-	Filter::Filter(const File &        input,
-		       const File &        output,
+	Filter::Filter(const FCP::File &   input,
+		       const FCP::File &   output,
 		       const std::string & command) :
 		input_(input),
 		output_(output),
