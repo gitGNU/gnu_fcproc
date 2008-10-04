@@ -23,6 +23,8 @@
 
 #include <string>
 
+#include "file.h"
+
 namespace FCP {
 	class Transformation {
 	public:
@@ -31,15 +33,15 @@ namespace FCP {
 		~Transformation(void);
 
 		const std::string & tag(void)    const;
-		const std::string & input(void)  const;
-		const std::string & output(void) const;
+		const FCP::File &   input(void)  const;
+		const FCP::File &   output(void) const;
 
 	protected:
 
 	private:
 		std::string tag_;
-		std::string input_;
-		std::string output_;
+		FCP::File * input_;
+		FCP::File * output_;
 	};
 };
 

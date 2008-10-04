@@ -47,7 +47,7 @@ namespace FCP {
 					"'" + tag_ + "'");
 		}
 		BUG_ON(tmp == "");
-		input_ = tmp;
+		input_ = new FCP::File(tmp);
 
 		tmp = tag_.substr(p + 1);
 		if (tmp.size() == 0) {
@@ -56,11 +56,13 @@ namespace FCP {
 					"'" + tag_ + "'");
 		}
 		BUG_ON(tmp == "");
-		output_ = tmp;
+		output_ = new FCP::File(tmp);
 	}
 
 	Transformation::~Transformation(void)
 	{
+		delete input_;
+		delete output_;
 	}
 
 	const std::string & Transformation::tag(void) const
@@ -68,13 +70,13 @@ namespace FCP {
 		return tag_;
 	}
 
-	const std::string & Transformation::input(void) const
+	const FCP::File & Transformation::input(void) const
 	{
-		return input_;
+		return *input_;
 	}
 
-	const std::string & Transformation::output(void) const
+	const FCP::File & Transformation::output(void) const
 	{
-		return output_;
+		return *output_;
 	}
 };
