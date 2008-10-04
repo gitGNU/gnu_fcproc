@@ -282,14 +282,15 @@ void transform(const FCP::Transformation &                           transf,
 	TR_DBG("  Looking for filter-chain '%s' -> '%s'\n",
 	       transf.input().extension().c_str(),
 	       transf.output().extension().c_str());
+
 #if 0
 	std::list<std::vector<FCP::Rule *> > chains;
 
 	// Build filter-chains
 	std::vector<FCP::Rule *> chain;
 	build_chains(rules,
-		     transf.input(),
-		     transf.output(),
+		     transf.input().extension(),
+		     transf.output().extension(),
 		     chains,
 		     chain,
 		     max_depth);
