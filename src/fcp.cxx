@@ -24,6 +24,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <set>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
@@ -33,7 +34,6 @@
 #include "exception.h"
 #include "filter.h"
 #include "rule.h"
-#include "dependency.h"
 #include "transformation.h"
 
 #define PROGRAM_NAME "fcp"
@@ -110,8 +110,8 @@ void hint(const std::string & message)
 #define P_DBG(FMT,ARGS...)
 #endif
 
-void read_rules(const std::string &      filename,
-		std::list<FCP::Rule *> & rules)
+void read_rules(const std::string &     filename,
+		std::set<FCP::Rule *> & rules)
 {
 	P_DBG("Reading rules from file '%s'\n", filename.c_str());
 
@@ -217,7 +217,7 @@ void read_rules(const std::string &      filename,
 			r = new FCP::Rule(tag_in, tag_out, command);
 			BUG_ON(r == 0);
 
-			rules.push_front(r);
+			rules.insert(r);
 
 			tag_in  = "";
 			tag_out = "";
@@ -230,6 +230,13 @@ void read_rules(const std::string &      filename,
 	}
 
 	stream.close();
+}
+
+void transform(const FCP::Transformation &   transformation,
+	       const std::set<FCP::Rule *> & rules)
+{
+	TR_DBG("Transforming '%s' -> '%s'\n",
+	       transformation.input().c_str(), transformation.output().c_str());
 }
 
 int main(int argc, char * argv[])
@@ -315,13 +322,13 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		TR_DBG("Separator          '%c'\n", separator);
+		TR_DBG("Separator     '%c'\n", separator);
 #if USE_CONFIGURATION_FILE
-		TR_DBG("Configuration file '%s'\n",
+		TR_DBG("Configuration '%s'\n",
 		       configuration_file.c_str());
 		BUG_ON(configuration_file.size() == 0);
 #endif
-		TR_DBG("Rules file         '%s'\n",
+		TR_DBG("Rules         '%s'\n",
 		       rules_file.c_str());
 		BUG_ON(rules_file.size() == 0);
 
@@ -379,8 +386,8 @@ int main(int argc, char * argv[])
 #endif
 
 		// Read rules file
-		std::list<FCP::Rule *>           rules;
-		std::list<FCP::Rule *>::iterator ir;
+		std::set<FCP::Rule *>           rules;
+		std::set<FCP::Rule *>::iterator ir;
 
 		try {
 			read_rules(rules_file, rules);
@@ -397,48 +404,18 @@ int main(int argc, char * argv[])
 			TR_ERR("%s\n", e.what());
 		}
 
-
-		// Place each rule in the dependency tree
-		TR_DBG("Building dependency graph\n");
-		for (ir  = rules.begin();
-		     ir != rules.end();
-		     ir++) {
-			TR_DBG("Adding rule '%s' -> '%s'\n",
-			       (*ir)->input().c_str(),
-			       (*ir)->output().c_str());
-		}
-
-#if 0
-
-		// Inject filter-chains into each transformation
-		for (it  = transformations.begin();
-		     it != transformations.end();
-		     it++) {
-			// Extract filters chain
-			std::vector<Graph::Node *> filters;
-			filters = dag->chain((*it)->input().type(),
-					     (*it)->output().type());
-
-			// Check filter chain size before starting execution
-			if (filters.size() == 0) {
-				TR_ERR("No filter chain available "
-				       "for transformation '%s'\n",
-				       (*it)->tag().c_str());
-				return 1;
+		// Perform transformations
+		try {
+			for (it  = transformations.begin();
+			     it != transformations.end();
+			     it++) {
+				transform(*(*it), rules);
 			}
-
-			// Inject the chain, finally
-			(*it)->filters(filters);
+		} catch (std::exception & e) {
+			TR_ERR("%s\n", e.what());
 		}
 
-		// Perform all transformations
-		for (it  = transformations.begin();
-		     it != transformations.end();
-		     it++) {
-		}
-#endif
-
-		TR_DBG("Operation complete\n");
+		TR_DBG("Operations complete, cleaning up ...\n");
 
 		// Clean up everything
 		for (it  = transformations.begin();

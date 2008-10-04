@@ -35,9 +35,7 @@ fcp_SOURCES =					\
 	transformation.h			\
 	transformation.cxx			\
 	rule.h					\
-	rule.cxx				\
-	dependency.h				\
-	dependency.cxx
+	rule.cxx
 fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
 fcp_LDADD =					\
