@@ -68,30 +68,32 @@ std::string rules_file          = Environment::get("HOME") +
      std::string(PACKAGE_TARNAME) +
      std::string("/") +
      std::string("rules");
+int         max_depth           = 16;
 
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<                            std::endl
-		<<                                                                                              std::endl
-		<< "Options: " <<                                                                               std::endl
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<                              std::endl
+		<<                                                                                                std::endl
+		<< "Options: " <<                                                                                 std::endl
 #if USE_CONFIGURATION_FILE
-		<< "  -c, --config=FILE       use alternate configuration file" <<                              std::endl
-		<< "                          [" << configuration_file << "]" <<                                std::endl
+		<< "  -c, --config=FILE       use alternate configuration file" <<                                std::endl
+		<< "                          [" << configuration_file << "]" <<                                  std::endl
 #endif
-		<< "  -r, --rules=FILE        use alternate rules file" <<                                      std::endl
-		<< "                          [" << rules_file << "]" <<                                        std::endl
-		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                    std::endl
-		<< "  -n, --dry-run           display commands without modifying any files" <<                  std::endl
-		<< "  -d, --debug             enable debugging traces" <<                                       std::endl
-		<< "  -v, --verbose           verbosely report processing" <<                                   std::endl
-		<< "  -h, --help              print this help, then exit" <<                                    std::endl
-		<< "  -V, --version           print version number, then exit" <<                               std::endl
-		<<                                                                                              std::endl
-		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." <<                 std::endl
-		<< "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." << std::endl
-		<<                                                                                              std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                                            std::endl;
+		<< "  -r, --rules=FILE        use alternate rules file" <<                                        std::endl
+		<< "                          [" << rules_file << "]" <<                                          std::endl
+		<< "  -m, --max-depth=NUM     use NUM as max filter-chain depth [default " << max_depth << "]" << std::endl
+		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
+		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
+		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
+		<< "  -v, --verbose           verbosely report processing" <<                                     std::endl
+		<< "  -h, --help              print this help, then exit" <<                                      std::endl
+		<< "  -V, --version           print version number, then exit" <<                                 std::endl
+		<<                                                                                                std::endl
+		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." <<                   std::endl
+		<< "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." <<   std::endl
+		<<                                                                                                std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                                              std::endl;
 }
 
 void hint(const std::string & message)
@@ -232,11 +234,71 @@ void read_rules(const std::string &                             filename,
 	stream.close();
 }
 
+#if 0
+void build_chains(const std::map<std::string, std::set<FCP::Rule *> > & rules,
+		  std::string                                           in,
+		  std::string                                           out,
+		  std::list<std::vector<FCP::Rule *> > &                chains,
+		  std::vector<FCP::Rule *> &                            chain,
+		  int                                                   maxd)
+{
+	BUG_ON(in.size()  == 0);
+	BUG_ON(out.size() == 0);
+	BUG_ON(maxd <= 0);
+
+	maxd--;
+	if (maxd == 0) {
+		// Max filter-chain size exceeded
+		return;
+	}
+
+	const std::set<FCP::Rule *>     r = rules[in];
+	std::set<FCP::Rule *>::iterator i;
+
+	for (i = r.begin(); i != r.end(); i++) {
+		if ((*i)->output() == out) {
+			// Got the end
+			chain.push_back(*i);
+			chains.push_back(chain);
+			return;
+		}
+	}
+
+	for (i = r.begin(); i != r.end(); i++) {
+		std::vector<FCP::Rule *> c;
+		build_chains(rules, (*i)->output(), out, chains, c, maxd);
+	}
+}
+#endif
+
 void transform(const FCP::Transformation &                           transf,
-	       const std::map<std::string, std::set<FCP::Rule *> > & rules)
+	       const std::map<std::string, std::set<FCP::Rule *> > & rules,
+	       int                                                   max_depth)
 {
 	TR_DBG("Transforming '%s' -> '%s'\n",
 	       transf.input().c_str(), transf.output().c_str());
+#if 0
+	std::list<std::vector<FCP::Rule *> > chains;
+
+	// Build filter-chains
+	std::vector<FCP::Rule *> chain;
+	build_chains(rules,
+		     transf.input(),
+		     transf.output(),
+		     chains,
+		     chain,
+		     max_depth);
+	if (chains.size() == 0) {
+		throw Exception("No filter-chain available for "
+				"'" + transf.tag() + "' transformation");
+	}
+
+	TR_DBG("Found %d filter-chains\n", chains.size());
+
+	// Select the smallest filter-chain among all available
+	std::list<std::vector<FCP::Rule *> >::iterator iter;
+	iter = min_element(chains.begin(), chains.end());
+#endif
 }
 
 int main(int argc, char * argv[])
@@ -245,7 +307,7 @@ int main(int argc, char * argv[])
 	TR_CONFIG_PFX(PROGRAM_NAME);
 
 	try {
-		bool dry_run   = false;
+		bool dry_run = false;
 
 		int c;
 		// int digit_optind = 0;
@@ -256,6 +318,7 @@ int main(int argc, char * argv[])
 			static struct option long_options[] = {
 				{ "config",    1, 0, 'c' },
 				{ "rules",     1, 0, 'r' },
+				{ "max-depth", 1, 0, 'm' },
 				{ "separator", 1, 0, 's' },
 				{ "dry-run",   0, 0, 'n' },
 				{ "debug",     0, 0, 'd' },
@@ -292,6 +355,13 @@ int main(int argc, char * argv[])
 					}
 					separator = optarg[0];
 					break;
+				case 'm':
+					max_depth = atoi(optarg);
+					if (max_depth <= 0) {
+						hint("Wrong max-depth");
+						return 1;
+					}
+					break;
 				case 'n':
 					dry_run  = true;
 					break;
@@ -324,13 +394,13 @@ int main(int argc, char * argv[])
 
 		TR_DBG("Separator     '%c'\n", separator);
 #if USE_CONFIGURATION_FILE
-		TR_DBG("Configuration '%s'\n",
-		       configuration_file.c_str());
+		TR_DBG("Configuration '%s'\n", configuration_file.c_str());
 		BUG_ON(configuration_file.size() == 0);
 #endif
-		TR_DBG("Rules         '%s'\n",
-		       rules_file.c_str());
+		TR_DBG("Rules         '%s'\n", rules_file.c_str());
 		BUG_ON(rules_file.size() == 0);
+		TR_DBG("Max depth     '%d'\n", max_depth);
+		BUG_ON(max_depth > 0);
 
 		assert((argc - optind) >= 0);
 
@@ -403,7 +473,7 @@ int main(int argc, char * argv[])
 				     is++) {
 					BUG_ON((*ir).first != (*is)->input());
 
-				TR_DBG("    '%s'\n",
+					TR_DBG("    '%s'\n",
 					       (*is)->output().c_str());
 				}
 			}
@@ -416,7 +486,7 @@ int main(int argc, char * argv[])
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				transform(*(*it), rules);
+				transform(*(*it), rules, max_depth);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
