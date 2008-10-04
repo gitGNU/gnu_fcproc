@@ -110,8 +110,8 @@ void hint(const std::string & message)
 #define P_DBG(FMT,ARGS...)
 #endif
 
-void read_rules(const std::string &     filename,
-		std::set<FCP::Rule *> & rules)
+void read_rules(const std::string &                             filename,
+		std::map<std::string, std::set<FCP::Rule *> > & rules)
 {
 	P_DBG("Reading rules from file '%s'\n", filename.c_str());
 
@@ -217,7 +217,7 @@ void read_rules(const std::string &     filename,
 			r = new FCP::Rule(tag_in, tag_out, command);
 			BUG_ON(r == 0);
 
-			rules.insert(r);
+			rules[tag_in].insert(r);
 
 			tag_in  = "";
 			tag_out = "";
@@ -232,11 +232,11 @@ void read_rules(const std::string &     filename,
 	stream.close();
 }
 
-void transform(const FCP::Transformation &   transformation,
-	       const std::set<FCP::Rule *> & rules)
+void transform(const FCP::Transformation &                           transf,
+	       const std::map<std::string, std::set<FCP::Rule *> > & rules)
 {
 	TR_DBG("Transforming '%s' -> '%s'\n",
-	       transformation.input().c_str(), transformation.output().c_str());
+	       transf.input().c_str(), transf.output().c_str());
 }
 
 int main(int argc, char * argv[])
@@ -386,19 +386,26 @@ int main(int argc, char * argv[])
 #endif
 
 		// Read rules file
-		std::set<FCP::Rule *>           rules;
-		std::set<FCP::Rule *>::iterator ir;
+		std::map<std::string, std::set<FCP::Rule *> >           rules;
+		std::map<std::string, std::set<FCP::Rule *> >::iterator ir;
+		std::set<FCP::Rule *>::iterator                         is;
 
 		try {
 			read_rules(rules_file, rules);
 
-			TR_DBG("Known rules (%d):\n", rules.size());
+			TR_DBG("Known rules:\n");
 			for (ir  = rules.begin();
 			     ir != rules.end();
 			     ir++) {
-				TR_DBG("  '%s' -> '%s'\n",
-				       (*ir)->input().c_str(),
-				       (*ir)->output().c_str());
+				TR_DBG("  '%s' ->\n", (*ir).first.c_str());
+				for (is  = (*ir).second.begin();
+				     is != (*ir).second.end();
+				     is++) {
+					BUG_ON((*ir).first != (*is)->input());
+
+				TR_DBG("    '%s'\n",
+					       (*is)->output().c_str());
+				}
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
@@ -426,7 +433,11 @@ int main(int argc, char * argv[])
 		for (ir  = rules.begin();
 		     ir != rules.end();
 		     ir++) {
-			delete (*ir);
+			for (is  = (*ir).second.begin();
+			     is != (*ir).second.end();
+			     is++) {
+				delete (*is);
+			}
 		}
 
 	} catch (std::exception & e) {
