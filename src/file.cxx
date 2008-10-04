@@ -69,4 +69,9 @@ namespace FCP {
 	{
 		return extension_;
 	}
+
+	bool File::operator ==(const FCP::File & rhs) const
+	{
+		return ((*this).name_ == rhs.name_);
+	}
 };

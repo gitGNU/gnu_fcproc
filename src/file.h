@@ -34,6 +34,8 @@ namespace FCP {
 		const std::string & basename(void)  const;
 		const std::string & extension(void) const;
 
+		bool operator ==(const FCP::File & rhs) const;
+
 	protected:
 		File(void);
 
