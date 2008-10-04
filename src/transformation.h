@@ -30,9 +30,9 @@ namespace FCP {
 			       char                separator);
 		~Transformation(void);
 
-		const std::string & tag(void);
-		const std::string & input(void);
-		const std::string & output(void);
+		const std::string & tag(void)    const;
+		const std::string & input(void)  const;
+		const std::string & output(void) const;
 
 	protected:
 

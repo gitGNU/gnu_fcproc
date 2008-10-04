@@ -63,17 +63,17 @@ namespace FCP {
 	{
 	}
 
-	const std::string & Transformation::tag(void)
+	const std::string & Transformation::tag(void) const
 	{
 		return tag_;
 	}
 
-	const std::string & Transformation::input(void)
+	const std::string & Transformation::input(void) const
 	{
 		return input_;
 	}
 
-	const std::string & Transformation::output(void)
+	const std::string & Transformation::output(void) const
 	{
 		return output_;
 	}
