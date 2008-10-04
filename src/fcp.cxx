@@ -276,7 +276,7 @@ void transform(const FCP::Transformation &                           transf,
 	       int                                                   max_depth)
 {
 	TR_DBG("Transforming '%s' -> '%s'\n",
-	       transf.input().c_str(), transf.output().c_str());
+	       transf.input().name().c_str(), transf.output().name().c_str());
 #if 0
 	std::list<std::vector<FCP::Rule *> > chains;
 
@@ -357,7 +357,7 @@ int main(int argc, char * argv[])
 					break;
 				case 'm':
 					max_depth = atoi(optarg);
-					if (max_depth <= 0) {
+					if (max_depth <= 1) {
 						hint("Wrong max-depth");
 						return 1;
 					}
@@ -400,7 +400,7 @@ int main(int argc, char * argv[])
 		TR_DBG("Rules         '%s'\n", rules_file.c_str());
 		BUG_ON(rules_file.size() == 0);
 		TR_DBG("Max depth     '%d'\n", max_depth);
-		BUG_ON(max_depth > 0);
+		BUG_ON(max_depth <= 0);
 
 		assert((argc - optind) >= 0);
 
@@ -432,9 +432,9 @@ int main(int argc, char * argv[])
 				transformations[j] = t;
 
 				TR_DBG("  '%s' = '%s' -> '%s'\n",
-				       transformations[j]->tag().c_str(),
-				       transformations[j]->input().c_str(),
-				       transformations[j]->output().c_str());
+				       t->tag().c_str(),
+				       t->input().name().c_str(),
+				       t->output().name().c_str());
 
 			} catch (std::exception & e) {
 				TR_ERR("%s\n", e.what());
