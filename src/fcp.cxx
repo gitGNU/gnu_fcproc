@@ -276,7 +276,12 @@ void transform(const FCP::Transformation &                           transf,
 	       int                                                   max_depth)
 {
 	TR_DBG("Transforming '%s' -> '%s'\n",
-	       transf.input().name().c_str(), transf.output().name().c_str());
+	       transf.input().name().c_str(),
+	       transf.output().name().c_str());
+
+	TR_DBG("  Looking for filter-chain '%s' -> '%s'\n",
+	       transf.input().extension().c_str(),
+	       transf.output().extension().c_str());
 #if 0
 	std::list<std::vector<FCP::Rule *> > chains;
 
