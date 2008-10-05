@@ -35,6 +35,7 @@
 #include "filter.h"
 #include "rule.h"
 #include "transformation.h"
+#include "job.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -112,8 +113,8 @@ void hint(const std::string & message)
 #define P_DBG(FMT,ARGS...)
 #endif
 
-void read_rules(const std::string &                             filename,
-		std::map<std::string, std::set<FCP::Rule *> > & rules)
+void parse_rules(const std::string &                             filename,
+		 std::map<std::string, std::set<FCP::Rule *> > & rules)
 {
 	P_DBG("Reading rules from file '%s'\n", filename.c_str());
 
@@ -323,15 +324,17 @@ void transform(FCP::Transformation &                           transf,
 		TR_DBG("  '%s' -> '%s'\n",
 		       (*iter)->input().c_str(),
 		       (*iter)->output().c_str());
-	}
-
-	// Perform transformation now
-	TR_DBG("Performing transformation\n");
-	for (iter = chain.begin(); iter != chain.end(); iter++) {
 		if (drun) {
 			std::cout << (*iter)->command();
 		}
 	}
+
+	if (drun) {
+		return;
+	}
+
+	// Perform transformation now
+	FCP::Job j(transf.input(), chain, transf.output());
 }
 
 int main(int argc, char * argv[])
@@ -495,7 +498,7 @@ int main(int argc, char * argv[])
 		std::set<FCP::Rule *>::iterator                         is;
 
 		try {
-			read_rules(rules_file, rules);
+			parse_rules(rules_file, rules);
 
 			TR_DBG("Known rules:\n");
 			for (ir  = rules.begin();
