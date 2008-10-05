@@ -44,6 +44,11 @@ namespace FCP {
 	{
 	}
 
+	const std::string & Job::id(void)
+	{
+		return id_;
+	}
+
 	void Job::run(const std::string & temp_dir)
 	{
 		std::vector<FCP::Rule *>::iterator  ir;

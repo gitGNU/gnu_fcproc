@@ -36,7 +36,8 @@ namespace FCP {
 		    const FCP::File &          output);
 		~Job(void);
 
-		void run(const std::string & temp_dir);
+		const std::string & id(void);
+		void                run(const std::string & temp_dir);
 
 	protected:
 

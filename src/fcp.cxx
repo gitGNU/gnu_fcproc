@@ -564,6 +564,7 @@ int main(int argc, char * argv[])
 		std::vector<FCP::Job *>::iterator ij;
 		try {
 			for (ij = jobs.begin(); ij != jobs.end(); ij++) {
+				TR_DBG("Job '%s':\n", (*ij)->id().c_str());
 				(*ij)->run(temp_dir);
 			}
 		} catch (std::exception & e) {
