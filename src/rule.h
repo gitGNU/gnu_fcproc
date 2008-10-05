@@ -22,25 +22,26 @@
 #include "config.h"
 
 #include <string>
+#include <vector>
 
 namespace FCP {
 	class Rule {
 	public:
-		Rule(const std::string & tag_in,
-		     const std::string & tag_out,
-		     const std::string & command);
+		Rule(const std::string &              tag_in,
+		     const std::string &              tag_out,
+		     const std::vector<std::string> & commands);
 		~Rule(void);
 
-		const std::string & input(void);
-		const std::string & output(void);
-		const std::string & command(void);
+		const std::string &              input(void);
+		const std::string &              output(void);
+		const std::vector<std::string> & commands(void);
 
 	protected:
 
 	private:
-		std::string tag_in_;
-		std::string tag_out_;
-		std::string command_;
+		std::string              tag_in_;
+		std::string              tag_out_;
+		std::vector<std::string> commands_;
 	};
 };
 

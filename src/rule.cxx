@@ -19,16 +19,17 @@
 #include "config.h"
 
 #include <string>
+#include <vector>
 
 #include "rule.h"
 
 namespace FCP {
-	Rule::Rule(const std::string & tag_in,
-		   const std::string & tag_out,
-		   const std::string & command) :
+	Rule::Rule(const std::string &              tag_in,
+		   const std::string &              tag_out,
+		   const std::vector<std::string> & commands) :
 		tag_in_(tag_in),
 		tag_out_(tag_out),
-		command_(command)
+		commands_(commands)
 	{
 	}
 
@@ -46,8 +47,8 @@ namespace FCP {
 		return tag_out_;
 	}
 
-	const std::string & Rule::command(void)
+	const std::vector<std::string> & Rule::commands(void)
 	{
-		return command_;
+		return commands_;
 	}
 };
