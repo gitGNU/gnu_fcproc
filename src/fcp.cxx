@@ -283,28 +283,28 @@ void transform(const FCP::Transformation &                           transf,
 	       transf.input().extension().c_str(),
 	       transf.output().extension().c_str());
 
-#if 0
-	std::list<std::vector<FCP::Rule *> > chains;
+	// We want a single chain, for the moment ...
+	std::vector<FCP::Rule *> chain;
 
 	// Build filter-chains
-	std::vector<FCP::Rule *> chain;
-	build_chains(rules,
-		     transf.input().extension(),
-		     transf.output().extension(),
-		     chains,
-		     chain,
-		     max_depth);
-	if (chains.size() == 0) {
+#if 0
+	chain = build_chain(rules,
+			    transf.input().extension(),
+			    transf.output().extension(),
+			    max_depth);
+#endif
+	if (chain.size() == 0) {
 		throw Exception("No filter-chain available for "
 				"'" + transf.tag() + "' transformation");
 	}
 
-	TR_DBG("Found %d filter-chains\n", chains.size());
-
-	// Select the smallest filter-chain among all available
-	std::list<std::vector<FCP::Rule *> >::iterator iter;
-	iter = min_element(chains.begin(), chains.end());
-#endif
+	TR_DBG("Filter chain:\n");
+	std::vector<FCP::Rule *>::iterator iter;
+	for (iter = chain.begin(); iter != chain.end(); iter++) {
+		TR_DBG("  '%s' -> '%s'\n",
+		       (*iter)->input().c_str(),
+		       (*iter)->output().c_str());
+	}
 }
 
 int main(int argc, char * argv[])
@@ -458,6 +458,7 @@ int main(int argc, char * argv[])
 
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
+			return 1;
 		}
 #endif
 
@@ -485,6 +486,7 @@ int main(int argc, char * argv[])
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
+			return 1;
 		}
 
 		// Perform transformations
@@ -496,6 +498,7 @@ int main(int argc, char * argv[])
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
+			return 1;
 		}
 
 		TR_DBG("Operations complete, cleaning up ...\n");
@@ -521,6 +524,7 @@ int main(int argc, char * argv[])
 		return 1;
 	} catch (...) {
 		BUG();
+		return 1; // Should be useless ...
 	};
 
 	return 0;
