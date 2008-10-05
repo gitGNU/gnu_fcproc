@@ -33,6 +33,7 @@ namespace FCP {
 
 		const std::string & input(void);
 		const std::string & output(void);
+		const std::string & command(void);
 
 	protected:
 

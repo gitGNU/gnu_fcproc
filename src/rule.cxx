@@ -32,6 +32,10 @@ namespace FCP {
 	{
 	}
 
+	Rule::~Rule(void)
+	{
+	}
+
 	const std::string & Rule::input(void)
 	{
 		return tag_in_;
@@ -42,7 +46,8 @@ namespace FCP {
 		return tag_out_;
 	}
 
-	Rule::~Rule(void)
+	const std::string & Rule::command(void)
 	{
+		return command_;
 	}
 };
