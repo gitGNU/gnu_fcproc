@@ -134,9 +134,11 @@ void parse_rules(const std::string &                             filename,
 		S_COMPLETE,
 	}           state = S_IDLE;
 
-	std::string tag_in  = "";
-	std::string tag_out = "";
-	std::string command = "";
+	std::string              tag_in   = "";
+	std::string              tag_out  = "";
+	std::vector<std::string> commands;
+
+	commands.clear();
 
 	while (!stream.eof()) {
 		if (state == S_IDLE) {
@@ -205,26 +207,26 @@ void parse_rules(const std::string &                             filename,
 						"at line '" + line + "'");
 			}
 
-			command += line;
+			commands.push_back(line);
 
 		} else if (state == S_COMPLETE) {
 			BUG_ON(tag_in  == "");
 			BUG_ON(tag_out == "");
-			BUG_ON(command == "");
+			BUG_ON(commands.size() < 1);
 
 			P_DBG("  %s -> %s\n", tag_in.c_str(), tag_out.c_str());
-			P_DBG("  %s\n",       command.c_str());
+			P_DBG("  %s\n",       commands.c_str());
 
 			FCP::Rule * r;
 
-			r = new FCP::Rule(tag_in, tag_out, command);
+			r = new FCP::Rule(tag_in, tag_out, commands);
 			BUG_ON(r == 0);
 
 			rules[tag_in].insert(r);
 
-			tag_in  = "";
-			tag_out = "";
-			command = "";
+			tag_in   = "";
+			tag_out  = "";
+			commands.clear();
 
 			state = S_IDLE;
 		} else {
