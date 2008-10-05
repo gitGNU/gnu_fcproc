@@ -29,16 +29,21 @@
 namespace FCP {
 	class Job {
 	public:
-		Job(const FCP::File &          input,
+		Job(const std::string &        id,
+		    const FCP::File &          input,
 		    std::vector<FCP::Rule *> & rules,
 		    const FCP::File &          output);
 		~Job(void);
 
-		void run(void);
+		void run(bool dry_run);
 
 	protected:
 
 	private:
+		std::string                id_;
+		const FCP::File &          input_;
+		std::vector<FCP::Rule *> & rules_;
+		const FCP::File &          output_;
 	};
 };
 

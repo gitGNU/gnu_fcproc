@@ -18,16 +18,24 @@
 
 #include "config.h"
 
+#include <cstdlib>
 #include <vector>
+#include <iostream>
 
+#include "libs/misc/debug.h"
 #include "job.h"
 #include "file.h"
 #include "rule.h"
 
 namespace FCP {
-	Job::Job(const FCP::File &          input,
+	Job::Job(const std::string &        id,
+		 const FCP::File &          input,
 		 std::vector<FCP::Rule *> & rules,
-		 const FCP::File &          output)
+		 const FCP::File &          output) :
+		id_(id),
+		input_(input),
+		rules_(rules),
+		output_(output)
 	{
 	}
 
@@ -35,8 +43,24 @@ namespace FCP {
 	{
 	}
 
-	void Job::run(void)
+	void Job::run(bool dry_run)
 	{
-		
+		std::vector<FCP::Rule *>::size_type c;
+		std::vector<FCP::Rule *>::iterator  iter;
+
+		c = 1;
+		for (iter = rules_.begin(); iter != rules_.end(); iter++) {
+			TR_DBG("Running command (%d/%d)\n",
+			       c, rules_.size());
+
+			if (dry_run) {
+				std::cout
+					<< id_ << ": "
+					<< (*iter)->command()
+					<< std::endl;
+			}
+			
+			c++;
+		}
 	}
 };

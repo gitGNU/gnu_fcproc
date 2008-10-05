@@ -255,7 +255,7 @@ bool find_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 	r = rules[in];
 	for (i = r.begin(); i != r.end(); i++) {
 		if ((*i)->output() == out) {
-			TR_DBG("Got chain end '%s'\n", out.c_str());
+			//TR_DBG("Got chain!\n");
 			chain.push_back(*i);
 			return true;
 		}
@@ -287,10 +287,10 @@ void build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 	       in.c_str(), out.c_str(), mdepth);
 
 	if (!find_chain(rules, in, out, mdepth, chain)) {
-		TR_DBG("No chain found\n");
+		//TR_DBG("No chain found\n");
 		chain.clear();
 	} else {
-		TR_DBG("Chain found\n");
+		//TR_DBG("Chain found!\n");
 		std::reverse(chain.begin(), chain.end());
 	}
 }
@@ -324,17 +324,12 @@ void transform(FCP::Transformation &                           transf,
 		TR_DBG("  '%s' -> '%s'\n",
 		       (*iter)->input().c_str(),
 		       (*iter)->output().c_str());
-		if (drun) {
-			std::cout << (*iter)->command();
-		}
-	}
-
-	if (drun) {
-		return;
 	}
 
 	// Perform transformation now
-	FCP::Job j(transf.input(), chain, transf.output());
+	FCP::Job j("1", transf.input(), chain, transf.output());
+
+	j.run(drun);
 }
 
 int main(int argc, char * argv[])
