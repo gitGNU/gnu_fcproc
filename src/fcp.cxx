@@ -536,9 +536,10 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		// Perform transformations
+		// Get all jobs from transformations
+		TR_DBG("Handling transformations\n");
+		std::vector<FCP::Job *> jobs;
 		try {
-			TR_DBG("Handling transformations\n");
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
@@ -547,18 +548,33 @@ int main(int argc, char * argv[])
 				j = transform(*(*it), rules, max_depth);
 				BUG_ON(j == 0);
 
-				j->run(temp_dir);
-
-				delete j;
+				jobs.push_back(j);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 			return 1;
 		}
 
-		TR_DBG("Operations complete, cleaning up ...\n");
+		// Run all jobs now
+		TR_DBG("Running jobs\n");
+		std::vector<FCP::Job *>::iterator ij;
+		try {
+			for (ij = jobs.begin(); ij != jobs.end(); ij++) {
+				(*ij)->run(temp_dir);
+			}
+		} catch (std::exception & e) {
+			TR_ERR("%s\n", e.what());
+			return 1;
+		}
 
 		// Clean up everything
+		TR_DBG("Operations complete, cleaning up ...\n");
+
+		for (ij  = jobs.begin();
+		     ij != jobs.end();
+		     ij++) {
+			delete (*ij);
+		}
 		for (it  = transformations.begin();
 		     it != transformations.end();
 		     it++) {
