@@ -56,6 +56,9 @@ namespace FCP {
 		     ir != rules_.end();
 		     ir++) {
 			//TR_DBG("Running rule\n");
+
+			std::cout << id_ << ":" << std::endl;
+
 			std::vector<std::string>::const_iterator ic;
 			std::vector<std::string>::size_type      count;
 			std::vector<std::string>::size_type      all;
@@ -66,12 +69,9 @@ namespace FCP {
 			     ic != (*ir)->commands().end();
 			     ic++, count++) {
 				//TR_DBG("Running command\n");
-				std::cout
-					<< id_ << ","
-					<<  count << "/" << all
-					<< " = "
-					<< "'" << (*ic).c_str() << "'"
-					<< std::endl;
+				std::cout <<  count << "/" << all << " "
+					  << "'" << (*ic).c_str() << "'"
+					  << std::endl;
 			}
 		}
 	}
