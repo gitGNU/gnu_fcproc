@@ -215,7 +215,7 @@ void parse_rules(const std::string &                             filename,
 				throw Exception("Wrong body "
 						"at line '" + line + "'");
 			}
-
+			line = String::trim_both(line, " \t");
 			commands.push_back(line);
 
 		} else if (state == S_COMPLETE) {

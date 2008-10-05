@@ -70,7 +70,7 @@ namespace FCP {
 					<< id_ << ","
 					<<  count << "/" << all
 					<< " = "
-					<< (*ic).c_str()
+					<< "'" << (*ic).c_str() << "'"
 					<< std::endl;
 			}
 		}
