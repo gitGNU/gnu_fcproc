@@ -328,13 +328,13 @@ void transform(FCP::Transformation &                           transf,
 		       (*iter)->output().c_str());
 	}
 
-	if (drun) {
-		TR_DBG("Dry running, no transformation this time ...\n")
-		return;
-	}
-
 	// Perform transformation now
 	TR_DBG("Performing transformation\n");
+	for (iter = chain.begin(); iter != chain.end(); iter++) {
+		if (drun) {
+			std::cout << (*iter)->command();
+		}
+	}
 }
 
 int main(int argc, char * argv[])
