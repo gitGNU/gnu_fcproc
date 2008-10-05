@@ -295,7 +295,8 @@ void build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 
 void transform(FCP::Transformation &                           transf,
 	       std::map<std::string, std::set<FCP::Rule *> > & rules,
-	       int                                             mdepth)
+	       int                                             mdepth,
+	       bool                                            drun)
 {
 	BUG_ON(mdepth <= 0);
 
@@ -327,7 +328,13 @@ void transform(FCP::Transformation &                           transf,
 		       (*iter)->output().c_str());
 	}
 
+	if (drun) {
+		TR_DBG("Dry running, no transformation this time ...\n")
+		return;
+	}
+
 	// Perform transformation now
+	TR_DBG("Performing transformation\n");
 }
 
 int main(int argc, char * argv[])
@@ -517,7 +524,7 @@ int main(int argc, char * argv[])
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				transform(*(*it), rules, max_depth);
+				transform(*(*it), rules, max_depth, dry_run);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
