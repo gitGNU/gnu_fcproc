@@ -52,12 +52,19 @@ namespace FCP {
 		     ir++) {
 			//TR_DBG("Running rule\n");
 			std::vector<std::string>::const_iterator ic;
+			std::vector<std::string>::size_type      count;
+			std::vector<std::string>::size_type      all;
+
+			count = 1;
+			all   = (*ir)->commands().size();
 			for (ic  = (*ir)->commands().begin();
 			     ic != (*ir)->commands().end();
-			     ic++) {
+			     ic++, count++) {
 				//TR_DBG("Running command\n");
 				std::cout
-					<< id_ << ": "
+					<< id_ << ","
+					<<  count << "/" << all
+					<< " = "
 					<< (*ic).c_str()
 					<< std::endl;
 			}
