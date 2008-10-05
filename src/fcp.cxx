@@ -234,7 +234,45 @@ void read_rules(const std::string &                             filename,
 	stream.close();
 }
 
-bool build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
+bool find_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
+		 std::string                                     in,
+		 std::string                                     out,
+		 int                                             mdepth,
+		 std::vector<FCP::Rule *> &                      chain)
+{
+	BUG_ON(mdepth <= 0);
+
+	mdepth--;
+	if (mdepth == 0) {
+		// Max filter-chain size exceeded
+		return false;
+	}
+
+	std::set<FCP::Rule *>           r;
+	std::set<FCP::Rule *>::iterator i;
+
+	r = rules[in];
+	for (i = r.begin(); i != r.end(); i++) {
+		if ((*i)->output() == out) {
+			TR_DBG("Got chain end '%s'\n", out.c_str());
+			chain.push_back(*i);
+			return true;
+		}
+
+		if (find_chain(rules,
+				(*i)->output(),
+				out,
+				mdepth,
+				chain)) {
+			chain.push_back(*i);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 		 std::string                                     in,
 		 std::string                                     out,
 		 int                                             mdepth,
@@ -247,34 +285,12 @@ bool build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 	TR_DBG("Building chain from '%s' to '%s' with %d max depth\n",
 	       in.c_str(), out.c_str(), mdepth);
 
-	mdepth--;
-	if (mdepth == 0) {
-		// Max filter-chain size exceeded
-		return false;
+	if (!find_chain(rules, in, out, mdepth, chain)) {
+		TR_DBG("No chain end found\n");
+		chain.clear();
 	}
 
-	std::set<FCP::Rule *>           r = rules[in];
-	std::set<FCP::Rule *>::iterator i;
-	for (i = r.begin(); i != r.end(); i++) {
-		if ((*i)->output() == out) {
-			TR_DBG("Got chain end '%s'\n", out.c_str());
-			chain.push_back(*i);
-			return true;
-		}
-
-		if (build_chain(rules,
-				(*i)->output(),
-				out,
-				mdepth,
-				chain)) {
-			chain.push_back(*i);
-			return true;
-		}
-	}
-
-	TR_DBG("No chain end found\n");
-
-	return false;
+	std::reverse(chain.begin(), chain.end());
 }
 
 void transform(FCP::Transformation &                           transf,
@@ -293,11 +309,11 @@ void transform(FCP::Transformation &                           transf,
 
 	// Build the filter-chain
 	std::vector<FCP::Rule *> chain;
-	(void) build_chain(rules,
-			   transf.input().extension(),
-			   transf.output().extension(),
-			   mdepth,
-			   chain);
+	build_chain(rules,
+		    transf.input().extension(),
+		    transf.output().extension(),
+		    mdepth,
+		    chain);
 	if (chain.size() == 0) {
 		throw Exception("No filter-chain available for "
 				"'" + transf.tag() + "' transformation");
