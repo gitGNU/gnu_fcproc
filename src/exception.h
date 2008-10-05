@@ -29,14 +29,14 @@ class Exception : public std::exception {
 	description_(description) {
 	};
 	~Exception(void) throw() { };
-	
+
 	virtual const char * what(void) const throw() {
 		return description_.c_str();
 	};
-	
+
  protected:
 	Exception(void);
-	
+
  private:
 	std::string description_;
 };

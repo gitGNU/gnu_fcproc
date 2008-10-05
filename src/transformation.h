@@ -37,6 +37,9 @@ namespace FCP {
 		const FCP::File &   output(void) const;
 
 	protected:
+		// No copy allowed
+		Transformation(const Transformation &);
+		void operator =(const Transformation &);
 
 	private:
 		std::string tag_;

@@ -310,7 +310,7 @@ void build_chain(const std::map<std::string, std::set<FCP::Rule *> > & rules,
 	}
 }
 
-FCP::Job * transform(const FCP::Transformation & transf,
+FCP::Job * transform(const FCP::Transformation & transformation,
 		     const std::map<std::string,
 		     std::set<FCP::Rule *> > &   rules,
 		     int                         mdepth)
@@ -318,19 +318,20 @@ FCP::Job * transform(const FCP::Transformation & transf,
 	BUG_ON(mdepth <= 0);
 
 	TR_DBG("Transforming '%s' -> '%s'\n",
-	       transf.input().name().c_str(),
-	       transf.output().name().c_str());
+	       transformation.input().name().c_str(),
+	       transformation.output().name().c_str());
 
 	// Build the filter-chain
 	std::vector<FCP::Rule *> chain;
 	build_chain(rules,
-		    transf.input().extension(),
-		    transf.output().extension(),
+		    transformation.input().extension(),
+		    transformation.output().extension(),
 		    mdepth,
 		    chain);
 	if (chain.size() == 0) {
 		throw Exception("No filter-chain available for "
-				"'" + transf.tag() + "' transformation");
+				"'" + transformation.tag() + "' "
+				"transformation");
 	}
 
 	TR_DBG("Filter chain:\n");
@@ -344,7 +345,10 @@ FCP::Job * transform(const FCP::Transformation & transf,
 	// Perform transformation now
 	FCP::Job * j;
 
-	j = new FCP::Job("1", transf.input(), chain, transf.output());
+	j = new FCP::Job(transformation.tag(),
+			 transformation.input(),
+			 chain,
+			 transformation.output());
 	BUG_ON(j == 0);
 
 	return j;
