@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include <vector>
+#include <string>
 
 #include "file.h"
 #include "rule.h"
@@ -35,15 +36,15 @@ namespace FCP {
 		    const FCP::File &          output);
 		~Job(void);
 
-		void run(bool dry_run);
+		void run(const std::string & temp_dir);
 
 	protected:
 
 	private:
-		std::string                id_;
-		const FCP::File &          input_;
-		std::vector<FCP::Rule *> & rules_;
-		const FCP::File &          output_;
+		std::string              id_;
+		FCP::File                input_;
+		std::vector<FCP::Rule *> rules_;
+		FCP::File                output_;
 	};
 };
 

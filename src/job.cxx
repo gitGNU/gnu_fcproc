@@ -19,6 +19,7 @@
 #include "config.h"
 
 #include <cstdlib>
+#include <string>
 #include <vector>
 #include <iostream>
 
@@ -43,7 +44,7 @@ namespace FCP {
 	{
 	}
 
-	void Job::run(bool dry_run)
+	void Job::run(const std::string & temp_dir)
 	{
 		std::vector<FCP::Rule *>::iterator  ir;
 		for (ir  = rules_.begin();
@@ -55,12 +56,10 @@ namespace FCP {
 			     ic != (*ir)->commands().end();
 			     ic++) {
 				//TR_DBG("Running command\n");
-				if (dry_run) {
-					std::cout
-						<< id_ << ": "
-						<< (*ic).c_str()
-						<< std::endl;
-				}
+				std::cout
+					<< id_ << ": "
+					<< (*ic).c_str()
+					<< std::endl;
 			}
 		}
 	}

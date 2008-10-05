@@ -56,26 +56,26 @@ void version(void)
 char        separator           = ':';
 #if USE_CONFIGURATION_FILE
 std::string configuration_file  =
-     Environment::get("HOME") +
-     std::string("/") +
-     std::string(".") +
-     std::string(PACKAGE_TARNAME) +
-     std::string("/") +
-     std::string("configuration");
+												     Environment::get("HOME") +
+												     std::string("/") +
+												     std::string(".") +
+												     std::string(PACKAGE_TARNAME) +
+												     std::string("/") +
+												     std::string("configuration");
 #endif
 std::string rules_file          = Environment::get("HOME") +
-     std::string("/") +
-     std::string(".") +
-     std::string(PACKAGE_TARNAME) +
-     std::string("/") +
-     std::string("rules");
+												     std::string("/") +
+												     std::string(".") +
+												     std::string(PACKAGE_TARNAME) +
+												     std::string("/") +
+												     std::string("rules");
 int         max_depth           = 16;
-std::string tmp_dir             = Environment::get("HOME") +
-     std::string("/") +
-     std::string(".") +
-     std::string(PACKAGE_TARNAME) +
-     std::string("/") +
-     std::string("cache");
+std::string temp_dir            = Environment::get("HOME") +
+												     std::string("/") +
+												     std::string(".") +
+												     std::string(PACKAGE_TARNAME) +
+												     std::string("/") +
+												     std::string("cache");
 
 void help(void)
 {
@@ -92,7 +92,7 @@ void help(void)
 		<< "  -m, --max-depth=NUM     use NUM as max filter-chain depth" <<                               std::endl
 		<< "                          [default " << max_depth << "]" <<                                   std::endl
 		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                  std::endl
-		<< "                          [default " << tmp_dir << "]" <<                                     std::endl
+		<< "                          [default " << temp_dir << "]" <<                                    std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
 		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
@@ -125,7 +125,7 @@ void hint(const std::string & message)
 void parse_rules(const std::string &                             filename,
 		 std::map<std::string, std::set<FCP::Rule *> > & rules)
 {
-	P_DBG("Reading rules from file '%s'\n", filename.c_str());
+	P_DBG("Parsing rules from file '%s'\n", filename.c_str());
 
 	std::ifstream stream;
 
@@ -155,7 +155,7 @@ void parse_rules(const std::string &                             filename,
 			std::getline(stream, line);
 			number++;
 			P_DBG("  State %d, number %d, line '%s'\n",
-			       state, number, line.c_str());
+			      state, number, line.c_str());
 
 			// Remove comments
 			line = line.substr(0, line.find("#"));
@@ -204,7 +204,7 @@ void parse_rules(const std::string &                             filename,
 			std::getline(stream, line);
 			number++;
 			P_DBG("  State %d, number %d, line '%s'\n",
-			       state, number, line.c_str());
+			      state, number, line.c_str());
 
 			// Empty lines complete the body part
 			if (line.size() == 0) {
@@ -246,11 +246,11 @@ void parse_rules(const std::string &                             filename,
 	stream.close();
 }
 
-bool find_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
-		 std::string                                     in,
-		 std::string                                     out,
-		 int                                             mdepth,
-		 std::vector<FCP::Rule *> &                      chain)
+bool find_chain(const std::map<std::string, std::set<FCP::Rule *> > & rules,
+		const std::string &                                   in,
+		const std::string &                                   out,
+		int                                                   mdepth,
+		std::vector<FCP::Rule *> &                            chain)
 {
 	BUG_ON(mdepth <= 0);
 
@@ -260,11 +260,15 @@ bool find_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 		return false;
 	}
 
-	std::set<FCP::Rule *>           r;
-	std::set<FCP::Rule *>::iterator i;
+	std::map<std::string, std::set<FCP::Rule *> >::const_iterator r;
+	r = rules.find(in);
+	if (r == rules.end()) {
+		return false;
+	}
 
-	r = rules[in];
-	for (i = r.begin(); i != r.end(); i++) {
+	std::set<FCP::Rule *>::const_iterator i;
+
+	for (i = (*r).second.begin(); i != (*r).second.end(); i++) {
 		if ((*i)->output() == out) {
 			//TR_DBG("Got chain!\n");
 			chain.push_back(*i);
@@ -272,10 +276,10 @@ bool find_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 		}
 
 		if (find_chain(rules,
-				(*i)->output(),
-				out,
-				mdepth,
-				chain)) {
+			       (*i)->output(),
+			       out,
+			       mdepth,
+			       chain)) {
 			chain.push_back(*i);
 			return true;
 		}
@@ -284,11 +288,11 @@ bool find_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 	return false;
 }
 
-void build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
-		 std::string                                     in,
-		 std::string                                     out,
-		 int                                             mdepth,
-		 std::vector<FCP::Rule *> &                      chain)
+void build_chain(const std::map<std::string, std::set<FCP::Rule *> > & rules,
+		 const std::string &                                   in,
+		 const std::string &                                   out,
+		 int                                                   mdepth,
+		 std::vector<FCP::Rule *> &                            chain)
 {
 	BUG_ON(in.size()  == 0);
 	BUG_ON(out.size() == 0);
@@ -306,10 +310,10 @@ void build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 	}
 }
 
-void transform(FCP::Transformation &                           transf,
-	       std::map<std::string, std::set<FCP::Rule *> > & rules,
-	       int                                             mdepth,
-	       bool                                            drun)
+FCP::Job * transform(const FCP::Transformation & transf,
+		     const std::map<std::string,
+		     std::set<FCP::Rule *> > &   rules,
+		     int                         mdepth)
 {
 	BUG_ON(mdepth <= 0);
 
@@ -338,9 +342,12 @@ void transform(FCP::Transformation &                           transf,
 	}
 
 	// Perform transformation now
-	FCP::Job j("1", transf.input(), chain, transf.output());
+	FCP::Job * j;
 
-	j.run(drun);
+	j = new FCP::Job("1", transf.input(), chain, transf.output());
+	BUG_ON(j == 0);
+
+	return j;
 }
 
 int main(int argc, char * argv[])
@@ -358,6 +365,7 @@ int main(int argc, char * argv[])
 			int option_index       = 0;
 
 			static struct option long_options[] = {
+				{ "temp-dir",  1, 0, 't' },
 				{ "config",    1, 0, 'c' },
 				{ "rules",     1, 0, 'r' },
 				{ "max-depth", 1, 0, 'm' },
@@ -371,10 +379,10 @@ int main(int argc, char * argv[])
 			};
 
 #if USE_CONFIGURATION_FILE
-			c = getopt_long(argc, argv, "c:s:ndvVh",
+			c = getopt_long(argc, argv, "t:c:s:ndvVh",
 					long_options, &option_index);
 #else
-			c = getopt_long(argc, argv, "s:ndvVh",
+			c = getopt_long(argc, argv, "t:s:ndvVh",
 					long_options, &option_index);
 #endif
 			if (c == -1) {
@@ -389,6 +397,9 @@ int main(int argc, char * argv[])
 #endif
 				case 'r':
 					rules_file = optarg;
+					break;
+				case 't':
+					temp_dir = optarg;
 					break;
 				case 's':
 					if (strlen(optarg) > 1) {
@@ -527,10 +538,18 @@ int main(int argc, char * argv[])
 
 		// Perform transformations
 		try {
+			TR_DBG("Handling transformations\n");
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				transform(*(*it), rules, max_depth, dry_run);
+				FCP::Job * j;
+
+				j = transform(*(*it), rules, max_depth);
+				BUG_ON(j == 0);
+
+				j->run(temp_dir);
+
+				delete j;
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
