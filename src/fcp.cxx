@@ -257,7 +257,7 @@ bool build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 	std::set<FCP::Rule *>::iterator i;
 	for (i = r.begin(); i != r.end(); i++) {
 		if ((*i)->output() == out) {
-			TR_DBG("Got chain end\n");
+			TR_DBG("Got chain end '%s'\n", out.c_str());
 			chain.push_back(*i);
 			return true;
 		}
