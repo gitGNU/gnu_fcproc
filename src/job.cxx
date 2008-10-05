@@ -45,22 +45,23 @@ namespace FCP {
 
 	void Job::run(bool dry_run)
 	{
-		std::vector<FCP::Rule *>::size_type c;
-		std::vector<FCP::Rule *>::iterator  iter;
-
-		c = 1;
-		for (iter = rules_.begin(); iter != rules_.end(); iter++) {
-			TR_DBG("Running command (%d/%d)\n",
-			       c, rules_.size());
-
-			if (dry_run) {
-				std::cout
-					<< id_ << ": "
-					<< (*iter)->command()
-					<< std::endl;
+		std::vector<FCP::Rule *>::iterator  ir;
+		for (ir  = rules_.begin();
+		     ir != rules_.end();
+		     ir++) {
+			//TR_DBG("Running rule\n");
+			std::vector<std::string>::const_iterator ic;
+			for (ic  = (*ir)->commands().begin();
+			     ic != (*ir)->commands().end();
+			     ic++) {
+				//TR_DBG("Running command\n");
+				if (dry_run) {
+					std::cout
+						<< id_ << ": "
+						<< (*ic).c_str()
+						<< std::endl;
+				}
 			}
-			
-			c++;
 		}
 	}
 };
