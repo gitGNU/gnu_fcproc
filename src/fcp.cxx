@@ -70,6 +70,12 @@ std::string rules_file          = Environment::get("HOME") +
      std::string("/") +
      std::string("rules");
 int         max_depth           = 16;
+std::string tmp_dir             = Environment::get("HOME") +
+     std::string("/") +
+     std::string(".") +
+     std::string(PACKAGE_TARNAME) +
+     std::string("/") +
+     std::string("cache");
 
 void help(void)
 {
@@ -82,8 +88,11 @@ void help(void)
 		<< "                          [" << configuration_file << "]" <<                                  std::endl
 #endif
 		<< "  -r, --rules=FILE        use alternate rules file" <<                                        std::endl
-		<< "                          [" << rules_file << "]" <<                                          std::endl
-		<< "  -m, --max-depth=NUM     use NUM as max filter-chain depth [default " << max_depth << "]" << std::endl
+		<< "                          [default " << rules_file << "]" <<                                  std::endl
+		<< "  -m, --max-depth=NUM     use NUM as max filter-chain depth" <<                               std::endl
+		<< "                          [default " << max_depth << "]" <<                                   std::endl
+		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                  std::endl
+		<< "                          [default " << tmp_dir << "]" <<                                     std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
 		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
