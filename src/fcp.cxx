@@ -283,9 +283,7 @@ void build_chain(std::map<std::string, std::set<FCP::Rule *> > & rules,
 	BUG_ON(mdepth <= 0);
 
 	TR_DBG("Looking for filter-chain '%s' -> '%s' (max depth %d)\n",
-	       transf.input().extension().c_str(),
-	       transf.output().extension().c_str(),
-	       mdepth);
+	       in.c_str(), out.c_str(), mdepth);
 
 	if (!find_chain(rules, in, out, mdepth, chain)) {
 		TR_DBG("No chain found\n");
