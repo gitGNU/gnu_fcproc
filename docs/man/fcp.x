@@ -1,2 +1,2 @@
 [name]
-fcp \- tranform files using chains of filters
+fcp \- tranform files using filter-chains
