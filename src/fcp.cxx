@@ -94,6 +94,7 @@ void help(void)
 		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                  std::endl
 		<< "                          [default " << temp_dir << "]" <<                                    std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
+		<< "                          [default `" << separator << "']" <<                                 std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
 		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
 		<< "  -v, --verbose           verbosely report processing" <<                                     std::endl
