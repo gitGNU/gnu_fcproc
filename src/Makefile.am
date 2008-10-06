@@ -87,4 +87,11 @@ libfile_a_CPPFLAGS =				\
 ##
 update-local: Makefile
 
+all_SRCS =					\
+	$(fcp_SOURCES)				\
+	$(libmisc_a_SOURCES)			\
+	$(libconf_a_SOURCES)			\
+	$(libfile_a_SOURCES)
+
 maintainer-check-local: Makefile
+	$(WHITESPACE_DETECT)  $(all_SRCS)
