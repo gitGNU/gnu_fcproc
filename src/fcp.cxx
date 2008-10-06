@@ -565,7 +565,22 @@ int main(int argc, char * argv[])
 		try {
 			for (ij = jobs.begin(); ij != jobs.end(); ij++) {
 				TR_DBG("Job '%s':\n", (*ij)->id().c_str());
-				(*ij)->run(temp_dir);
+				(*ij)->setup(temp_dir);
+
+				if (!dry_run) {
+					(*ij)->run();
+					continue;
+				}
+
+				// Dry-running
+				const std::vector<std::string> &         cs =
+					(*ij)->commands();
+				std::vector<std::string>::const_iterator ic;
+				for (ic  = cs.begin();
+				     ic != cs.end();
+				     ic++) {
+					std::cout << (*ic) << std::endl;
+				}
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
