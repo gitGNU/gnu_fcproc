@@ -30,6 +30,9 @@ namespace String {
 			       const std::string & t);
 	std::string trim_both(const std::string & s,
 			      const std::string & t);
+	std::string replace(std::string &       in,
+			    const std::string & from,
+			    const std::string & to);
 };
 
 #endif // LIBS_MISC_STRING_H

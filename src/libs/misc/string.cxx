@@ -20,6 +20,8 @@
 
 #include <string>
 
+#include "libs/misc/debug.h"
+
 namespace String {
 	std::string trim_left(const std::string & s,
 			      const std::string & t)
@@ -45,5 +47,36 @@ namespace String {
 			      const std::string & t)
 	{
 		return trim_left(trim_right(s, t), t);
+	}
+
+	std::string replace(std::string &       in,
+			    const std::string & from,
+			    const std::string & to)
+	{
+		BUG_ON(from.size() == 0);
+
+		//TR_DBG("Replacing in '%s': '%s' -> '%s'\n",
+		//       in.c_str(), from.c_str(), to.c_str());
+
+		std::string            t;
+		std::string::size_type p;
+		std::string::size_type q;
+
+		t = in;
+		p = 0;
+		q = from.size();
+		for (;;) {
+			p = t.find(from, p);
+			if (p == t.npos) {
+				break;
+			}
+
+			t.replace(p, q, to);
+			p += to.size();
+		}
+
+		//TR_DBG("String is now '%s'\n", t.c_str());
+
+		return t;
 	}
 }
