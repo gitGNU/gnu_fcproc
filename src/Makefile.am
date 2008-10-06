@@ -24,6 +24,9 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 ## Programs
 
+EXTRA_DIST =					\
+	config.h
+
 bin_PROGRAMS =					\
 	fcp
 
