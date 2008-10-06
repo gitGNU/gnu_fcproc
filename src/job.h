@@ -23,6 +23,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 #include "file.h"
 #include "rule.h"
@@ -36,16 +37,24 @@ namespace FCP {
 		    const FCP::File &          output);
 		~Job(void);
 
-		const std::string & id(void);
-		void                run(const std::string & temp_dir);
+		const std::string &              id(void);
+		const std::vector<std::string> & commands(void);
+		void                             setup(const std::string & dir);
+		void                             run(void);
 
 	protected:
 
 	private:
 		std::string              id_;
 		FCP::File                input_;
-		std::vector<FCP::Rule *> rules_;
+		std::vector<std::string> commands_;
 		FCP::File                output_;
+		std::map<std::string,
+			 std::string>    temps_;
+
+		int                      temp_count_;
+
+		std::string         mktemp(const std::string & dir);
 	};
 };
 

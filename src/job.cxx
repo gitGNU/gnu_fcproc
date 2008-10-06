@@ -22,11 +22,14 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 #include "libs/misc/debug.h"
+#include "libs/misc/string.h"
 #include "job.h"
 #include "file.h"
 #include "rule.h"
+#include "exception.h"
 
 namespace FCP {
 	Job::Job(const std::string &        id,
@@ -35,9 +38,24 @@ namespace FCP {
 		 const FCP::File &          output) :
 		id_(id),
 		input_(input),
-		rules_(rules),
-		output_(output)
+		output_(output),
+		temp_count_(0)
 	{
+		std::vector<FCP::Rule *>::iterator ir;
+		for (ir  = rules.begin();
+		     ir != rules.end();
+		     ir++) {
+			std::vector<std::string>::const_iterator ic;
+			for (ic  = (*ir)->commands().begin();
+			     ic != (*ir)->commands().end();
+			     ic++) {
+				std::string command;
+
+				command = (*ic);
+
+				commands_.push_back(command);
+			}
+		}
 	}
 
 	Job::~Job(void)
@@ -49,29 +67,121 @@ namespace FCP {
 		return id_;
 	}
 
-	void Job::run(const std::string & temp_dir)
+	const std::vector<std::string> & Job::commands(void)
 	{
-		std::vector<FCP::Rule *>::iterator  ir;
-		for (ir  = rules_.begin();
-		     ir != rules_.end();
-		     ir++) {
-			//TR_DBG("Running rule\n");
+		return commands_;
+	}
 
-			std::cout << id_ << ":" << std::endl;
+	std::string Job::mktemp(const std::string & dir)
+	{
+		std::string       t;
+		std::stringstream s;
 
-			std::vector<std::string>::const_iterator ic;
-			std::vector<std::string>::size_type      count;
-			std::vector<std::string>::size_type      all;
+		s << temp_count_;
 
-			count = 1;
-			all   = (*ir)->commands().size();
-			for (ic  = (*ir)->commands().begin();
-			     ic != (*ir)->commands().end();
-			     ic++, count++) {
-				//TR_DBG("Running command\n");
-				std::cout <<  count << "/" << all << " "
-					  << "'" << (*ic).c_str() << "'"
-					  << std::endl;
+		t = dir                   +
+			std::string("/")       +
+			id_ + std::string("-") +
+			s.str();
+
+		temp_count_++;
+
+		return t;
+	}
+
+	void Job::setup(const std::string & dir)
+	{
+		std::vector<std::string>::iterator ic;
+
+		//TR_DBG("Replacing variables\n")
+		for (ic  = commands_.begin();
+		     ic != commands_.end();
+		     ic++) {
+			std::string command;
+
+			command = (*ic);
+
+			command = String::replace(command,
+						  "$I",
+						  input_.name());
+			command = String::replace(command,
+						  "$O",
+						  output_.name());
+
+			//TR_DBG("  Command '%s'\n", command.c_str());
+
+			// Ugly
+			for (;;) {
+				//TR_DBG("    Replace in progress\n");
+				std::string::size_type s;
+				std::string::size_type e;
+				std::string            v;
+
+				s = 0;
+				e = 0;
+
+				s = command.find("$T");
+				//TR_DBG("      s = %d, e = %d\n", s, e);
+				if ((s == 0) || (s == std::string::npos)) {
+					break;
+				}
+
+				e = command.find_first_not_of("0123456789",
+							      s + 1);
+				//TR_DBG("      s = %d, e = %d\n", s, e);
+				if ((e == 0) || (e == std::string::npos)) {
+					break;
+				}
+
+				v = command.substr(s, e - s + 2);
+				BUG_ON(v.size() == 0);
+
+				//TR_DBG("      v = '%s'\n", v.c_str());
+
+				std::string t;
+				t = temps_[v];
+				if (t == "") {
+					t  = mktemp(dir);
+					temps_[v] = t;
+				}
+
+				command = String::replace(command, v, t);
+
+				//TR_DBG("    Replaced '%s' with '%s'\n",
+				//       v.c_str(), t.c_str());
+			}
+
+			//TR_DBG("    Command is now '%s'\n", command.c_str());
+
+			(*ic) = command;
+		}
+	}
+
+	void Job::run(void)
+	{
+		std::vector<std::string>::iterator ic;
+		std::vector<std::string>::size_type count;
+		std::vector<std::string>::size_type all;
+
+		all   = commands_.size();
+		count = 1;
+		for (ic  = commands_.begin();
+		     ic != commands_.end();
+		     ic++, count++) {
+			//TR_DBG("Running command '%s'\n", (*ic).c_str());
+			int ret;
+
+			ret = system((*ic).c_str());
+#if 0
+			if (WIFSIGNALED(ret) &&
+			    (WTERMSIG(ret) == SIGINT ||
+			     WTERMSIG(ret) == SIGQUIT)) {
+				throw Exception("Interrupted");
+			}
+#endif
+			if (ret != 0) {
+				throw Exception("Got problems running "
+						"command '" + (*ic) + "'");
 			}
 		}
 	}
