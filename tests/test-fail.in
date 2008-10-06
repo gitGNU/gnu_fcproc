@@ -21,6 +21,6 @@
 # Test to ensure that the test environment has a good set-up
 # Report from Francesco Salvestrini
 
-. @builddir@/defs || exit 1
+. $testdir/defs || exit 1
 
 exit 1
