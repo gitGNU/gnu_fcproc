@@ -38,6 +38,11 @@ tools/autotools/depcomp
 tools/autotools/config.guess
 tools/autotools/config.sub
 
+tests/defs
+tests/wrapper
+tests/test-fail
+tests/test-success
+
 docs/man/fcp.1
 docs/info/fcp.info
 
