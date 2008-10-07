@@ -34,10 +34,6 @@ cat > ./rules <<EOF
 
 		      #		command2
     		  # 	command2 command2 # command2 #command2 command2
-
-ext1:ext2
-	command1
-
 # command2
 # command2	
  # command2
