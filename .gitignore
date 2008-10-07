@@ -40,6 +40,7 @@ tools/autotools/config.sub
 
 tests/defs
 tests/wrapper
+tests/testSubDir-*
 tests/test-fail
 tests/test-success
 tests/test-parse-01
