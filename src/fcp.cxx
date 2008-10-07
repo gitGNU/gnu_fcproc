@@ -31,7 +31,6 @@
 #include "libs/conf/configuration.h"
 #include "libs/file/utils.h"
 #include "exception.h"
-#include "filter.h"
 #include "rule.h"
 #include "transformation.h"
 #include "job.h"
