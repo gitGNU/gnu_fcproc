@@ -23,6 +23,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <csignal>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
@@ -171,15 +172,17 @@ namespace FCP {
 			//TR_DBG("Running command '%s'\n", (*ic).c_str());
 			int ret;
 
+			BUG_ON((*ic).size() == 0);
 			ret = system((*ic).c_str());
-#if 0
+			if (ret == -1) {
+				throw Exception("Got fork() failure");
+			}
 			if (WIFSIGNALED(ret) &&
 			    (WTERMSIG(ret) == SIGINT ||
 			     WTERMSIG(ret) == SIGQUIT)) {
 				throw Exception("Interrupted");
 			}
-#endif
-			if (ret != 0) {
+			if (WEXITSTATUS(ret) != 0) {
 				throw Exception("Got problems running "
 						"command '" + (*ic) + "'");
 			}
