@@ -30,10 +30,11 @@ extern int     trace_level;
 extern char *  trace_prefix;
 
 // Trace levels
-#define TR_LVL_CRITICAL 4
-#define TR_LVL_ERROR    3
-#define TR_LVL_WARNING  2
-#define TR_LVL_NOTICE   1
+#define TR_LVL_CRITICAL 5
+#define TR_LVL_ERROR    4
+#define TR_LVL_WARNING  3
+#define TR_LVL_NOTICE   2
+#define TR_LVL_VERBOSE  1
 #define TR_LVL_DEBUG    0
 
 #define TR_LVL_DEFAULT TR_LVL_NOTICE
@@ -54,6 +55,7 @@ extern char *  trace_prefix;
 
 // Shortcuts for traces
 #define TR_DBG(FMT,ARGS...) _TRACE(TR_LVL_DEBUG,    FMT, ##ARGS);
+#define TR_VRB(FMT,ARGS...) _TRACE(TR_LVL_VERBOSE,  FMT, ##ARGS);
 #define TR_WRN(FMT,ARGS...) _TRACE(TR_LVL_WARNING,  FMT, ##ARGS);
 #define TR_ERR(FMT,ARGS...) _TRACE(TR_LVL_ERROR,    FMT, ##ARGS);
 #define TR_CRT(FMT,ARGS...) _TRACE(TR_LVL_CRITICAL, FMT, ##ARGS);
