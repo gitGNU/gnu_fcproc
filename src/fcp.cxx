@@ -247,10 +247,10 @@ int main(int argc, char * argv[])
 			};
 
 #if USE_CONFIGURATION_FILE
-			c = getopt_long(argc, argv, "t:c:s:ndvVh",
+			c = getopt_long(argc, argv, "t:c:r:m:s:ndvVh",
 					long_options, &option_index);
 #else
-			c = getopt_long(argc, argv, "t:s:ndvVh",
+			c = getopt_long(argc, argv, "t:r:m:s:ndvVh",
 					long_options, &option_index);
 #endif
 			if (c == -1) {
@@ -309,7 +309,7 @@ int main(int argc, char * argv[])
 
 		// Gather input file names
 		if (optind >= argc) {
-			hint("Missing input file name(s)");
+			hint("Missing transformation(s)");
 			return 1;
 		}
 
