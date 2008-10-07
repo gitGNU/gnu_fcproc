@@ -70,12 +70,11 @@ export SHELL
 test -z "$PERL" && PERL='@PERL@'
 test -z "$MAKE" && MAKE=make
 
-# Always issue warnings ...
-FLAGS="$FLAGS --warnings all"
+FLAGS=""
 
 test -n "$VERBOSE"  && FLAGS="$FLAGS --verbose"
 test -n "$DEBUG"    && FLAGS="$FLAGS --debug"
-test -z "$FCP"      && SITETOOL="wrapper fcp $FLAGS"
+test -z "$FCP"      && FCP="wrapper fcp $FLAGS"
 test -z "$WRAPPER"  && WRAPPER="wrapper"
 
 PATH=`pwd`:$PATH
