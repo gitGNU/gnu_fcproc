@@ -42,6 +42,7 @@ tests/defs
 tests/wrapper
 tests/test-fail
 tests/test-success
+tests/test-parse-01
 
 docs/man/fcp.1
 docs/info/fcp.info
