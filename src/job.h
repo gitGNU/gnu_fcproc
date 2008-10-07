@@ -40,7 +40,7 @@ namespace FCP {
 		const std::string &              id(void);
 		const std::vector<std::string> & commands(void);
 		void                             setup(const std::string & dir);
-		void                             run(void);
+		void                             run(bool dry_run);
 
 	protected:
 

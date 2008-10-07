@@ -163,7 +163,7 @@ namespace FCP {
 		}
 	}
 
-	void Job::run(void)
+	void Job::run(bool dry_run)
 	{
 		std::vector<std::string>::iterator ic;
 		std::vector<std::string>::size_type count;
@@ -174,7 +174,11 @@ namespace FCP {
 		for (ic  = commands_.begin();
 		     ic != commands_.end();
 		     ic++, count++) {
-			//TR_DBG("Running command '%s'\n", (*ic).c_str());
+			if (dry_run) {
+				TR_VRB("%s\n", (*ic).c_str());
+				continue;
+			}
+
 			int ret;
 
 			BUG_ON((*ic).size() == 0);
