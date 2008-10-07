@@ -117,4 +117,16 @@ AC_CONFIG_FILES([tools/maint/fetch],               [chmod +x tools/maint/fetch])
 AC_CONFIG_FILES([tools/maint/whitespace-detect],   [chmod +x tools/maint/whitespace-detect])
 AC_CONFIG_FILES([tools/maint/gitlog-to-committers],[chmod +x tools/maint/gitlog-to-committers])
 
+## Look for programs and inject their rules
+#FCP_RULE_SETUP([./rules])
+#
+#FCP_RULE([asciidoc],[ASCIIDOC],[
+#txt:xhtml
+#	ASCIIDOC -b=xhtml11 -o=$O $I
+#
+#txt:html
+#	ASCIIDOC -b=html4 -o=$O $I
+#
+#])
+
 AC_OUTPUT
