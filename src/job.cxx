@@ -121,6 +121,11 @@ namespace FCP {
 				s = 0;
 				e = 0;
 
+				//
+				// XXX FIXME:
+				//     Add environment variable substitution
+				//
+
 				s = command.find("$T");
 				//TR_DBG("      s = %d, e = %d\n", s, e);
 				if ((s == 0) || (s == std::string::npos)) {

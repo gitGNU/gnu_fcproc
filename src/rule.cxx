@@ -115,6 +115,11 @@ namespace FCP {
 					continue;
 				}
 
+				//
+				// XXX FIXME:
+				//     Add 'include' handling here
+				//
+
 				// Line is not empty, start reading header
 				state = S_HEADER;
 			} else if (state == S_HEADER) {
