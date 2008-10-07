@@ -290,7 +290,7 @@ int main(int argc, char * argv[])
 					TR_CONFIG_LVL(TR_LVL_DEBUG);
 					break;
 				case 'v':
-					TR_CONFIG_LVL(TR_LVL_NOTICE);
+					TR_CONFIG_LVL(TR_LVL_VERBOSE);
 					break;
 				case 'V':
 					version();
@@ -431,20 +431,7 @@ int main(int argc, char * argv[])
 				TR_DBG("Job '%s':\n", (*ij)->id().c_str());
 				(*ij)->setup(temp_dir);
 
-				if (!dry_run) {
-					(*ij)->run();
-					continue;
-				}
-
-				// Dry-running
-				const std::vector<std::string> &         cs =
-					(*ij)->commands();
-				std::vector<std::string>::const_iterator ic;
-				for (ic  = cs.begin();
-				     ic != cs.end();
-				     ic++) {
-					std::cout << (*ic) << std::endl;
-				}
+				(*ij)->run(dry_run);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
