@@ -33,7 +33,7 @@
 #include "exception.h"
 #include "rule.h"
 #include "transformation.h"
-#include "job.h"
+#include "filter.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -174,10 +174,10 @@ void build_chains(const std::map<std::string, std::set<FCP::Rule *> > & rules,
 	}
 }
 
-FCP::Job * transform(const FCP::Transformation & transformation,
-		     const std::map<std::string,
-		     std::set<FCP::Rule *> > &   rules,
-		     int                         mdepth)
+FCP::Filter * transform(const FCP::Transformation & transformation,
+			const std::map<std::string,
+			std::set<FCP::Rule *> > &   rules,
+			int                         mdepth)
 {
 	BUG_ON(mdepth <= 0);
 
@@ -207,12 +207,12 @@ FCP::Job * transform(const FCP::Transformation & transformation,
 	}
 
 	// Perform transformation now
-	FCP::Job * j;
+	FCP::Filter * j;
 
-	j = new FCP::Job(transformation.tag(),
-			 transformation.input(),
-			 chain,
-			 transformation.output());
+	j = new FCP::Filter(transformation.tag(),
+			    transformation.input(),
+			    chain,
+			    transformation.output());
 	BUG_ON(j == 0);
 
 	return j;
@@ -404,31 +404,31 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		// Get all jobs from transformations
+		// Get all filters from transformations
 		TR_DBG("Handling transformations\n");
-		std::vector<FCP::Job *> jobs;
+		std::vector<FCP::Filter *> filters;
 		try {
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				FCP::Job * j;
+				FCP::Filter * j;
 
 				j = transform(*(*it), rules, max_depth);
 				BUG_ON(j == 0);
 
-				jobs.push_back(j);
+				filters.push_back(j);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 			return 1;
 		}
 
-		// Run all jobs now
-		TR_DBG("Running jobs\n");
-		std::vector<FCP::Job *>::iterator ij;
+		// Run all filters now
+		TR_DBG("Running filters\n");
+		std::vector<FCP::Filter *>::iterator ij;
 		try {
-			for (ij = jobs.begin(); ij != jobs.end(); ij++) {
-				TR_DBG("Job '%s':\n", (*ij)->id().c_str());
+			for (ij = filters.begin(); ij != filters.end(); ij++) {
+				TR_DBG("Filter '%s':\n", (*ij)->id().c_str());
 				(*ij)->setup(temp_dir);
 
 				(*ij)->run(dry_run);
@@ -441,8 +441,8 @@ int main(int argc, char * argv[])
 		// Clean up everything
 		TR_DBG("Operations complete, cleaning up ...\n");
 
-		for (ij  = jobs.begin();
-		     ij != jobs.end();
+		for (ij  = filters.begin();
+		     ij != filters.end();
 		     ij++) {
 			delete (*ij);
 		}

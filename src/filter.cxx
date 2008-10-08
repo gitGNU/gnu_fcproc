@@ -27,16 +27,16 @@
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
-#include "job.h"
+#include "filter.h"
 #include "file.h"
 #include "rule.h"
 #include "exception.h"
 
 namespace FCP {
-	Job::Job(const std::string &        id,
-		 const FCP::File &          input,
-		 std::vector<FCP::Rule *> & rules,
-		 const FCP::File &          output) :
+	Filter::Filter(const std::string &        id,
+		       const FCP::File &          input,
+		       std::vector<FCP::Rule *> & rules,
+		       const FCP::File &          output) :
 		id_(id),
 		input_(input),
 		output_(output),
@@ -59,21 +59,21 @@ namespace FCP {
 		}
 	}
 
-	Job::~Job(void)
+	Filter::~Filter(void)
 	{
 	}
 
-	const std::string & Job::id(void)
+	const std::string & Filter::id(void)
 	{
 		return id_;
 	}
 
-	const std::vector<std::string> & Job::commands(void)
+	const std::vector<std::string> & Filter::commands(void)
 	{
 		return commands_;
 	}
 
-	std::string Job::mktemp(const std::string & dir)
+	std::string Filter::mktemp(const std::string & dir)
 	{
 		std::string       t;
 		std::stringstream s;
@@ -90,7 +90,7 @@ namespace FCP {
 		return t;
 	}
 
-	void Job::setup(const std::string & dir)
+	void Filter::setup(const std::string & dir)
 	{
 		std::vector<std::string>::iterator ic;
 
@@ -163,7 +163,7 @@ namespace FCP {
 		}
 	}
 
-	void Job::run(bool dry_run)
+	void Filter::run(bool dry_run)
 	{
 		std::vector<std::string>::iterator ic;
 		std::vector<std::string>::size_type count;

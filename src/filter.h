@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef JOB_H
-#define JOB_H
+#ifndef FILTER_H
+#define FILTER_H
 
 #include "config.h"
 
@@ -29,13 +29,13 @@
 #include "rule.h"
 
 namespace FCP {
-	class Job {
+	class Filter {
 	public:
-		Job(const std::string &        id,
-		    const FCP::File &          input,
-		    std::vector<FCP::Rule *> & rules,
-		    const FCP::File &          output);
-		~Job(void);
+		Filter(const std::string &        id,
+		       const FCP::File &          input,
+		       std::vector<FCP::Rule *> & rules,
+		       const FCP::File &          output);
+		~Filter(void);
 
 		const std::string &              id(void);
 		const std::vector<std::string> & commands(void);
@@ -58,4 +58,4 @@ namespace FCP {
 	};
 };
 
-#endif // JOB_H
+#endif // FILTER_H
