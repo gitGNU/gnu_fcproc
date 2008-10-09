@@ -87,7 +87,7 @@ void help(void)
 #endif
 		<< "  -r, --rules=FILE        use alternate rules file" <<                                        std::endl
 		<< "                          [default " << rules_file << "]" <<                                  std::endl
-		<< "  -m, --max-depth=NUM     use NUM as max filter-chain depth" <<                               std::endl
+		<< "  -m, --max-depth=NUM     use NUM as max filter-chains depth" <<                              std::endl
 		<< "                          [default " << max_depth << "]" <<                                   std::endl
 		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                  std::endl
 		<< "                          [default " << temp_dir << "]" <<                                    std::endl
@@ -124,7 +124,7 @@ bool build_chain(const std::map<std::string, std::set<FCP::Rule *> > & rules,
 
 	mdepth--;
 	if (mdepth == 0) {
-		// Max filter-chain size exceeded
+		// Max filters-chain size exceeded
 		return false;
 	}
 
@@ -162,7 +162,7 @@ void build_chains(const std::map<std::string, std::set<FCP::Rule *> > & rules,
 	BUG_ON(out.size() == 0);
 	BUG_ON(mdepth <= 0);
 
-	TR_DBG("Looking for filter-chain '%s' -> '%s' (max depth %d)\n",
+	TR_DBG("Looking for filters-chain '%s' -> '%s' (max depth %d)\n",
 	       in.c_str(), out.c_str(), mdepth);
 
 	if (!build_chain(rules, in, out, mdepth, chain)) {
@@ -185,7 +185,7 @@ FCP::Filter * transform(const FCP::Transformation & transformation,
 	       transformation.input().name().c_str(),
 	       transformation.output().name().c_str());
 
-	// Build the filter-chain
+	// Build the filters-chain
 	std::vector<FCP::Rule *> chain;
 	build_chains(rules,
 		     transformation.input().extension(),
@@ -193,7 +193,7 @@ FCP::Filter * transform(const FCP::Transformation & transformation,
 		     mdepth,
 		     chain);
 	if (chain.size() == 0) {
-		throw Exception("No filter-chain available for "
+		throw Exception("No filters-chain available for "
 				"'" + transformation.tag() + "' "
 				"transformation");
 	}
