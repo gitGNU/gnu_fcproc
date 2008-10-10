@@ -84,10 +84,11 @@ namespace FCP {
 		size_t      number = 0;
 		enum {
 			S_IDLE,
-			S_HEADER,
-			S_BODY,
-			S_COMPLETE,
-		}           state = S_IDLE;
+			S_INCLUDE,
+			S_RULE_HEADER,
+			S_RULE_BODY,
+			S_RULE_COMPLETE,
+		} state;
 
 		std::string              tag_in   = "";
 		std::string              tag_out  = "";
@@ -95,6 +96,7 @@ namespace FCP {
 
 		commands.clear();
 
+		state = S_IDLE;
 		while (!stream.eof()) {
 			if (state == S_IDLE) {
 				// Read a new line
@@ -103,7 +105,11 @@ namespace FCP {
 				P_DBG("  State %d, number %d, line '%s'\n",
 				      state, number, line.c_str());
 
-				// Remove comments
+				// Handle include
+
+				// XXX FIXME: Add code here
+
+				// Handle comments
 				line = line.substr(0, line.find("#"));
 				line = String::trim_right(line, " \t");
 
@@ -115,19 +121,18 @@ namespace FCP {
 					continue;
 				}
 
-				//
-				// XXX FIXME:
-				//     Add 'include' handling here
-				//
-
 				// Line is not empty, start reading header
-				state = S_HEADER;
-			} else if (state == S_HEADER) {
+				state = S_RULE_HEADER;
+			} else if (state == S_INCLUDE) {
+				state = S_IDLE;
+			} else if (state == S_RULE_HEADER) {
 				std::string::size_type delimiter_pos;
 
 				delimiter_pos = line.find(":");
 				if (delimiter_pos >= std::string::npos) {
 					throw Exception("No delimiter found "
+							"in file "
+							"'" + fname + "'"
 							"at line "
 							"'" + line + "'");
 				}
@@ -135,6 +140,8 @@ namespace FCP {
 				tag_in = line.substr(0, delimiter_pos);
 				if (tag_in == "") {
 					throw Exception("Missing input tag "
+							"in file "
+							"'" + fname + "'"
 							"at line "
 							"'" + line + "'");
 				}
@@ -142,6 +149,8 @@ namespace FCP {
 				tag_out = line.substr(delimiter_pos + 1);
 				if (tag_out == "") {
 					throw Exception("Missing output tag "
+							"in file "
+							"'" + fname + "'"
 							"at line "
 							"'" + line + "'");
 				}
@@ -153,8 +162,8 @@ namespace FCP {
 				P_DBG("  tag out = '%s'\n", tag_out.c_str());
 
 				// Header read, start reading body
-				state = S_BODY;
-			} else if (state == S_BODY) {
+				state = S_RULE_BODY;
+			} else if (state == S_RULE_BODY) {
 				// Read a new line
 				std::getline(stream, line);
 				number++;
@@ -163,18 +172,20 @@ namespace FCP {
 
 				// Empty lines complete the body part
 				if (line.size() == 0) {
-					state = S_COMPLETE;
+					state = S_RULE_COMPLETE;
 					continue;
 				}
 				if (line[0] != '\t') {
 					throw Exception("Wrong body "
+							"in file "
+							"'" + fname + "'"
 							"at line "
 							"'" + line + "'");
 				}
 				line = String::trim_both(line, " \t");
 				commands.push_back(line);
 
-			} else if (state == S_COMPLETE) {
+			} else if (state == S_RULE_COMPLETE) {
 				BUG_ON(tag_in  == "");
 				BUG_ON(tag_out == "");
 				BUG_ON(commands.size() < 1);
