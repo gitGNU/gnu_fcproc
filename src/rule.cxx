@@ -101,8 +101,8 @@ namespace FCP {
 		while (!stream.eof()) {
 			if (state == S_IDLE) {
 				// Read a new line
-				std::getline(stream, line);
-				number++;
+				std::getline(stream, line); number++;
+
 				P_DBG("  State %d, number %d, line '%s'\n",
 				      state, number, line.c_str());
 
@@ -164,7 +164,9 @@ namespace FCP {
 							"in file "
 							"'" + fname + "'"
 							" at line "
-							"'" + line + "'");
+							"'" +
+							String::itos(number) +
+							"'");
 				}
 
 				tag_in = line.substr(0, delimiter_pos);
@@ -173,7 +175,9 @@ namespace FCP {
 							"in file "
 							"'" + fname + "'"
 							" at line "
-							"'" + line + "'");
+							"'" +
+							String::itos(number) +
+							"'");
 				}
 
 				tag_out = line.substr(delimiter_pos + 1);
@@ -182,7 +186,9 @@ namespace FCP {
 							"in file "
 							"'" + fname + "'"
 							" at line "
-							"'" + line + "'");
+							"'" +
+							String::itos(number) +
+							"'");
 				}
 
 				BUG_ON(tag_in  == "");
@@ -197,8 +203,8 @@ namespace FCP {
 
 			} else if (state == S_RULE_BODY) {
 				// Read a new line
-				std::getline(stream, line);
-				number++;
+				std::getline(stream, line); number++;
+
 				P_DBG("  State %d, number %d, line '%s'\n",
 				      state, number, line.c_str());
 
@@ -212,7 +218,9 @@ namespace FCP {
 							"in file "
 							"'" + fname + "'"
 							" at line "
-							"'" + line + "'");
+							"'" +
+							String::itos(number) +
+							"'");
 				}
 				line = String::trim_both(line, " \t");
 				commands.push_back(line);
