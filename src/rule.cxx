@@ -163,7 +163,7 @@ namespace FCP {
 					throw Exception("No delimiter found "
 							"in file "
 							"'" + fname + "'"
-							"at line "
+							" at line "
 							"'" + line + "'");
 				}
 
@@ -172,7 +172,7 @@ namespace FCP {
 					throw Exception("Missing input tag "
 							"in file "
 							"'" + fname + "'"
-							"at line "
+							" at line "
 							"'" + line + "'");
 				}
 
@@ -181,7 +181,7 @@ namespace FCP {
 					throw Exception("Missing output tag "
 							"in file "
 							"'" + fname + "'"
-							"at line "
+							" at line "
 							"'" + line + "'");
 				}
 
@@ -211,7 +211,7 @@ namespace FCP {
 					throw Exception("Wrong body "
 							"in file "
 							"'" + fname + "'"
-							"at line "
+							" at line "
 							"'" + line + "'");
 				}
 				line = String::trim_both(line, " \t");
