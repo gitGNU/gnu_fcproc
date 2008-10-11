@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include <string>
+#include <sstream>
 
 namespace String {
 	std::string trim_left(const std::string & s,
@@ -33,6 +34,7 @@ namespace String {
 	std::string replace(std::string &       in,
 			    const std::string & from,
 			    const std::string & to);
+	std::string itos(int value);
 };
 
 #endif // LIBS_MISC_STRING_H

@@ -19,6 +19,7 @@
 #include "config.h"
 
 #include <string>
+#include <sstream>
 
 #include "libs/misc/debug.h"
 
@@ -78,5 +79,14 @@ namespace String {
 		//TR_DBG("String is now '%s'\n", t.c_str());
 
 		return t;
+	}
+
+	std::string itos(int value)
+	{
+		std::stringstream tmp;
+
+		tmp << value;
+
+		return tmp.str();
 	}
 }
