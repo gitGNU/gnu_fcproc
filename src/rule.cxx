@@ -30,7 +30,7 @@
 #include "exception.h"
 #include "rule.h"
 
-#define PARSER_DEBUGS 0
+#define PARSER_DEBUGS 1
 #if PARSER_DEBUGS
 #define P_DBG(FMT,ARGS...) TR_DBG(FMT, ##ARGS);
 #else
@@ -66,6 +66,7 @@ namespace FCP {
 		return commands_;
 	}
 
+	// XXX FIXME: Rewrite parse_rules() ... it is really ugly
 	void parse_rules(const std::string &                             fname,
 			 std::map<std::string, std::set<FCP::Rule *> > & rules)
 	{
@@ -105,11 +106,7 @@ namespace FCP {
 				P_DBG("  State %d, number %d, line '%s'\n",
 				      state, number, line.c_str());
 
-				// Handle include
-
-				// XXX FIXME: Add code here
-
-				// Handle comments
+				// Remove comments
 				line = line.substr(0, line.find("#"));
 				line = String::trim_right(line, " \t");
 
@@ -121,10 +118,43 @@ namespace FCP {
 					continue;
 				}
 
+#if 0
+				// Is it an include ?
+				{
+					std::string tmp;
+
+					tmp = String::trim_left(line, " ");
+
+					P_DBG("  include position %d\n",
+					      tmp.find("include "));
+
+					if (tmp.find("include ") ==
+					    std::string::npos) {
+						tmp = tmp.substr(8);
+						tmp = String::trim_both(tmp,
+									" ");
+						state = S_INCLUDE;
+						P_DBG("  include = '%s'\n",
+						      tmp.c_str());
+						continue;
+					}
+				}
+#endif
+
 				// Line is not empty, start reading header
 				state = S_RULE_HEADER;
+				continue;
+
 			} else if (state == S_INCLUDE) {
+				std::string incfile;
+
+				incfile = "";
+
+				parse_rules(incfile, rules);
+
 				state = S_IDLE;
+				continue;
+
 			} else if (state == S_RULE_HEADER) {
 				std::string::size_type delimiter_pos;
 
@@ -163,6 +193,8 @@ namespace FCP {
 
 				// Header read, start reading body
 				state = S_RULE_BODY;
+				continue;
+
 			} else if (state == S_RULE_BODY) {
 				// Read a new line
 				std::getline(stream, line);
@@ -184,6 +216,7 @@ namespace FCP {
 				}
 				line = String::trim_both(line, " \t");
 				commands.push_back(line);
+				continue;
 
 			} else if (state == S_RULE_COMPLETE) {
 				BUG_ON(tag_in  == "");
@@ -192,8 +225,6 @@ namespace FCP {
 
 				P_DBG("  %s -> %s\n",
 				      tag_in.c_str(), tag_out.c_str());
-				P_DBG("  %s\n",
-				      commands.c_str());
 
 				FCP::Rule * r;
 
@@ -207,9 +238,13 @@ namespace FCP {
 				commands.clear();
 
 				state = S_IDLE;
+				continue;
+
 			} else {
 				BUG();
 			}
+
+			BUG();
 		}
 
 		stream.close();
