@@ -23,15 +23,43 @@
 
 #include <string>
 #include <map>
+#include <vector>
+
+#include "regex.h"
 
 #include "rule.h"
 
 namespace FCP {
-	namespace Rules {
-		void parse(const std::string &       filename,
-			   std::map<std::string,
-			   std::set<FCP::Rule *> > & rules);
-	}
+	class Rules {
+	public:
+		Rules(const std::string & filename);
+		~Rules(void);
+
+		void chains(const std::string &        in,
+			    const std::string &        out,
+			    int                        mdepth,
+			    std::vector<FCP::Rule *> & chain);
+
+	protected:
+
+	private:
+		regmatch_t re_match_[3];
+		regex_t    re_empty_;
+		regex_t    re_comment_;
+		regex_t    re_include_;
+		regex_t    re_header_;
+		regex_t    re_body_;
+
+		std::map<std::string,
+			 std::set<FCP::Rule *> > rules_;
+
+		void parse(const std::string & filename);
+
+		bool build_chain(const std::string &         in,
+				 const std::string &         out,
+				 int                         mdepth,
+				 std::vector<FCP::Rule *> &  chain);
+	};
 }
 
 #endif // RULES_H

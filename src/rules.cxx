@@ -32,6 +32,70 @@
 #include "exception.h"
 #include "rules.h"
 
+namespace FCP {
+	Rules::Rules(const std::string & filename)
+	{
+		if (regcomp(&re_empty_,
+			    "^[ \t]*$",
+			    REG_NOSUB)) {
+			throw Exception("Cannot compile empty regexp");
+		}
+
+		if (regcomp(&re_comment_,
+			    "^[ \t]*#.*$",
+			    REG_NOSUB)) {
+			throw Exception("Cannot compile comment regexp");
+		}
+
+		if (regcomp(&re_include_,
+			    "^[ \t]*include[ \t]+\"(.*)\"[ \t]*$",
+			    REG_EXTENDED)) {
+			throw Exception("Cannot compile include regexp");
+		}
+
+		if (regcomp(&re_header_,
+			    "^(.*):(.*)[ \t]*$",
+			    REG_EXTENDED)) {
+			throw Exception("Cannot compile header regexp");
+		}
+
+		if (regcomp(&re_body_,
+			    "^\t(.*)$",
+			    REG_EXTENDED)) {
+			throw Exception("Cannot compile body regexp");
+		}
+
+		parse(filename);
+
+		regfree(&re_body_);
+		regfree(&re_header_);
+		regfree(&re_include_);
+		regfree(&re_comment_);
+		regfree(&re_empty_);
+
+		std::map<std::string, std::set<FCP::Rule *> >::iterator ir;
+		std::set<FCP::Rule *>::iterator                         is;
+
+		TR_DBG("Known rules:\n");
+		for (ir  = rules_.begin();
+		     ir != rules_.end();
+		     ir++) {
+			TR_DBG("  '%s' ->\n", (*ir).first.c_str());
+			for (is  = (*ir).second.begin();
+			     is != (*ir).second.end();
+			     is++) {
+				BUG_ON((*ir).first != (*is)->input());
+
+				TR_DBG("    '%s'\n",
+				       (*is)->output().c_str());
+			}
+		}
+	}
+
+	Rules::~Rules(void)
+	{
+	}
+
 #define PARSER_DEBUGS 1
 #if PARSER_DEBUGS
 #define P_DBG(FMT,ARGS...) TR_DBG(FMT, ##ARGS);
@@ -39,219 +103,297 @@
 #define P_DBG(FMT,ARGS...)
 #endif
 
-namespace FCP {
-	namespace Rules {
-		// XXX FIXME: Rewrite parse() ... it is really ugly
-		void parse(const std::string &       filename,
-			   std::map<std::string,
-			   std::set<FCP::Rule *> > & rules)
-		{
-			P_DBG("Parsing rules from file '%s'\n", filename.c_str());
+#define DUMP_REGMATCH(X) {						\
+		P_DBG("    regexmatch_t.rm_so = %d\n", (X).rm_so);	\
+		P_DBG("    regexmatch_t.rm_eo = %d\n", (X).rm_eo);	\
+	}
 
-			std::ifstream stream;
+#if 0
+#define DUMP_REGMATCHES(X) {			\
+	DUMP_REGMATCH((X)[0]);			\
+	DUMP_REGMATCH((X)[1]);			\
+	DUMP_REGMATCH((X)[2]);			\
+}
+#else
+#define DUMP_REGMATCHES(X)
+#endif
 
-			stream.open(filename.c_str());
-			if (!stream) {
-				throw Exception("Cannot open file "
-						"'" + filename + "' "
-						"for reading");
-			}
+	void Rules::parse(const std::string & filename)
+	{
+		P_DBG("Parsing rules from file '%s'\n",
+		      filename.c_str());
 
-			std::string line   = "";
-			size_t      number = 0;
-			enum {
-				S_IDLE,
-				S_INCLUDE,
-				S_RULE_HEADER,
-				S_RULE_BODY,
-				S_RULE_COMPLETE,
-			} state;
+		std::ifstream stream;
 
-			std::string              tag_in   = "";
-			std::string              tag_out  = "";
-			std::vector<std::string> commands;
+		stream.open(filename.c_str());
+		if (!stream) {
+			throw Exception("Cannot open file "
+					"'" + filename + "' "
+					"for reading");
+		}
 
-			regmatch_t re_match;
-			regex_t *  re_comment = 0;
-			regex_t *  re_include = 0;
-			regex_t *  re_header  = 0;
+		std::string line   = "";
+		size_t      number = 0;
+		enum {
+			S_IDLE,
+			S_RULE_HEADER,
+			S_RULE_BODY,
+			S_RULE_COMPLETE,
+		} state;
 
-			{
-				int ret;
+		std::string              tag_in   = "";
+		std::string              tag_out  = "";
+		std::vector<std::string> commands;
 
-				ret = regcomp(re_comment,
-					      "^[ \t]*#.*$", 0);
-				if (ret != 0) {
-					throw Exception("Cannot compile "
-							"comment regexp");
+		commands.clear();
+
+		state = S_IDLE;
+		while (!stream.eof()) {
+			if (state == S_IDLE) {
+				P_DBG("State %d, number %d, line '%s'\n",
+				      state, number, line.c_str());
+
+				// Read a new line
+				std::getline(stream, line); number++;
+
+				P_DBG("  line %d = '%s'\n",
+				      number, line.c_str());
+
+				// Is this an empty line ?
+				if (regexec(&re_empty_,
+					    line.c_str(),
+					    3, re_match_, 0) == 0) {
+					P_DBG("  Got empty line\n");
+					continue;
 				}
-				BUG_ON(re_comment != 0);
 
-				ret = regcomp(re_include,
-					      "^[ \t]*include[ \t]+\"(.*)\"[ \t]*$", 0);
-				if (ret != 0) {
-					throw Exception("Cannot compile "
-							"include regexp");
+				// Is this a comment line ?
+				if (regexec(&re_comment_,
+					    line.c_str(),
+					    3, re_match_, 0) == 0) {
+					P_DBG("  Got comment line\n");
+					continue;
 				}
-				BUG_ON(re_include != 0);
 
-				ret = regcomp(re_header,
-					      "^(.*):(.*)[ \t]*$", 0);
-				if (ret != 0) {
-					throw Exception("Cannot compile include regexp");
+				// Is this an include line ?
+				if (regexec(&re_include_,
+					    line.c_str(),
+					    3, re_match_, 0) == 0) {
+
+					DUMP_REGMATCHES(re_match_);
+
+					std::string include;
+					include =
+						line.substr(re_match_[1].rm_so,
+							    re_match_[1].rm_eo -
+							    re_match_[1].rm_so);
+
+					P_DBG("  Got include is '%s'\n",
+					      include.c_str());
+					parse(include);
+					continue;
 				}
-				BUG_ON(re_include != 0);
 
+				// Line is not empty, start reading header
+				state = S_RULE_HEADER;
+				continue;
+
+			} else if (state == S_RULE_HEADER) {
+				P_DBG("State %d, number %d, line '%s'\n",
+				      state, number, line.c_str());
+
+				// Is this an header line ?
+				if (regexec(&re_header_,
+					    line.c_str(),
+					    3, re_match_, 0) != 0) {
+					throw Exception("Missing header "
+							"in file "
+							"'" + filename + "'"
+							" at line "
+							"'" +
+							String::itos(number) +
+							"'");
+				}
+
+				P_DBG("  Got header\n");
+
+				DUMP_REGMATCHES(re_match_);
+
+				tag_in = line.substr(re_match_[1].rm_so,
+						     re_match_[1].rm_eo -
+						     re_match_[1].rm_so);
+				if (tag_in == "") {
+					throw Exception("Missing input tag "
+							"in file "
+							"'" + filename + "'"
+							" at line "
+							"'" +
+							String::itos(number) +
+							"'");
+				}
+
+				tag_out = line.substr(re_match_[2].rm_so,
+						      re_match_[2].rm_eo -
+						      re_match_[2].rm_so);
+				if (tag_out == "") {
+					throw Exception("Missing output tag "
+							"in file "
+							"'" + filename + "'"
+							" at line "
+							"'" +
+							String::itos(number) +
+							"'");
+				}
+
+				BUG_ON(tag_in  == "");
+				BUG_ON(tag_out == "");
+
+				P_DBG("  tag in  = '%s'\n", tag_in.c_str());
+				P_DBG("  tag out = '%s'\n", tag_out.c_str());
+
+				// Header read, start reading body
+				state = S_RULE_BODY;
+				continue;
+
+			} else if (state == S_RULE_BODY) {
+				P_DBG("State %d, number %d, line '%s'\n",
+				      state, number, line.c_str());
+
+				// Read a new line
+				std::getline(stream, line); number++;
+
+				P_DBG("  State %d, number %d, line '%s'\n",
+				      state, number, line.c_str());
+
+				// Empty lines complete the body part
+				if (line.size() == 0) {
+					if (commands.size() == 0) {
+						throw Exception("Missing body "
+								"in file "
+								"'" + filename + "'"
+								" at line "
+								"'" +
+								String::itos(number) +
+								"'");
+					}
+
+					state = S_RULE_COMPLETE;
+					continue;
+				}
+
+				if (regexec(&re_body_,
+					    line.c_str(),
+					    3, re_match_, 0) != 0) {
+					throw Exception("Wrong body "
+							"in file "
+							"'" + filename + "'"
+							" at line "
+							"'" +
+							String::itos(number) +
+							"'");
+				}
+
+				DUMP_REGMATCHES(re_match_);
+
+				line = line.substr(re_match_[1].rm_so,
+						   re_match_[1].rm_eo -
+						   re_match_[1].rm_so);
+
+				commands.push_back(line);
+				continue;
+
+			} else if (state == S_RULE_COMPLETE) {
+				P_DBG("State %d, number %d, line '%s'\n",
+				      state, number, line.c_str());
+
+				BUG_ON(tag_in  == "");
+				BUG_ON(tag_out == "");
+				BUG_ON(commands.size() < 1);
+
+				P_DBG("  %s -> %s\n",
+				      tag_in.c_str(), tag_out.c_str());
+
+				FCP::Rule * r;
+
+				r = new FCP::Rule(tag_in, tag_out, commands);
+				BUG_ON(r == 0);
+
+				rules_[tag_in].insert(r);
+
+				tag_in   = "";
+				tag_out  = "";
 				commands.clear();
 
 				state = S_IDLE;
-				while (!stream.eof()) {
-					if (state == S_IDLE) {
-						// Read a new line
-						std::getline(stream, line); number++;
+				continue;
 
-						P_DBG("  State %d, number %d, line '%s'\n",
-						      state, number, line.c_str());
-
-						// Remove comments from line
-						line = line.substr(0, line.find("#"));
-						line = String::trim_right(line, " \t");
-
-						P_DBG("  line %d = '%s'\n",
-						      number, line.c_str());
-
-						if (line == "") {
-							// Discard empty lines
-							continue;
-						}
-
-						// Is this an include line ?
-						if (regexec(re_include, line.c_str(),
-							    1, &re_match, 0)) {
-							std::string include;
-							include = line.substr(re_match.rm_so,
-									      re_match.rm_eo);
-							P_DBG("  include is '%s'\n",
-							      include.c_str());
-						}
-
-						// Line is not empty, start reading header
-						state = S_RULE_HEADER;
-						continue;
-
-					} else if (state == S_INCLUDE) {
-						std::string incfile;
-
-						incfile = "";
-
-						parse(incfile, rules);
-
-						state = S_IDLE;
-						continue;
-
-					} else if (state == S_RULE_HEADER) {
-						std::string::size_type delimiter_pos;
-
-						delimiter_pos = line.find(":");
-						if (delimiter_pos >= std::string::npos) {
-							throw Exception("No delimiter found "
-									"in file "
-									"'" + filename + "'"
-									" at line "
-									"'" +
-									String::itos(number) +
-									"'");
-						}
-
-						tag_in = line.substr(0, delimiter_pos);
-						if (tag_in == "") {
-							throw Exception("Missing input tag "
-									"in file "
-									"'" + filename + "'"
-									" at line "
-									"'" +
-									String::itos(number) +
-									"'");
-						}
-
-						tag_out = line.substr(delimiter_pos + 1);
-						if (tag_out == "") {
-							throw Exception("Missing output tag "
-									"in file "
-									"'" + filename + "'"
-									" at line "
-									"'" +
-									String::itos(number) +
-									"'");
-						}
-
-						BUG_ON(tag_in  == "");
-						BUG_ON(tag_out == "");
-
-						P_DBG("  tag in  = '%s'\n", tag_in.c_str());
-						P_DBG("  tag out = '%s'\n", tag_out.c_str());
-
-						// Header read, start reading body
-						state = S_RULE_BODY;
-						continue;
-
-					} else if (state == S_RULE_BODY) {
-						// Read a new line
-						std::getline(stream, line); number++;
-
-						P_DBG("  State %d, number %d, line '%s'\n",
-						      state, number, line.c_str());
-
-						// Empty lines complete the body part
-						if (line.size() == 0) {
-							state = S_RULE_COMPLETE;
-							continue;
-						}
-						if (line[0] != '\t') {
-							throw Exception("Wrong body "
-									"in file "
-									"'" + filename + "'"
-									" at line "
-									"'" +
-									String::itos(number) +
-									"'");
-						}
-						line = String::trim_both(line, " \t");
-						commands.push_back(line);
-						continue;
-
-					} else if (state == S_RULE_COMPLETE) {
-						BUG_ON(tag_in  == "");
-						BUG_ON(tag_out == "");
-						BUG_ON(commands.size() < 1);
-
-						P_DBG("  %s -> %s\n",
-						      tag_in.c_str(), tag_out.c_str());
-
-						FCP::Rule * r;
-
-						r = new FCP::Rule(tag_in, tag_out, commands);
-						BUG_ON(r == 0);
-
-						rules[tag_in].insert(r);
-
-						tag_in   = "";
-						tag_out  = "";
-						commands.clear();
-
-						state = S_IDLE;
-						continue;
-
-					} else {
-						BUG();
-					}
-
-					BUG();
-				}
-
-				regfree(re_include);
-				stream.close();
+			} else {
+				BUG();
 			}
+
+			BUG();
+		}
+
+		stream.close();
+	}
+
+	bool Rules::build_chain(const std::string &         in,
+				const std::string &         out,
+				int                         mdepth,
+				std::vector<FCP::Rule *> &  chain)
+	{
+		BUG_ON(mdepth <= 0);
+
+		mdepth--;
+		if (mdepth == 0) {
+			// Max filters-chain size exceeded
+			return false;
+		}
+
+		std::map<std::string,
+			std::set<FCP::Rule *> >::const_iterator r;
+		r = rules_.find(in);
+		if (r == rules_.end()) {
+			return false;
+		}
+
+		std::set<FCP::Rule *>::const_iterator i;
+
+		for (i = (*r).second.begin(); i != (*r).second.end(); i++) {
+			if ((*i)->output() == out) {
+				//TR_DBG("Got chain!\n");
+				chain.push_back(*i);
+				return true;
+			}
+
+			if (build_chain((*i)->output(), out, mdepth, chain)) {
+				chain.push_back(*i);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	void Rules::chains(const std::string &        in,
+			   const std::string &        out,
+			   int                        mdepth,
+			   std::vector<FCP::Rule *> & chain)
+	{
+		BUG_ON(in.size()  == 0);
+		BUG_ON(out.size() == 0);
+		BUG_ON(mdepth <= 0);
+
+		TR_DBG("Looking for filters-chain '%s' -> '%s' "
+		       "(max depth %d)\n",
+		       in.c_str(), out.c_str(), mdepth);
+
+		if (!build_chain(in, out, mdepth, chain)) {
+			//TR_DBG("No chain found\n");
+			chain.clear();
+		} else {
+			//TR_DBG("Chain found!\n");
+			std::reverse(chain.begin(), chain.end());
 		}
 	}
 }
