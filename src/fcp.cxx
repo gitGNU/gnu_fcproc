@@ -384,7 +384,7 @@ int main(int argc, char * argv[])
 		std::set<FCP::Rule *>::iterator                         is;
 
 		try {
-			FCP::parse_rules(rules_file, rules);
+			FCP::Rules::parse(rules_file, rules);
 
 			TR_DBG("Known rules:\n");
 			for (ir  = rules.begin();
