@@ -96,7 +96,7 @@ namespace FCP {
 	{
 	}
 
-#define PARSER_DEBUGS 1
+#define PARSER_DEBUGS 0
 #if PARSER_DEBUGS
 #define P_DBG(FMT,ARGS...) TR_DBG(FMT, ##ARGS);
 #else
