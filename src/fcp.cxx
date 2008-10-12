@@ -32,6 +32,7 @@
 #include "libs/file/utils.h"
 #include "exception.h"
 #include "rule.h"
+#include "rules.h"
 #include "transformation.h"
 #include "filter.h"
 
