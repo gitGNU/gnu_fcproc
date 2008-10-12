@@ -27,9 +27,11 @@
 #include "rule.h"
 
 namespace FCP {
-
-	void parse_rules(const std::string &                             fame,
-			 std::map<std::string, std::set<FCP::Rule *> > & rules);
+	namespace Rules {
+		void parse(const std::string &       filename,
+			   std::map<std::string,
+			   std::set<FCP::Rule *> > & rules);
+	}
 }
 
 #endif // RULES_H
