@@ -45,9 +45,6 @@ namespace FCP {
 		std::string              tag_out_;
 		std::vector<std::string> commands_;
 	};
-
-	void parse_rules(const std::string &                             fame,
-			 std::map<std::string, std::set<FCP::Rule *> > & rules);
 };
 
 #endif // RULE_H
