@@ -26,7 +26,6 @@
 cat > ./include-4 <<EOF
 ext1:ext2
 	command
-
 EOF
 
 cat > ./include-3 <<EOF
