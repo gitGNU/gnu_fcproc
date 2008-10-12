@@ -32,7 +32,6 @@ bin_PROGRAMS =					\
 
 fcp_SOURCES =					\
 	fcp.cxx					\
-	exception.h				\
 	transformation.h			\
 	transformation.cxx			\
 	file.h					\
@@ -58,6 +57,7 @@ noinst_LIBRARIES =				\
 	libfile.a
 
 libmisc_a_SOURCES =				\
+	libs/misc/exception.h			\
 	libs/misc/debug.h			\
 	libs/misc/debug.cxx			\
 	libs/misc/trace.h			\
