@@ -46,6 +46,6 @@ namespace FCP {
 		FCP::File * input_;
 		FCP::File * output_;
 	};
-};
+}
 
 #endif // TRANSFORMATION_H

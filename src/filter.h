@@ -56,6 +56,6 @@ namespace FCP {
 
 		std::string         mktemp(const std::string & dir);
 	};
-};
+}
 
 #endif // FILTER_H

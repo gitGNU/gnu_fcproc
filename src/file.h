@@ -45,6 +45,6 @@ namespace FCP {
 		std::string basename_;
 		std::string extension_;
 	};
-};
+}
 
 #endif // FILE_H

@@ -45,6 +45,6 @@ namespace FCP {
 		std::string              tag_out_;
 		std::vector<std::string> commands_;
 	};
-};
+}
 
 #endif // RULE_H
