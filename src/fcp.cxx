@@ -30,7 +30,7 @@
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
 #include "libs/file/utils.h"
-#include "exception.h"
+#include "libs/misc/exception.h"
 #include "rule.h"
 #include "rules.h"
 #include "transformation.h"

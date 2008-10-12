@@ -21,7 +21,7 @@
 #include <string>
 
 #include "libs/misc/debug.h"
-#include "exception.h"
+#include "libs/misc/exception.h"
 #include "transformation.h"
 
 namespace FCP {
