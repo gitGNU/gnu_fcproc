@@ -23,15 +23,22 @@
 
 . $testdir/defs || exit 1
 
+cat > ./include-4 <<EOF
+ext1:ext2
+	command
+
+EOF
+
 cat > ./include-3 <<EOF
-	#	include "./include-4"
-#	include "./include-4"
-#include "./include-4"
+	#	include "./include-40"
+#	include "./include-41"
+#include "./include-42"
+	 include "./include-4"
 EOF
 
 cat > ./include-2 <<EOF
 # This is a test for include
-	include "./include-2"	
+	include "./include-3"	
 EOF
 
 cat > ./include-1 <<EOF
