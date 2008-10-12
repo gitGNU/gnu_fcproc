@@ -115,69 +115,8 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-bool build_chain(const std::map<std::string, std::set<FCP::Rule *> > & rules,
-		 const std::string &                                   in,
-		 const std::string &                                   out,
-		 int                                                   mdepth,
-		 std::vector<FCP::Rule *> &                            chain)
-{
-	BUG_ON(mdepth <= 0);
-
-	mdepth--;
-	if (mdepth == 0) {
-		// Max filters-chain size exceeded
-		return false;
-	}
-
-	std::map<std::string, std::set<FCP::Rule *> >::const_iterator r;
-	r = rules.find(in);
-	if (r == rules.end()) {
-		return false;
-	}
-
-	std::set<FCP::Rule *>::const_iterator i;
-
-	for (i = (*r).second.begin(); i != (*r).second.end(); i++) {
-		if ((*i)->output() == out) {
-			//TR_DBG("Got chain!\n");
-			chain.push_back(*i);
-			return true;
-		}
-
-		if (build_chain(rules, (*i)->output(), out, mdepth, chain)) {
-			chain.push_back(*i);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void build_chains(const std::map<std::string, std::set<FCP::Rule *> > & rules,
-		  const std::string &                                   in,
-		  const std::string &                                   out,
-		  int                                                   mdepth,
-		  std::vector<FCP::Rule *> &                            chain)
-{
-	BUG_ON(in.size()  == 0);
-	BUG_ON(out.size() == 0);
-	BUG_ON(mdepth <= 0);
-
-	TR_DBG("Looking for filters-chain '%s' -> '%s' (max depth %d)\n",
-	       in.c_str(), out.c_str(), mdepth);
-
-	if (!build_chain(rules, in, out, mdepth, chain)) {
-		//TR_DBG("No chain found\n");
-		chain.clear();
-	} else {
-		//TR_DBG("Chain found!\n");
-		std::reverse(chain.begin(), chain.end());
-	}
-}
-
 FCP::Filter * transform(const FCP::Transformation & transformation,
-			const std::map<std::string,
-			std::set<FCP::Rule *> > &   rules,
+			FCP::Rules &                rules,
 			int                         mdepth)
 {
 	BUG_ON(mdepth <= 0);
@@ -188,8 +127,7 @@ FCP::Filter * transform(const FCP::Transformation & transformation,
 
 	// Build the filters-chain
 	std::vector<FCP::Rule *> chain;
-	build_chains(rules,
-		     transformation.input().extension(),
+	rules.chains(transformation.input().extension(),
 		     transformation.output().extension(),
 		     mdepth,
 		     chain);
@@ -379,27 +317,10 @@ int main(int argc, char * argv[])
 #endif
 
 		// Read rules file
-		std::map<std::string, std::set<FCP::Rule *> >           rules;
-		std::map<std::string, std::set<FCP::Rule *> >::iterator ir;
-		std::set<FCP::Rule *>::iterator                         is;
+		FCP::Rules * rules;
 
 		try {
-			FCP::Rules::parse(rules_file, rules);
-
-			TR_DBG("Known rules:\n");
-			for (ir  = rules.begin();
-			     ir != rules.end();
-			     ir++) {
-				TR_DBG("  '%s' ->\n", (*ir).first.c_str());
-				for (is  = (*ir).second.begin();
-				     is != (*ir).second.end();
-				     is++) {
-					BUG_ON((*ir).first != (*is)->input());
-
-					TR_DBG("    '%s'\n",
-					       (*is)->output().c_str());
-				}
-			}
+			rules = new FCP::Rules(rules_file);
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 			return 1;
@@ -414,7 +335,7 @@ int main(int argc, char * argv[])
 			     it++) {
 				FCP::Filter * j;
 
-				j = transform(*(*it), rules, max_depth);
+				j = transform(*(*it), *rules, max_depth);
 				BUG_ON(j == 0);
 
 				filters.push_back(j);
@@ -452,15 +373,8 @@ int main(int argc, char * argv[])
 		     it++) {
 			delete (*it);
 		}
-		for (ir  = rules.begin();
-		     ir != rules.end();
-		     ir++) {
-			for (is  = (*ir).second.begin();
-			     is != (*ir).second.end();
-			     is++) {
-				delete (*is);
-			}
-		}
+
+		delete rules;
 
 	} catch (std::exception & e) {
 		TR_ERR("Got exception '%s'\n", e.what());
