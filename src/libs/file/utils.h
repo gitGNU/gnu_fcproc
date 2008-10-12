@@ -27,6 +27,7 @@ namespace File {
 	std::string dirname(const std::string & s);
 	std::string basename(const std::string & s);
 	std::string extension(const std::string & s);
+	time_t      mtime(const std::string & s);
 };
 
 #endif // LIBS_FILE_UTILS_H

@@ -19,9 +19,14 @@
 #include "config.h"
 
 #include <iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include "libs/misc/string.h"
 #include "libs/file/utils.h"
+#include "libs/misc/exception.h"
 
 namespace File {
 	std::string dirname(const std::string & s)
@@ -59,5 +64,20 @@ namespace File {
 		}
 
 		return t;
+	}
+
+	time_t mtime(const std::string & s)
+	{
+		struct stat t;
+
+		if (stat(s.c_str(), &t)) {
+			throw Exception("Cannot stat() file "
+					"'" + s + "' " 
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
+
+		return t.st_mtime;
 	}
 }
