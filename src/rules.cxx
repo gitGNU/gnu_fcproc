@@ -334,6 +334,18 @@ namespace FCP {
 			BUG();
 		}
 
+		// Do we need to push the last command ?
+		if (commands.size() && tag_in != "" && tag_out != "") {
+			// Yes we do
+
+			FCP::Rule * r;
+
+			r = new FCP::Rule(tag_in, tag_out, commands);
+			BUG_ON(r == 0);
+
+			rules_[tag_in].insert(r);
+		}
+
 		stream.close();
 	}
 
