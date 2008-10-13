@@ -23,6 +23,8 @@
 
 . $testdir/defs || exit 1
 
+required="diff"
+
 cat > ./include-4 <<EOF
 ext5:ext6
 	echo "5" >> \$O
