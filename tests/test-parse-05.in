@@ -25,37 +25,48 @@
 
 cat > ./include-4 <<EOF
 ext5:ext6
-	echo "5" > $O
+	echo "5" >> \$O
 EOF
 
 cat > ./include-3 <<EOF
 include "./include-4"
 ext4:ext5
-	echo "4" > $O
+	echo "4" >> \$O
 EOF
 
 cat > ./include-2 <<EOF
 include "./include-3"	
 ext3:ext4
-	echo "3" > $O
+	echo "3" >> \$O
 EOF
 
 cat > ./include-1 <<EOF
 include "./include-2"    
 ext2:ext3
-	echo "2" > $O
+	echo "2" >> \$O
 EOF
 
 cat > ./rules <<EOF
 include "./include-1"
 ext1:ext2
-	echo "1" > $O
+	echo "1" >> \$O
 EOF
 
-cat > ./test1.ext1 <<EOF
-0
+rm -f ./test1.ext1      || exit 1
+echo "0" > ./test1.ext1 || exit 1
+rm -f ./test2.ext5
+
+$FCP -r ./rules -m 100 -s : -t ./ test1.ext1:test2.ext6 || exit 1
+
+rm -f test.exp || exit 1
+cat > test.exp <<EOF
+1
+2
+3
+4
+5
 EOF
 
-$FCP -r ./rules -m 100 -s : -t ./ test1.ext1:test2.ext5 || exit 1
+diff ./test.exp ./test2.ext6 || exit 1
 
 exit 0
