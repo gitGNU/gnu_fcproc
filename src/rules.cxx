@@ -96,7 +96,7 @@ namespace FCP {
 	{
 	}
 
-#define PARSER_DEBUGS 0
+#define PARSER_DEBUGS 1
 #if PARSER_DEBUGS
 #define P_DBG(FMT,ARGS...) TR_DBG(FMT, ##ARGS);
 #else
@@ -356,9 +356,12 @@ namespace FCP {
 	{
 		BUG_ON(mdepth <= 0);
 
+		TR_DBG("Looking for '%s' -> '%s'\n",
+		       in.c_str(), out.c_str());
+
 		mdepth--;
 		if (mdepth == 0) {
-			// Max filters-chain size exceeded
+			TR_DBG("Max filters-chain size exceeded\n");
 			return false;
 		}
 
@@ -366,6 +369,8 @@ namespace FCP {
 			std::set<FCP::Rule *> >::const_iterator r;
 		r = rules_.find(in);
 		if (r == rules_.end()) {
+			TR_DBG("No rules available for '%s' -> '%s'\n",
+			       in.c_str(), out.c_str());
 			return false;
 		}
 
@@ -373,7 +378,7 @@ namespace FCP {
 
 		for (i = (*r).second.begin(); i != (*r).second.end(); i++) {
 			if ((*i)->output() == out) {
-				//TR_DBG("Got chain!\n");
+				TR_DBG("Got chain end!\n");
 				chain.push_back(*i);
 				return true;
 			}
@@ -401,10 +406,10 @@ namespace FCP {
 		       in.c_str(), out.c_str(), mdepth);
 
 		if (!build_chain(in, out, mdepth, chain)) {
-			//TR_DBG("No chain found\n");
+			TR_DBG("No chain found ...\n");
 			chain.clear();
 		} else {
-			//TR_DBG("Chain found!\n");
+			TR_DBG("Chain found!\n");
 			std::reverse(chain.begin(), chain.end());
 		}
 	}
