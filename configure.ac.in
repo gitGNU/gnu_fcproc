@@ -55,6 +55,13 @@ AC_PROG_CXX
 AC_PROG_CXX_C_O
 AC_PROG_RANLIB
 
+#
+# gnulib related
+#
+GNULIB_EARLY
+GNULIB_INIT
+
+
 # Checks for preprocessor flags
 TEMP_FLAGS=""
 AX_CXXCPP_CHECK_FLAG([-Wall],  [],[],[ TEMP_FLAGS="$TEMP_FLAGS -Wall"  ])
@@ -97,6 +104,7 @@ AC_CONFIG_FILES([
 	Makefile
 
 	src/Makefile
+	src/gnulib/Makefile
 
 	tools/Makefile
 	tools/maint/Makefile
