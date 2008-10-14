@@ -22,6 +22,8 @@ include $(top_srcdir)/Makefile.sub
 
 AUTOMAKE_OPTIONS = subdir-objects
 
+SUBDIRS = gnulib
+
 ## Programs
 
 EXTRA_DIST =					\
