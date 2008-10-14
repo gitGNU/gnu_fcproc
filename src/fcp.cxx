@@ -18,7 +18,6 @@
 
 #include "config.h"
 
-#include <getopt.h>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -35,6 +34,7 @@
 #include "rules.h"
 #include "transformation.h"
 #include "filter.h"
+#include "getopt.h"
 
 #define PROGRAM_NAME "fcp"
 
