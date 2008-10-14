@@ -25,6 +25,8 @@ src/autoconfig.h
 src/autoconfig.h.in
 src/stamp-h1
 
+src/gnulib/sys/stat.h
+
 tools/maint/fetch
 tools/maint/whitespace-detect
 tools/maint/gitlog-to-committers
