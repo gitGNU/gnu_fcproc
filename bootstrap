@@ -46,6 +46,14 @@ rm -rf autom4te.cache                                || exit 1
 rm -rf `find ./ -name ".deps"`                       || exit 1
 
 #
+# Call gnulib
+#
+if test -n "`which gnulib-tool`" ; then
+    gnulib-tool --lgpl=2 --no-changelog --aux-dir ./tools/autotools --m4-base ./tools/autotools/m4 --source-base=./src/gnulib --macro-prefix GNULIB --no-vc-files --import sys_stat || exit 1
+fi
+
+
+#
 # configure.ac
 #
 echo "$ME: Building configure.ac from configure.ac.in"
