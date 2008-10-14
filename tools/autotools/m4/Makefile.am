@@ -23,28 +23,33 @@ include $(top_srcdir)/Makefile.sub
 ##
 ## Maintainer related targets
 ##
+
 HOST = "http://autoconf-archive.cryp.to"
 
-DOWNLOAD =					\
+EXTERNAL =					\
 	ax_missing_prog.m4			\
 	ax_path_missing.m4			\
         ax_cxxcpp_check_flag.m4			\
 	ax_print_to_file.m4			\
 	ax_file_escapes.m4
 
+INTERNAL =					\
+	gnulib-cache.m4
+
 MACROS =					\
-	$(DOWNLOAD)
+	$(EXTERNAL)				\
+	$(INTERNAL)
 
 update-local: Makefile
 	rm -r -f fetch-dir && \
 	mkdir fetch-dir && \
-	for i in $(DOWNLOAD) ; do \
+	for i in $(EXTERNAL) ; do \
 		$(FETCH) $(HOST)/$$i fetch-dir/$$i || { \
 			rm -f fetch-dir/$$i ; \
 			exit 1 ; \
 		} \
 	done && \
-	for i in $(DOWNLOAD) ; do \
+	for i in $(EXTERNAL) ; do \
 		mv fetch-dir/$$i $$i || { \
 			exit 1 ; \
 		} \
