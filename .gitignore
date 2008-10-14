@@ -26,6 +26,15 @@ src/autoconfig.h.in
 src/stamp-h1
 
 src/gnulib/sys/stat.h
+src/gnulib/alloca.h
+src/gnulib/charset.alias
+src/gnulib/configmake.h
+src/gnulib/ref-add.sed
+src/gnulib/ref-del.sed
+src/gnulib/stdlib.h
+src/gnulib/unistd.h
+
+tools/autotools/link-warning.h
 
 tools/maint/fetch
 tools/maint/whitespace-detect
