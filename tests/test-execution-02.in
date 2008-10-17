@@ -20,33 +20,47 @@
 
 . $testdir/defs || exit 1
 
+required="diff"
+
 cat > ./rules <<EOF
-
-# command2
-# command2	
- # command2
-
-
-	#	command2
-
-		      #		command2
-    		  # 	command2 command2 # command2 #command2 command2
+ext1:ext4
+	echo "0" >> \$O
 
 ext1:ext2
-	command1
+	echo "1" >> \$O
 
-# command2
-# command2	
- # command2
+ext2:ext1
+	echo "2" >> \$O
 
+ext2:ext3
+	echo "3" >> \$O
 
-	#	command2
+ext3:ext2
+	echo "4" >> \$O
 
-		      #		command2
-    		  # 	command2 command2 # command2 #command2 command2
+ext3:ext4
+	echo "5" >> \$O
 
+ext4:ext3
+	echo "6" >> \$O
+
+ext4:ext1
+	echo "7" >> \$O
 EOF
 
-$FCP -r ./rules -m 100 -s : -t ./ -n test1.ext1:test2.ext2 || exit 1
+rm -f ./test1.ext1 || exit 1
+touch ./test1.ext1
+rm -f ./test2.ext4 || exit 1
+
+$FCP -r ./rules -m 100 -s : -t ./ test1.ext1:test2.ext4 || exit 1
+
+rm -f test.exp || exit 1
+cat > test.exp <<EOF
+1
+3
+5
+EOF
+
+diff ./test.exp ./test2.ext4 || exit 1
 
 exit 0
