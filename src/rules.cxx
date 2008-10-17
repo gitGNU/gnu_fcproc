@@ -383,8 +383,12 @@ namespace FCP {
 				return true;
 			}
 
+			TR_DBG("Looking for '%s' -> '%s'\n",
+			       (*i)->output().c_str(), out.c_str());
 			if (build_chain((*i)->output(), out, mdepth, chain)) {
 				chain.push_back(*i);
+				TR_DBG("Got '%s' -> '%s'\n",
+				       (*i)->output().c_str(), out.c_str());
 				return true;
 			}
 		}

@@ -49,7 +49,8 @@ fcp_CPPFLAGS =					\
 fcp_LDADD =					\
 	libmisc.a				\
 	libconf.a				\
-	libfile.a
+	libfile.a				\
+	gnulib/libgnu.a
 
 ## Libraries
 
