@@ -1,5 +1,10 @@
 (h3 "DESCRIPTION")
-(p "FCP is a filter-chains processor")
+(p "Filter Chains Processor (FCP) is a small command line utility that "
+   "handles parallel files transformations, automatically building filter "
+   "chains in order to transform each input file from its format to the "
+   "desired output format.")
+(p "Each filter chain is computed dinamically, using external tools (defined "
+   "by the user in a configuration file) or internal functions.")
 
 (h3 "COPYING")
 (p "FCP is licensed under the "
@@ -39,8 +44,6 @@
 (h3 "DEVELOPMENT")
 (h4 "Browsing sources")
 (p "You can browse the "
-   (br)
-   (br)
    (a (@ (href "http://git.savannah.nongnu.org/gitweb/?p=fcp.git"))
       "Git repository")
    " of this project with your web browser. This gives you a good "
@@ -50,8 +53,9 @@
 
 (h4 "Getting a copy of the Git Repository")
 (p "Anonymous checkout: "
-   (kbd (a (@ (href "http://savannah.gnu.org/maintenance/UsingGit")) "git")
-	" clone git://git.savannah.nongnu.org/fcp.git"))
+   (p (@ class "terminal")
+      (a (@ (href "http://savannah.gnu.org/maintenance/UsingGit")) "git")
+      " clone git://git.savannah.nongnu.org/fcp.git"))
 
 (h4 "Contribute")
 (p "If you have time and programming skills, you can help us by developing "
