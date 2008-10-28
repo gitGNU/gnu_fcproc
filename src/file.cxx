@@ -59,15 +59,20 @@ namespace FCP {
 
 	const std::string & File::dirname(void) const
 	{
-		return extension_;
+		return dirname_;
 	}
 	const std::string & File::basename(void) const
 	{
-		return extension_;
+		return basename_;
 	}
 	const std::string & File::extension(void) const
 	{
 		return extension_;
+	}
+
+	time_t File::mtime(void) const
+	{
+		return ::File::mtime(name_);
 	}
 
 	bool File::operator ==(const FCP::File & rhs) const
