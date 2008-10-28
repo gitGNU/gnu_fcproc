@@ -72,7 +72,7 @@ namespace File {
 
 		if (stat(s.c_str(), &t)) {
 			throw Exception("Cannot stat() file "
-					"'" + s + "' " 
+					"'" + s + "' "
 					"(" +
 					std::string(strerror(errno)) +
 					")");
