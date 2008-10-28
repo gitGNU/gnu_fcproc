@@ -35,10 +35,10 @@ namespace FCP {
 		Rules(const std::string & filename);
 		~Rules(void);
 
-		void chains(const std::string &        in,
-			    const std::string &        out,
-			    int                        mdepth,
-			    std::vector<FCP::Rule *> & chain);
+		void chains(const std::string &          in,
+			    const std::string &          out,
+			    int                          mdepth,
+			    std::vector<FCP::Filter *> & chain);
 
 	protected:
 
@@ -51,7 +51,7 @@ namespace FCP {
 		regex_t    re_body_;
 
 		std::map<std::string,
-			 std::set<FCP::Rule *> > rules_;
+			 std::set<FCP::Filter *> > rules_;
 
 		void parse(const std::string & filename);
 
@@ -60,7 +60,7 @@ namespace FCP {
 				 const std::string &                 in,
 				 const std::string &                 out,
 				 int                                 mdepth,
-				 std::vector<FCP::Rule *> &          chain);
+				 std::vector<FCP::Filter *> &        chain);
 	};
 }
 

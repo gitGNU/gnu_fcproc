@@ -73,8 +73,8 @@ namespace FCP {
 		regfree(&re_comment_);
 		regfree(&re_empty_);
 
-		std::map<std::string, std::set<FCP::Rule *> >::iterator ir;
-		std::set<FCP::Rule *>::iterator                         is;
+		std::map<std::string, std::set<FCP::Filter *> >::iterator ir;
+		std::set<FCP::Filter *>::iterator                         is;
 
 		TR_DBG("Known rules:\n");
 		for (ir  = rules_.begin();
@@ -313,9 +313,9 @@ namespace FCP {
 				P_DBG("  %s -> %s\n",
 				      tag_in.c_str(), tag_out.c_str());
 
-				FCP::Rule * r;
+				FCP::Filter * r;
 
-				r = new FCP::Rule(tag_in, tag_out, commands);
+				r = new FCP::Filter(tag_in, tag_out, commands);
 				BUG_ON(r == 0);
 
 				rules_[tag_in].insert(r);
@@ -338,9 +338,9 @@ namespace FCP {
 		if (commands.size() && tag_in != "" && tag_out != "") {
 			// Yes we do
 
-			FCP::Rule * r;
+			FCP::Filter * r;
 
-			r = new FCP::Rule(tag_in, tag_out, commands);
+			r = new FCP::Filter(tag_in, tag_out, commands);
 			BUG_ON(r == 0);
 
 			rules_[tag_in].insert(r);
@@ -354,7 +354,7 @@ namespace FCP {
 				const std::string &                 in,
 				const std::string &                 out,
 				int                                 mdepth,
-				std::vector<FCP::Rule *> &          chain)
+				std::vector<FCP::Filter *> &        chain)
 	{
 		BUG_ON(mdepth <= 0);
 
@@ -367,7 +367,8 @@ namespace FCP {
 			return false;
 		}
 
-		std::map<std::string, std::set<FCP::Rule *> >::const_iterator r;
+		std::map<std::string,
+			std::set<FCP::Filter *> >::const_iterator r;
 		r = rules_.find(in);
 		if (r == rules_.end()) {
 			TR_DBG("No rules available for '%s' -> '%s'\n",
@@ -384,7 +385,7 @@ namespace FCP {
 		}
 		loopset.insert(t);
 
-		std::set<FCP::Rule *>::const_iterator i;
+		std::set<FCP::Filter *>::const_iterator i;
 
 		for (i = (*r).second.begin(); i != (*r).second.end(); i++) {
 			if ((*i)->output() == out) {
@@ -408,10 +409,10 @@ namespace FCP {
 		return false;
 	}
 
-	void Rules::chains(const std::string &        in,
-			   const std::string &        out,
-			   int                        mdepth,
-			   std::vector<FCP::Rule *> & chain)
+	void Rules::chains(const std::string &          in,
+			   const std::string &          out,
+			   int                          mdepth,
+			   std::vector<FCP::Filter *> & chain)
 	{
 		BUG_ON(in.size()  == 0);
 		BUG_ON(out.size() == 0);

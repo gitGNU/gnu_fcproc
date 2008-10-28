@@ -126,7 +126,7 @@ FCP::Chain * transform(const FCP::Transformation & transformation,
 	       transformation.output().name().c_str());
 
 	// Build the filters-chain
-	std::vector<FCP::Rule *> chain;
+	std::vector<FCP::Filter *> chain;
 	rules.chains(transformation.input().extension(),
 		     transformation.output().extension(),
 		     mdepth,
@@ -138,7 +138,7 @@ FCP::Chain * transform(const FCP::Transformation & transformation,
 	}
 
 	TR_DBG("Filters chain:\n");
-	std::vector<FCP::Rule *>::iterator iter;
+	std::vector<FCP::Filter *>::iterator iter;
 	for (iter = chain.begin(); iter != chain.end(); iter++) {
 		TR_DBG("  '%s' -> '%s'\n",
 		       (*iter)->input().c_str(),

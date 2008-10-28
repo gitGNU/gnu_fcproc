@@ -27,30 +27,30 @@
 #include "filter.h"
 
 namespace FCP {
-	Rule::Rule(const std::string &              tag_in,
-		   const std::string &              tag_out,
-		   const std::vector<std::string> & commands) :
+	Filter::Filter(const std::string &              tag_in,
+		       const std::string &              tag_out,
+		       const std::vector<std::string> & commands) :
 		tag_in_(tag_in),
 		tag_out_(tag_out),
 		commands_(commands)
 	{
 	}
 
-	Rule::~Rule(void)
+	Filter::~Filter(void)
 	{
 	}
 
-	const std::string & Rule::input(void)
+	const std::string & Filter::input(void)
 	{
 		return tag_in_;
 	}
 
-	const std::string & Rule::output(void)
+	const std::string & Filter::output(void)
 	{
 		return tag_out_;
 	}
 
-	const std::vector<std::string> & Rule::commands(void)
+	const std::vector<std::string> & Filter::commands(void)
 	{
 		return commands_;
 	}

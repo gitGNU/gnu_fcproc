@@ -31,10 +31,10 @@
 namespace FCP {
 	class Chain {
 	public:
-		Chain(const std::string &        id,
-		      const FCP::File &          input,
-		      std::vector<FCP::Rule *> & rules,
-		      const FCP::File &          output);
+		Chain(const std::string &          id,
+		      const FCP::File &            input,
+		      std::vector<FCP::Filter *> & rules,
+		      const FCP::File &            output);
 		~Chain(void);
 
 		const std::string &              id(void);
@@ -50,7 +50,7 @@ namespace FCP {
 		std::vector<std::string> commands_;
 		FCP::File                output_;
 		std::map<std::string,
-			std::string>    temps_;
+			 std::string>    temps_;
 
 		int                      temp_count_;
 

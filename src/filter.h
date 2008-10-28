@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef RULE_H
-#define RULE_H
+#ifndef FILTER_H
+#define FILTER_H
 
 #include "config.h"
 
@@ -27,12 +27,12 @@
 #include <map>
 
 namespace FCP {
-	class Rule {
+	class Filter {
 	public:
-		Rule(const std::string &              tag_in,
-		     const std::string &              tag_out,
-		     const std::vector<std::string> & commands);
-		~Rule(void);
+		Filter(const std::string &              tag_in,
+		       const std::string &              tag_out,
+		       const std::vector<std::string> & commands);
+		~Filter(void);
 
 		const std::string &              input(void);
 		const std::string &              output(void);
@@ -47,4 +47,4 @@ namespace FCP {
 	};
 }
 
-#endif // RULE_H
+#endif // FILTER_H

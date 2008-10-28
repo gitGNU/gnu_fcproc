@@ -33,16 +33,16 @@
 #include "filter.h"
 
 namespace FCP {
-	Chain::Chain(const std::string &        id,
-		     const FCP::File &          input,
-		     std::vector<FCP::Rule *> & rules,
-		     const FCP::File &          output) :
+	Chain::Chain(const std::string &          id,
+		     const FCP::File &            input,
+		     std::vector<FCP::Filter *> & rules,
+		     const FCP::File &            output) :
 		id_(id),
 		input_(input),
 		output_(output),
 		temp_count_(0)
 	{
-		std::vector<FCP::Rule *>::iterator ir;
+		std::vector<FCP::Filter *>::iterator ir;
 		for (ir  = rules.begin();
 		     ir != rules.end();
 		     ir++) {
