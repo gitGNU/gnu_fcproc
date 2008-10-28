@@ -55,10 +55,12 @@ namespace FCP {
 
 		void parse(const std::string & filename);
 
-		bool build_chain(const std::string &         in,
-				 const std::string &         out,
-				 int                         mdepth,
-				 std::vector<FCP::Rule *> &  chain);
+		bool build_chain(std::set<std::pair<std::string,
+				                    std::string> > & loopset,
+				 const std::string &                 in,
+				 const std::string &                 out,
+				 int                                 mdepth,
+				 std::vector<FCP::Rule *> &          chain);
 	};
 }
 

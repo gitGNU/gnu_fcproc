@@ -349,10 +349,12 @@ namespace FCP {
 		stream.close();
 	}
 
-	bool Rules::build_chain(const std::string &         in,
-				const std::string &         out,
-				int                         mdepth,
-				std::vector<FCP::Rule *> &  chain)
+	bool Rules::build_chain(std::set<std::pair<std::string,
+						   std::string> > & loopset,
+				const std::string &                 in,
+				const std::string &                 out,
+				int                                 mdepth,
+				std::vector<FCP::Rule *> &          chain)
 	{
 		BUG_ON(mdepth <= 0);
 
@@ -365,14 +367,22 @@ namespace FCP {
 			return false;
 		}
 
-		std::map<std::string,
-			std::set<FCP::Rule *> >::const_iterator r;
+		std::map<std::string, std::set<FCP::Rule *> >::const_iterator r;
 		r = rules_.find(in);
 		if (r == rules_.end()) {
 			TR_DBG("No rules available for '%s' -> '%s'\n",
 			       in.c_str(), out.c_str());
 			return false;
 		}
+
+		// Loop detection
+		std::pair<std::string, std::string> t(in, out);
+
+		if (loopset.find(t) != loopset.end()) {
+			TR_DBG("Got a loop\n");
+			return false;
+		}
+		loopset.insert(t);
 
 		std::set<FCP::Rule *>::const_iterator i;
 
@@ -385,7 +395,9 @@ namespace FCP {
 
 			TR_DBG("Looking for '%s' -> '%s'\n",
 			       (*i)->output().c_str(), out.c_str());
-			if (build_chain((*i)->output(), out, mdepth, chain)) {
+			if (build_chain(loopset,
+					(*i)->output(), out,
+					mdepth, chain)) {
 				chain.push_back(*i);
 				TR_DBG("Got '%s' -> '%s'\n",
 				       (*i)->output().c_str(), out.c_str());
@@ -409,7 +421,11 @@ namespace FCP {
 		       "(max depth %d)\n",
 		       in.c_str(), out.c_str(), mdepth);
 
-		if (!build_chain(in, out, mdepth, chain)) {
+		std::set<std::pair<std::string, std::string> > loopset;
+
+		loopset.clear();
+
+		if (!build_chain(loopset, in, out, mdepth, chain)) {
 			TR_DBG("No chain found ...\n");
 			chain.clear();
 		} else {
