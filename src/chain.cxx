@@ -165,15 +165,13 @@ namespace FCP {
 
 	void Chain::run(bool dry_run)
 	{
-		std::vector<std::string>::iterator ic;
-		std::vector<std::string>::size_type count;
+		std::vector<std::string>::iterator  ic;
 		std::vector<std::string>::size_type all;
 
 		all   = commands_.size();
-		count = 1;
 		for (ic  = commands_.begin();
 		     ic != commands_.end();
-		     ic++, count++) {
+		     ic++) {
 			if (dry_run) {
 				TR_VRB("%s\n", (*ic).c_str());
 				continue;
