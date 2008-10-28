@@ -43,12 +43,14 @@ namespace FCP {
 	protected:
 
 	private:
-		regmatch_t re_match_[3];
-		regex_t    re_empty_;
-		regex_t    re_comment_;
-		regex_t    re_include_;
-		regex_t    re_header_;
-		regex_t    re_body_;
+		struct {
+			regmatch_t match_[3];
+			regex_t    empty_;
+			regex_t    comment_;
+			regex_t    include_;
+			regex_t    header_;
+			regex_t    body_;
+		} re_;
 
 		std::map<std::string,
 			 std::set<FCP::Filter *> > rules_;

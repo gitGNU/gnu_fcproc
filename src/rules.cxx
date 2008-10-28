@@ -35,31 +35,31 @@
 namespace FCP {
 	Rules::Rules(const std::string & filename)
 	{
-		if (regcomp(&re_empty_,
+		if (regcomp(&re_.empty_,
 			    "^[ \t]*$",
 			    REG_NOSUB)) {
 			throw Exception("Cannot compile empty regexp");
 		}
 
-		if (regcomp(&re_comment_,
+		if (regcomp(&re_.comment_,
 			    "^[ \t]*#.*$",
 			    REG_NOSUB)) {
 			throw Exception("Cannot compile comment regexp");
 		}
 
-		if (regcomp(&re_include_,
+		if (regcomp(&re_.include_,
 			    "^[ \t]*include[ \t]+\"(.*)\"[ \t]*$",
 			    REG_EXTENDED)) {
 			throw Exception("Cannot compile include regexp");
 		}
 
-		if (regcomp(&re_header_,
+		if (regcomp(&re_.header_,
 			    "^(.*):(.*)[ \t]*$",
 			    REG_EXTENDED)) {
 			throw Exception("Cannot compile header regexp");
 		}
 
-		if (regcomp(&re_body_,
+		if (regcomp(&re_.body_,
 			    "^\t(.*)$",
 			    REG_EXTENDED)) {
 			throw Exception("Cannot compile body regexp");
@@ -67,11 +67,11 @@ namespace FCP {
 
 		parse(filename);
 
-		regfree(&re_body_);
-		regfree(&re_header_);
-		regfree(&re_include_);
-		regfree(&re_comment_);
-		regfree(&re_empty_);
+		regfree(&re_.body_);
+		regfree(&re_.header_);
+		regfree(&re_.include_);
+		regfree(&re_.comment_);
+		regfree(&re_.empty_);
 
 		std::map<std::string, std::set<FCP::Filter *> >::iterator ir;
 		std::set<FCP::Filter *>::iterator                         is;
@@ -160,33 +160,33 @@ namespace FCP {
 				      number, line.c_str());
 
 				// Is this an empty line ?
-				if (regexec(&re_empty_,
+				if (regexec(&re_.empty_,
 					    line.c_str(),
-					    3, re_match_, 0) == 0) {
+					    3, re_.match_, 0) == 0) {
 					P_DBG("  Got empty line\n");
 					continue;
 				}
 
 				// Is this a comment line ?
-				if (regexec(&re_comment_,
+				if (regexec(&re_.comment_,
 					    line.c_str(),
-					    3, re_match_, 0) == 0) {
+					    3, re_.match_, 0) == 0) {
 					P_DBG("  Got comment line\n");
 					continue;
 				}
 
 				// Is this an include line ?
-				if (regexec(&re_include_,
+				if (regexec(&re_.include_,
 					    line.c_str(),
-					    3, re_match_, 0) == 0) {
+					    3, re_.match_, 0) == 0) {
 
-					DUMP_REGMATCHES(re_match_);
+					DUMP_REGMATCHES(re_.match_);
 
 					std::string include;
 					include =
-						line.substr(re_match_[1].rm_so,
-							    re_match_[1].rm_eo -
-							    re_match_[1].rm_so);
+						line.substr(re_.match_[1].rm_so,
+							    re_.match_[1].rm_eo -
+							    re_.match_[1].rm_so);
 
 					P_DBG("  Got include is '%s'\n",
 					      include.c_str());
@@ -203,9 +203,9 @@ namespace FCP {
 				      state, number, line.c_str());
 
 				// Is this an header line ?
-				if (regexec(&re_header_,
+				if (regexec(&re_.header_,
 					    line.c_str(),
-					    3, re_match_, 0) != 0) {
+					    3, re_.match_, 0) != 0) {
 					throw Exception("Missing header "
 							"in file "
 							"'" + filename + "'"
@@ -217,11 +217,11 @@ namespace FCP {
 
 				P_DBG("  Got header\n");
 
-				DUMP_REGMATCHES(re_match_);
+				DUMP_REGMATCHES(re_.match_);
 
-				tag_in = line.substr(re_match_[1].rm_so,
-						     re_match_[1].rm_eo -
-						     re_match_[1].rm_so);
+				tag_in = line.substr(re_.match_[1].rm_so,
+						     re_.match_[1].rm_eo -
+						     re_.match_[1].rm_so);
 				if (tag_in == "") {
 					throw Exception("Missing input tag "
 							"in file "
@@ -232,9 +232,9 @@ namespace FCP {
 							"'");
 				}
 
-				tag_out = line.substr(re_match_[2].rm_so,
-						      re_match_[2].rm_eo -
-						      re_match_[2].rm_so);
+				tag_out = line.substr(re_.match_[2].rm_so,
+						      re_.match_[2].rm_eo -
+						      re_.match_[2].rm_so);
 				if (tag_out == "") {
 					throw Exception("Missing output tag "
 							"in file "
@@ -281,9 +281,9 @@ namespace FCP {
 					continue;
 				}
 
-				if (regexec(&re_body_,
+				if (regexec(&re_.body_,
 					    line.c_str(),
-					    3, re_match_, 0) != 0) {
+					    3, re_.match_, 0) != 0) {
 					throw Exception("Wrong body "
 							"in file "
 							"'" + filename + "'"
@@ -293,11 +293,11 @@ namespace FCP {
 							"'");
 				}
 
-				DUMP_REGMATCHES(re_match_);
+				DUMP_REGMATCHES(re_.match_);
 
-				line = line.substr(re_match_[1].rm_so,
-						   re_match_[1].rm_eo -
-						   re_match_[1].rm_so);
+				line = line.substr(re_.match_[1].rm_so,
+						   re_.match_[1].rm_eo -
+						   re_.match_[1].rm_so);
 
 				commands.push_back(line);
 				continue;
