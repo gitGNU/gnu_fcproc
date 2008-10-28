@@ -27,14 +27,16 @@
 namespace FCP {
 	Transformation::Transformation(const std::string & tag,
 				       char                separator) :
-		tag_(tag)
+		tag_(tag),
+		input_(0),
+		output_(0)
 	{
 		std::string::size_type p;
 
 		p = tag_.find(separator);
 		if ((p < 0) || (p > tag_.size())) {
-			throw Exception("Missing separator in "
-					"transformation "
+			throw Exception("Missing separator "
+					"in transformation "
 					"'" + tag_ + "'");
 		}
 
@@ -42,7 +44,7 @@ namespace FCP {
 
 		tmp = tag_.substr(0, p);
 		if (tmp.size() == 0) {
-			throw Exception("Missing input "
+			throw Exception("Missing input file "
 					"in transformation "
 					"'" + tag_ + "'");
 		}
@@ -51,7 +53,7 @@ namespace FCP {
 
 		tmp = tag_.substr(p + 1);
 		if (tmp.size() == 0) {
-			throw Exception("Missing output "
+			throw Exception("Missing output file "
 					"in transformation "
 					"'" + tag_ + "'");
 		}
@@ -61,7 +63,10 @@ namespace FCP {
 
 	Transformation::~Transformation(void)
 	{
+		BUG_ON(input_ == 0);
 		delete input_;
+
+		BUG_ON(output_ == 0);
 		delete output_;
 	}
 
@@ -72,11 +77,13 @@ namespace FCP {
 
 	const FCP::File & Transformation::input(void) const
 	{
+		BUG_ON(input_ == 0);
 		return *input_;
 	}
 
 	const FCP::File & Transformation::output(void) const
 	{
+		BUG_ON(output_ == 0);
 		return *output_;
 	}
 };
