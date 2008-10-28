@@ -33,10 +33,10 @@
 #include "rule.h"
 
 namespace FCP {
-	Filter::Filter(const std::string &        id,
-		       const FCP::File &          input,
-		       std::vector<FCP::Rule *> & rules,
-		       const FCP::File &          output) :
+	Chain::Chain(const std::string &        id,
+		     const FCP::File &          input,
+		     std::vector<FCP::Rule *> & rules,
+		     const FCP::File &          output) :
 		id_(id),
 		input_(input),
 		output_(output),
@@ -59,21 +59,21 @@ namespace FCP {
 		}
 	}
 
-	Filter::~Filter(void)
+	Chain::~Chain(void)
 	{
 	}
 
-	const std::string & Filter::id(void)
+	const std::string & Chain::id(void)
 	{
 		return id_;
 	}
 
-	const std::vector<std::string> & Filter::commands(void)
+	const std::vector<std::string> & Chain::commands(void)
 	{
 		return commands_;
 	}
 
-	std::string Filter::mktemp(const std::string & dir)
+	std::string Chain::mktemp(const std::string & dir)
 	{
 		std::string       t;
 		std::stringstream s;
@@ -90,7 +90,7 @@ namespace FCP {
 		return t;
 	}
 
-	void Filter::setup(const std::string & dir)
+	void Chain::setup(const std::string & dir)
 	{
 		std::vector<std::string>::iterator ic;
 
@@ -163,7 +163,7 @@ namespace FCP {
 		}
 	}
 
-	void Filter::run(bool dry_run)
+	void Chain::run(bool dry_run)
 	{
 		std::vector<std::string>::iterator ic;
 		std::vector<std::string>::size_type count;

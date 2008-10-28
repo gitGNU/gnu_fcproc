@@ -115,9 +115,9 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-FCP::Filter * transform(const FCP::Transformation & transformation,
-			FCP::Rules &                rules,
-			int                         mdepth)
+FCP::Chain * transform(const FCP::Transformation & transformation,
+		       FCP::Rules &                rules,
+		       int                         mdepth)
 {
 	BUG_ON(mdepth <= 0);
 
@@ -137,7 +137,7 @@ FCP::Filter * transform(const FCP::Transformation & transformation,
 				"transformation");
 	}
 
-	TR_DBG("Filter chain:\n");
+	TR_DBG("Filters chain:\n");
 	std::vector<FCP::Rule *>::iterator iter;
 	for (iter = chain.begin(); iter != chain.end(); iter++) {
 		TR_DBG("  '%s' -> '%s'\n",
@@ -146,12 +146,12 @@ FCP::Filter * transform(const FCP::Transformation & transformation,
 	}
 
 	// Perform transformation now
-	FCP::Filter * j;
+	FCP::Chain * j;
 
-	j = new FCP::Filter(transformation.tag(),
-			    transformation.input(),
-			    chain,
-			    transformation.output());
+	j = new FCP::Chain(transformation.tag(),
+			   transformation.input(),
+			   chain,
+			   transformation.output());
 	BUG_ON(j == 0);
 
 	return j;
@@ -328,12 +328,12 @@ int main(int argc, char * argv[])
 
 		// Get all filters from transformations
 		TR_DBG("Handling transformations\n");
-		std::vector<FCP::Filter *> filters;
+		std::vector<FCP::Chain *> filters;
 		try {
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				FCP::Filter * j;
+				FCP::Chain * j;
 
 				j = transform(*(*it), *rules, max_depth);
 				BUG_ON(j == 0);
@@ -347,10 +347,11 @@ int main(int argc, char * argv[])
 
 		// Run all filters now
 		TR_DBG("Running filters\n");
-		std::vector<FCP::Filter *>::iterator ij;
+		std::vector<FCP::Chain *>::iterator ij;
 		try {
 			for (ij = filters.begin(); ij != filters.end(); ij++) {
-				TR_DBG("Filter '%s':\n", (*ij)->id().c_str());
+				TR_DBG("Filters chain '%s':\n",
+				       (*ij)->id().c_str());
 				(*ij)->setup(temp_dir);
 
 				(*ij)->run(dry_run);
