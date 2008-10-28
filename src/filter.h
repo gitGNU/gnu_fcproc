@@ -54,7 +54,7 @@ namespace FCP {
 
 		int                      temp_count_;
 
-		std::string         mktemp(const std::string & dir);
+		std::string              mktemp(const std::string & dir);
 	};
 }
 

@@ -56,7 +56,7 @@ namespace FCP {
 		void parse(const std::string & filename);
 
 		bool build_chain(std::set<std::pair<std::string,
-				                    std::string> > & loopset,
+						    std::string> > & loopset,
 				 const std::string &                 in,
 				 const std::string &                 out,
 				 int                                 mdepth,
