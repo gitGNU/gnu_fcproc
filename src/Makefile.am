@@ -42,8 +42,8 @@ fcp_SOURCES =					\
 	chain.cxx				\
 	rules.h					\
 	rules.cxx				\
-	rule.h					\
-	rule.cxx
+	filter.h				\
+	filter.cxx
 fcp_CPPFLAGS =					\
 	$(EXTRA_CPPFLAGS)
 fcp_LDADD =					\

@@ -30,7 +30,7 @@
 #include "libs/misc/exception.h"
 #include "chain.h"
 #include "file.h"
-#include "rule.h"
+#include "filter.h"
 
 namespace FCP {
 	Chain::Chain(const std::string &        id,

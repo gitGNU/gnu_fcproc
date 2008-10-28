@@ -26,7 +26,7 @@
 #include <map>
 
 #include "file.h"
-#include "rule.h"
+#include "filter.h"
 
 namespace FCP {
 	class Chain {

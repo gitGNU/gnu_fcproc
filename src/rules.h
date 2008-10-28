@@ -27,7 +27,7 @@
 
 #include "regex.h"
 
-#include "rule.h"
+#include "filter.h"
 
 namespace FCP {
 	class Rules {

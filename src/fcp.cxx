@@ -30,7 +30,7 @@
 #include "libs/conf/configuration.h"
 #include "libs/file/utils.h"
 #include "libs/misc/exception.h"
-#include "rule.h"
+#include "filter.h"
 #include "rules.h"
 #include "transformation.h"
 #include "chain.h"

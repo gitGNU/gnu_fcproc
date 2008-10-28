@@ -24,7 +24,7 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/exception.h"
-#include "rule.h"
+#include "filter.h"
 
 namespace FCP {
 	Rule::Rule(const std::string &              tag_in,
