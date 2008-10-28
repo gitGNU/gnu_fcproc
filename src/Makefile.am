@@ -38,8 +38,8 @@ fcp_SOURCES =					\
 	transformation.cxx			\
 	file.h					\
 	file.cxx				\
-	filter.h				\
-	filter.cxx				\
+	chain.h					\
+	chain.cxx				\
 	rules.h					\
 	rules.cxx				\
 	rule.h					\

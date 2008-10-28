@@ -28,7 +28,7 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/exception.h"
-#include "filter.h"
+#include "chain.h"
 #include "file.h"
 #include "rule.h"
 

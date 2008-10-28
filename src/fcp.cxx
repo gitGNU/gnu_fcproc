@@ -33,7 +33,7 @@
 #include "rule.h"
 #include "rules.h"
 #include "transformation.h"
-#include "filter.h"
+#include "chain.h"
 #include "getopt.h"
 
 #define PROGRAM_NAME "fcp"
