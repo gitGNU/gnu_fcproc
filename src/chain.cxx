@@ -35,7 +35,7 @@
 namespace FCP {
 	Chain::Chain(const std::string &          id,
 		     const FCP::File &            input,
-		     std::vector<FCP::Filter *> & rules,
+		     std::vector<FCP::Filter *> & filters,
 		     const FCP::File &            output) :
 		id_(id),
 		input_(input),
@@ -43,8 +43,8 @@ namespace FCP {
 		temp_count_(0)
 	{
 		std::vector<FCP::Filter *>::iterator ir;
-		for (ir  = rules.begin();
-		     ir != rules.end();
+		for (ir  = filters.begin();
+		     ir != filters.end();
 		     ir++) {
 			std::vector<std::string>::const_iterator ic;
 			for (ic  = (*ir)->commands().begin();

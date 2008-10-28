@@ -33,7 +33,7 @@ namespace FCP {
 	public:
 		Chain(const std::string &          id,
 		      const FCP::File &            input,
-		      std::vector<FCP::Filter *> & rules,
+		      std::vector<FCP::Filter *> & filters,
 		      const FCP::File &            output);
 		~Chain(void);
 
