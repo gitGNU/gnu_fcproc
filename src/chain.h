@@ -38,23 +38,16 @@ namespace FCP {
 		~Chain(void);
 
 		const std::string &              id(void);
-		const std::vector<std::string> & commands(void);
-		void                             setup(const std::string & dir);
-		void                             run(bool dry_run);
+		void                             run(const std::string & dir,
+						     bool                dry);
 
 	protected:
 
 	private:
-		std::string              id_;
-		FCP::File                input_;
-		std::vector<std::string> commands_;
-		FCP::File                output_;
-		std::map<std::string,
-			 std::string>    temps_;
-
-		int                      temp_count_;
-
-		std::string              mktemp(const std::string & dir);
+		std::string                id_;
+		FCP::File                  input_;
+		FCP::File                  output_;
+		std::vector<FCP::Filter *> filters_;
 	};
 }
 
