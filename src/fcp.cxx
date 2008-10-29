@@ -345,16 +345,14 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		// Run all filters now
-		TR_DBG("Running filters\n");
+		// Run all filters-chains now
+		TR_DBG("Running filters-chains\n");
 		std::vector<FCP::Chain *>::iterator ij;
 		try {
 			for (ij = filters.begin(); ij != filters.end(); ij++) {
 				TR_DBG("Filters chain '%s':\n",
 				       (*ij)->id().c_str());
-				(*ij)->setup(temp_dir);
-
-				(*ij)->run(dry_run);
+				(*ij)->run(temp_dir, dry_run);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
