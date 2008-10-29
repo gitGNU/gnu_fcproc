@@ -20,11 +20,13 @@
 
 #include <string>
 #include <vector>
+#include <csignal>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/exception.h"
 #include "filter.h"
+#include "file.h"
 
 namespace FCP {
 	Filter::Filter(const std::string &              tag_in,
@@ -32,7 +34,7 @@ namespace FCP {
 		       const std::vector<std::string> & commands) :
 		tag_in_(tag_in),
 		tag_out_(tag_out),
-		commands_(commands)
+		templates_(commands)
 	{
 	}
 
@@ -50,8 +52,140 @@ namespace FCP {
 		return tag_out_;
 	}
 
-	const std::vector<std::string> & Filter::commands(void)
+	std::string Filter::mktemp(const std::string & id,
+				   const std::string & dir)
 	{
-		return commands_;
+		std::string       t;
+		std::stringstream s;
+
+
+		s << temp_count_;
+
+		t = dir + std::string("/") + id + std::string("-") + s.str();
+
+		temp_count_++;
+
+		return t;
+	}
+
+	// XXX FIXME: Rearrange ASAP
+	std::vector<std::string> Filter::setup(const std::string & id,
+					       const FCP::File &   input,
+					       const FCP::File &   output,
+					       const std::string & tmp_dir)
+	{
+		std::vector<std::string>::iterator ic;
+		std::vector<std::string>           commands;
+
+		commands = templates_;
+
+		//TR_DBG("Replacing variables\n")
+		for (ic  = commands.begin();
+		     ic != commands.end();
+		     ic++) {
+			std::string command;
+
+			command = (*ic);
+
+			command = String::replace(command,
+						  "$I",
+						  input.name());
+			command = String::replace(command,
+						  "$O",
+						  output.name());
+
+			//TR_DBG("  Command '%s'\n", command.c_str());
+
+			// Ugly
+			for (;;) {
+				//TR_DBG("    Replace in progress\n");
+				std::string::size_type s;
+				std::string::size_type e;
+				std::string            v;
+
+				s = 0;
+				e = 0;
+
+				//
+				// XXX FIXME:
+				//     Add environment variable substitution
+				//
+
+				s = command.find("$T");
+				//TR_DBG("      s = %d, e = %d\n", s, e);
+				if ((s == 0) || (s == std::string::npos)) {
+					break;
+				}
+
+				e = command.find_first_not_of("0123456789",
+							      s + 1);
+				//TR_DBG("      s = %d, e = %d\n", s, e);
+				if ((e == 0) || (e == std::string::npos)) {
+					break;
+				}
+
+				v = command.substr(s, e - s + 2);
+				BUG_ON(v.size() == 0);
+
+				//TR_DBG("      v = '%s'\n", v.c_str());
+
+				std::string t;
+				t = temps_[v];
+				if (t == "") {
+					t         = mktemp(id, tmp_dir);
+					temps_[v] = t;
+				}
+
+				command = String::replace(command, v, t);
+
+				//TR_DBG("    Replaced '%s' with '%s'\n",
+				//       v.c_str(), t.c_str());
+			}
+
+			//TR_DBG("    Command is now '%s'\n", command.c_str());
+
+			(*ic) = command;
+		}
+
+		return commands;
+	}
+
+	void Filter::run(const std::string & id,
+			 const FCP::File &   input,
+			 const FCP::File &   output,
+			 const std::string & tmp_dir,
+			 bool                dry_run)
+	{
+		std::vector<std::string>            commands;
+		std::vector<std::string>::iterator  ic;
+		std::vector<std::string>::size_type all;
+
+		commands = setup(id, input, output, tmp_dir);
+		all      = commands.size();
+		for (ic  = commands.begin();
+		     ic != commands.end();
+		     ic++) {
+			if (dry_run) {
+				TR_VRB("%s\n", (*ic).c_str());
+				continue;
+			}
+
+			int ret;
+
+			BUG_ON((*ic).size() == 0);
+			ret = system((*ic).c_str());
+			if (ret == -1) {
+				throw Exception("Got fork() failure");
+			}
+			if (WIFSIGNALED(ret) &&
+			    (WTERMSIG(ret) == SIGINT ||
+			     WTERMSIG(ret) == SIGQUIT)) {
+				throw Exception("Interrupted");
+			}
+			if (WEXITSTATUS(ret) != 0) {
+				throw Exception("Got problems running "
+						"command '" + (*ic) + "'");
+			}
+		}
 	}
 };

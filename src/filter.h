@@ -26,6 +26,8 @@
 #include <set>
 #include <map>
 
+#include "file.h"
+
 namespace FCP {
 	class Filter {
 	public:
@@ -34,16 +36,33 @@ namespace FCP {
 		       const std::vector<std::string> & commands);
 		~Filter(void);
 
-		const std::string &              input(void);
-		const std::string &              output(void);
-		const std::vector<std::string> & commands(void);
+		const std::string & input(void);
+		const std::string & output(void);
+		void                run(const std::string & id,
+					const FCP::File &   input,
+					const FCP::File &   output,
+					const std::string & tmp_dir,
+					bool                dry_run);
 
 	protected:
 
 	private:
 		std::string              tag_in_;
 		std::string              tag_out_;
-		std::vector<std::string> commands_;
+		std::vector<std::string> templates_;
+
+		std::map<std::string,
+			 std::string>    temps_;
+
+		size_t                   temp_count_;
+
+		std::string              mktemp(const std::string & id,
+						const std::string & tmp_dir);
+		std::vector<std::string> setup(const std::string & id,
+					       const FCP::File &   input,
+					       const FCP::File &   output,
+					       const std::string & tmp_dir);
+
 	};
 }
 
