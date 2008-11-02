@@ -96,6 +96,7 @@ void help(void)
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
 		<< "                          [default `" << separator << "']" <<                                 std::endl
 		<< "  -q, --no-rules          do not load initial rules" <<                                       std::endl
+		<< "  -b, --dump-rules        dump rules base, then exit" <<                                      std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
 		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
 		<< "  -v, --verbose           verbosely report processing" <<                                     std::endl
