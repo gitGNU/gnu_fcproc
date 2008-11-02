@@ -49,9 +49,9 @@ ext1:ext2
 	command1
 EOF
 
-$FCP -q -b -r ./rules                       > test1.exp || exit 1
-$FCP -q -b -r ./rules -r ./rules            > test2.exp || exit 1
-$FCP -q -b -r ./rules -r ./rules -r ./rules > test3.exp || exit 1
+$FCP_NOFLAGS -q -b -r ./rules                       > test1.exp || exit 1
+$FCP_NOFLAGS -q -b -r ./rules -r ./rules            > test2.exp || exit 1
+$FCP_NOFLAGS -q -b -r ./rules -r ./rules -r ./rules > test3.exp || exit 1
 
 diff test1.exp test2.exp || exit 1
 diff test2.exp test3.exp || exit 1

@@ -72,10 +72,11 @@ test -z "$MAKE" && MAKE=make
 
 FLAGS=""
 
-test -n "$VERBOSE"  && FLAGS="$FLAGS --verbose"
-test -n "$DEBUG"    && FLAGS="$FLAGS --debug"
-test -z "$FCP"      && FCP="wrapper fcp $FLAGS"
-test -z "$WRAPPER"  && WRAPPER="wrapper"
+test -n "$VERBOSE"     && FLAGS="$FLAGS --verbose"
+test -n "$DEBUG"       && FLAGS="$FLAGS --debug"
+test -z "$FCP"         && FCP="wrapper fcp $FLAGS"
+test -z "$FCP_NOFLAGS" && FCP_NOFLAGS="wrapper fcp"
+test -z "$WRAPPER"     && WRAPPER="wrapper"
 
 PATH=`pwd`:$PATH
 echo $PATH
