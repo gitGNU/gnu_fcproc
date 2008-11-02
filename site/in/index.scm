@@ -47,22 +47,23 @@
 (pre (@ class "terminal")
      "
 
-        Usage: fcp [OPTION]... [TRANSFORMATION]...
+	Usage: fcp [OPTION]... [TRANSFORMATION]...
 
-        Options:
-          -r, --rules=FILE        use alternate rules file
-                                  [default $HOME/.fcp/rules]
-          -m, --max-depth=NUM     use NUM as max filter-chains depth
-                                  [default 16]
-          -t, --temp-dir=DIR      use DIR as temporary directory
-                                  [default $HOME/.fcp/cache]
-          -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator
-                                  [default `:']
-          -n, --dry-run           display commands without modifying any files
-          -d, --debug             enable debugging traces
-          -v, --verbose           verbosely report processing
-          -h, --help              print this help, then exit
-          -V, --version           print version number, then exit
+	Options:
+	  -r, --rules=FILE	  use alternate rules file
+				  [default $HOME/.fcp/rules]
+	  -m, --max-depth=NUM	  use NUM as max filter-chains depth
+				  [default 16]
+	  -t, --temp-dir=DIR	  use DIR as temporary directory
+				  [default $HOME/.fcp/cache]
+	  -s, --separator=CHAR	  use CHAR as INPUTFILE/OUTPUTFILE separator
+				  [default `:']
+	  -q, --no-rules	  do not load initial rules
+	  -n, --dry-run		  display commands without modifying any files
+	  -d, --debug		  enable debugging traces
+	  -v, --verbose		  verbosely report processing
+	  -h, --help		  print this help, then exit
+	  -V, --version		  print version number, then exit
 
 ")
 
@@ -79,6 +80,8 @@
      "Specify a temporary directory")
  (li (kbd "-s") ", " (kbd "--separator")   ": "
      "Overrides transformation separator")
+ (li (kbd "-q") ", " (kbd "--no-rules")   ": "
+     "Do not load initial rules")
  (li (kbd "-n") ", " (kbd "--dry-run")     ": "
      "Run the program without modifyng any files")
  )
