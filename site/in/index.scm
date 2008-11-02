@@ -59,6 +59,7 @@
 	  -s, --separator=CHAR	  use CHAR as INPUTFILE/OUTPUTFILE separator
 				  [default `:']
 	  -q, --no-rules	  do not load initial rules
+	  -b, --dump-rules	  dump rules base, then exit
 	  -n, --dry-run		  display commands without modifying any files
 	  -d, --debug		  enable debugging traces
 	  -v, --verbose		  verbosely report processing
@@ -73,15 +74,25 @@
 
 (ul
  (li (kbd "-r") ", " (kbd "--rules")       ": "
-     "Specify a different rules file")
+     "Specify a different rules file. "
+     "This option could be specified multiple times.")
+
  (li (kbd "-m") ", " (kbd "--max-depth")   ": "
      "Specify maximum filter chains length")
+
  (li (kbd "-r") ", " (kbd "--temp-dir")    ": "
      "Specify a temporary directory")
+
  (li (kbd "-s") ", " (kbd "--separator")   ": "
      "Overrides transformation separator")
+
  (li (kbd "-q") ", " (kbd "--no-rules")   ": "
-     "Do not load initial rules")
+     "Do not load default rules file, starting with an empty rules base")
+
+ (li (kbd "-b") ", " (kbd "--dump-rules")   ": "
+     "Start the program, dump the rules base then exit. "
+     "Useful for debugging your rules base (and the program itself)")
+
  (li (kbd "-n") ", " (kbd "--dry-run")     ": "
      "Run the program without modifyng any files")
  )
