@@ -62,12 +62,13 @@ std::string configuration_file  =
 												     std::string("/") +
 												     std::string("configuration");
 #endif
-std::string rules_file          = Environment::get("HOME") +
-												     std::string("/") +
-												     std::string(".") +
-												     std::string(PACKAGE_TARNAME) +
-												     std::string("/") +
-												     std::string("rules");
+#define     DFLT_RULES				\
+	(Environment::get("HOME") +		\
+	 std::string("/") +			\
+	 std::string(".") +			\
+	 std::string(PACKAGE_TARNAME) +		\
+	 std::string("/") +			\
+	 std::string("rules"))
 int         max_depth           = 16;
 std::string temp_dir            = Environment::get("HOME") +
 												     std::string("/") +
@@ -87,13 +88,14 @@ void help(void)
 		<< "                          [" << configuration_file << "]" <<                                  std::endl
 #endif
 		<< "  -r, --rules=FILE        use alternate rules file" <<                                        std::endl
-		<< "                          [default " << rules_file << "]" <<                                  std::endl
+		<< "                          [default " << DFLT_RULES << "]" <<                                  std::endl
 		<< "  -m, --max-depth=NUM     use NUM as max filter-chains depth" <<                              std::endl
 		<< "                          [default " << max_depth << "]" <<                                   std::endl
 		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                  std::endl
 		<< "                          [default " << temp_dir << "]" <<                                    std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
 		<< "                          [default `" << separator << "']" <<                                 std::endl
+		<< "  -q, --no-rules          do not load initial rules" <<                                       std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
 		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
 		<< "  -v, --verbose           verbosely report processing" <<                                     std::endl
@@ -163,7 +165,11 @@ int main(int argc, char * argv[])
 	TR_CONFIG_PFX(PROGRAM_NAME);
 
 	try {
-		bool dry_run = false;
+		bool                     dry_run     = false;
+		std::vector<std::string> rules_files;
+
+		rules_files.clear();
+		rules_files.push_back(DFLT_RULES);
 
 		int c;
 		// int digit_optind = 0;
@@ -177,6 +183,7 @@ int main(int argc, char * argv[])
 				{ "rules",     1, 0, 'r' },
 				{ "max-depth", 1, 0, 'm' },
 				{ "separator", 1, 0, 's' },
+				{ "no-rules",  0, 0, 'q' },
 				{ "dry-run",   0, 0, 'n' },
 				{ "debug",     0, 0, 'd' },
 				{ "verbose",   0, 0, 'v' },
@@ -186,10 +193,10 @@ int main(int argc, char * argv[])
 			};
 
 #if USE_CONFIGURATION_FILE
-			c = getopt_long(argc, argv, "t:c:r:m:s:ndvVh",
+			c = getopt_long(argc, argv, "t:c:r:m:s:qndvVh",
 					long_options, &option_index);
 #else
-			c = getopt_long(argc, argv, "t:r:m:s:ndvVh",
+			c = getopt_long(argc, argv, "t:r:m:s:qndvVh",
 					long_options, &option_index);
 #endif
 			if (c == -1) {
@@ -203,7 +210,7 @@ int main(int argc, char * argv[])
 					break;
 #endif
 				case 'r':
-					rules_file = optarg;
+					rules_files.push_back(optarg);
 					break;
 				case 't':
 					temp_dir = optarg;
@@ -214,6 +221,9 @@ int main(int argc, char * argv[])
 						return 1;
 					}
 					separator = optarg[0];
+					break;
+				case 'q':
+					rules_files.clear();
 					break;
 				case 'm':
 					max_depth = atoi(optarg);
@@ -257,10 +267,15 @@ int main(int argc, char * argv[])
 		TR_DBG("Configuration '%s'\n", configuration_file.c_str());
 		BUG_ON(configuration_file.size() == 0);
 #endif
-		TR_DBG("Rules         '%s'\n", rules_file.c_str());
-		BUG_ON(rules_file.size() == 0);
 		TR_DBG("Max depth     '%d'\n", max_depth);
 		BUG_ON(max_depth <= 0);
+
+		if (rules_files.size() == 0) {
+			hint("No rules available");
+			return 1;
+		}
+		TR_DBG("Rules         '%d'\n", rules_files.size());
+		BUG_ON(rules_files.size() == 0);
 
 		BUG_ON((argc - optind) < 0);
 
@@ -320,7 +335,7 @@ int main(int argc, char * argv[])
 		FCP::Rules * rules;
 
 		try {
-			rules = new FCP::Rules(rules_file);
+			rules = new FCP::Rules(rules_files);
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 			return 1;
