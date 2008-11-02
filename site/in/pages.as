@@ -8,7 +8,7 @@ pages = {
 			footer = "footer";
 		};
 		vars = {
-			title = "FChains";
+			title = "Filter Chains Processor";
 			css   = "site.css";
 		};
 	};

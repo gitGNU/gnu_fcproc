@@ -25,11 +25,11 @@
  (a (@ (href "http://www.nongnu.org/sitetool"))
   ,as_site_variable_PROGRAMNAME)
  ", hosted at "
- (a (@ (href "http://savannah.nongnu.org/projects/fcp"))
+ (a (@ (href "http://savannah.nongnu.org/projects/fcproc"))
   "Savannah")
  (br)
  "Please send broken links and other web page suggestions to "
- "<fcp-generic AT nongnu DOT org>, thank you."
+ "<fcproc-generic AT nongnu DOT org>, thank you."
  (br)
  "This page was last modified on "
  ,(strftime "%A %d %B %Y" (localtime (current-time)))
