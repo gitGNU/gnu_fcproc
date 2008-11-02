@@ -58,6 +58,7 @@ tests/test-parse-01
 tests/test-parse-02
 tests/test-parse-03
 tests/test-parse-04
+tests/test-rules-01
 tests/test-execution-01
 tests/test-execution-02
 tests/test-execution-03
