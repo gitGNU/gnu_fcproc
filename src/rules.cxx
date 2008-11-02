@@ -101,6 +101,26 @@ namespace FCP {
 	{
 	}
 
+	void Rules::dump(std::ostream & stream)
+	{
+		std::map<std::string,
+			std::set<FCP::Filter *> >::const_iterator i;
+		for (i  = rules_.begin();
+		     i != rules_.end();
+		     i++) {
+			std::set<FCP::Filter *>::const_iterator j;
+			for (j  = (*i).second.begin();
+			     j != (*i).second.end();
+			     j++) {
+				stream
+					<< (*i).first
+					<< " -> "
+					<< (*j)->output()
+					<< std::endl;
+			}
+		}
+	}
+
 #define PARSER_DEBUGS 1
 #if PARSER_DEBUGS
 #define P_DBG(FMT,ARGS...) TR_DBG(FMT, ##ARGS);

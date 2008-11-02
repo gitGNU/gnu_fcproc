@@ -21,6 +21,7 @@
 
 #include "config.h"
 
+#include <iostream>
 #include <string>
 #include <map>
 #include <vector>
@@ -40,6 +41,8 @@ namespace FCP {
 			    int                          mdepth,
 			    std::vector<FCP::Filter *> & chain);
 
+		void dump(std::ostream & stream);
+
 	protected:
 
 	private:
@@ -52,8 +55,7 @@ namespace FCP {
 			regex_t    body_;
 		} re_;
 
-		std::map<std::string,
-			 std::set<FCP::Filter *> > rules_;
+		std::map<std::string, std::set<FCP::Filter *> > rules_;
 
 		void parse(const std::string & filename);
 
