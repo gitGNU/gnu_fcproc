@@ -83,7 +83,8 @@ SUCCESS_TESTS +=				\
 	test-parse-03				\
 	test-parse-04				\
 	test-execution-01			\
-	test-execution-02
+	test-execution-02			\
+	test-execution-03
 
 XFAIL_TESTS  = $(FAIL_TESTS)
 TESTS	     = $(FAIL_TESTS) $(SUCCESS_TESTS)
@@ -183,6 +184,18 @@ test-execution-02: $(srcdir)/test-execution-02.in Makefile
 	}
 EXTRA_DIST += test-execution-02.in
 CLEANFILES += test-execution-02
+
+test-execution-03: $(srcdir)/test-execution-03.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-execution-03.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-execution-03.in
+CLEANFILES += test-execution-03
 
 clean-local:
 	rm -rf testSubDir-*
