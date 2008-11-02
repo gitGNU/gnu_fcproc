@@ -32,7 +32,7 @@
 namespace FCP {
 	class Rules {
 	public:
-		Rules(const std::string & filename);
+		Rules(const std::vector<std::string> & filenames);
 		~Rules(void);
 
 		void chains(const std::string &          in,

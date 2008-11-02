@@ -33,7 +33,7 @@
 #include "rules.h"
 
 namespace FCP {
-	Rules::Rules(const std::string & filename)
+	Rules::Rules(const std::vector<std::string> & filenames)
 	{
 		if (regcomp(&re_.empty_,
 			    "^[ \t]*$",
@@ -65,7 +65,12 @@ namespace FCP {
 			throw Exception("Cannot compile body regexp");
 		}
 
-		parse(filename);
+		std::vector<std::string>::const_iterator iter;
+		for (iter  = filenames.begin();
+		     iter != filenames.end();
+		     iter++) {
+			parse((* iter));
+		}
 
 		regfree(&re_.body_);
 		regfree(&re_.header_);
