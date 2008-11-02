@@ -166,6 +166,7 @@ int main(int argc, char * argv[])
 
 	try {
 		bool                     dry_run     = false;
+		bool                     dump_rules  = false;
 		std::vector<std::string> rules_files;
 
 		rules_files.clear();
@@ -178,25 +179,26 @@ int main(int argc, char * argv[])
 			int option_index       = 0;
 
 			static struct option long_options[] = {
-				{ "temp-dir",  1, 0, 't' },
-				{ "config",    1, 0, 'c' },
-				{ "rules",     1, 0, 'r' },
-				{ "max-depth", 1, 0, 'm' },
-				{ "separator", 1, 0, 's' },
-				{ "no-rules",  0, 0, 'q' },
-				{ "dry-run",   0, 0, 'n' },
-				{ "debug",     0, 0, 'd' },
-				{ "verbose",   0, 0, 'v' },
-				{ "version",   0, 0, 'V' },
-				{ "help",      0, 0, 'h' },
-				{ 0,           0, 0, 0   }
+				{ "temp-dir",   1, 0, 't' },
+				{ "config",     1, 0, 'c' },
+				{ "rules",      1, 0, 'r' },
+				{ "max-depth",  1, 0, 'm' },
+				{ "separator",  1, 0, 's' },
+				{ "no-rules",   0, 0, 'q' },
+				{ "dump-rules", 0, 0, 'b' },
+				{ "dry-run",    0, 0, 'n' },
+				{ "debug",      0, 0, 'd' },
+				{ "verbose",    0, 0, 'v' },
+				{ "version",    0, 0, 'V' },
+				{ "help",       0, 0, 'h' },
+				{ 0,            0, 0, 0   }
 			};
 
 #if USE_CONFIGURATION_FILE
-			c = getopt_long(argc, argv, "t:c:r:m:s:qndvVh",
+			c = getopt_long(argc, argv, "t:c:r:m:s:qbndvVh",
 					long_options, &option_index);
 #else
-			c = getopt_long(argc, argv, "t:r:m:s:qndvVh",
+			c = getopt_long(argc, argv, "t:r:m:s:qbndvVh",
 					long_options, &option_index);
 #endif
 			if (c == -1) {
@@ -232,8 +234,11 @@ int main(int argc, char * argv[])
 						return 1;
 					}
 					break;
+				case 'b':
+					dump_rules = true;
+					break;
 				case 'n':
-					dry_run  = true;
+					dry_run = true;
 					break;
 				case 'd':
 					TR_CONFIG_LVL(TR_LVL_DEBUG);
@@ -256,12 +261,6 @@ int main(int argc, char * argv[])
 			}
 		}
 
-		// Gather input file names
-		if (optind >= argc) {
-			hint("Missing transformation(s)");
-			return 1;
-		}
-
 		TR_DBG("Separator     '%c'\n", separator);
 #if USE_CONFIGURATION_FILE
 		TR_DBG("Configuration '%s'\n", configuration_file.c_str());
@@ -270,12 +269,32 @@ int main(int argc, char * argv[])
 		TR_DBG("Max depth     '%d'\n", max_depth);
 		BUG_ON(max_depth <= 0);
 
+		// Read rules file
 		if (rules_files.size() == 0) {
 			hint("No rules available");
 			return 1;
 		}
 		TR_DBG("Rules         '%d'\n", rules_files.size());
 		BUG_ON(rules_files.size() == 0);
+
+		FCP::Rules * rules;
+
+		try {
+			rules = new FCP::Rules(rules_files);
+		} catch (std::exception & e) {
+			TR_ERR("%s\n", e.what());
+			return 1;
+		}
+		if (dump_rules) {
+			rules->dump(std::cout);
+			return 0;
+		}
+
+		// Handle transformations
+		if (optind >= argc) {
+			hint("Missing transformation(s)");
+			return 1;
+		}
 
 		BUG_ON((argc - optind) < 0);
 
@@ -330,16 +349,6 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 #endif
-
-		// Read rules file
-		FCP::Rules * rules;
-
-		try {
-			rules = new FCP::Rules(rules_files);
-		} catch (std::exception & e) {
-			TR_ERR("%s\n", e.what());
-			return 1;
-		}
 
 		// Get all filters from transformations
 		TR_DBG("Handling transformations\n");
