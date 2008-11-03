@@ -21,8 +21,8 @@ config.log
 config.status
 
 src/fcp
-src/autoconfig.h
-src/autoconfig.h.in
+src/config.h
+src/config.h.in
 src/stamp-h1
 
 src/gnulib/sys/stat.h
@@ -50,7 +50,6 @@ tools/autotools/config.guess
 tools/autotools/config.sub
 
 tests/defs
-tests/wrapper
 tests/testSubDir-*
 tests/test-fail
 tests/test-success
