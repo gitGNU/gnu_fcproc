@@ -39,7 +39,7 @@ AM_INIT_AUTOMAKE([1.10 foreign -Wall])
 #
 # Autoheader support
 #
-AC_CONFIG_HEADERS([src/autoconfig.h])
+AC_CONFIG_HEADERS([src/config.h])
 
 #
 # Build related programs

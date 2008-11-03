@@ -26,9 +26,6 @@ SUBDIRS = gnulib
 
 ## Programs
 
-EXTRA_DIST =					\
-	config.h
-
 bin_PROGRAMS =					\
 	fcp
 
