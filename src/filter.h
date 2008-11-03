@@ -29,6 +29,7 @@
 #include "file.h"
 
 namespace FCP {
+	// XXX FIXME: tag_in and tag_out could be useless, please check ASAP
 	class Filter {
 	public:
 		Filter(const std::string &              tag_in,
