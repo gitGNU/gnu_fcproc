@@ -74,8 +74,10 @@ FLAGS=""
 
 test -n "$VERBOSE"     && FLAGS="$FLAGS --verbose"
 test -n "$DEBUG"       && FLAGS="$FLAGS --debug"
-test -z "$FCP"         && FCP="wrapper fcp $FLAGS"
-test -z "$FCP_NOFLAGS" && FCP_NOFLAGS="wrapper fcp"
+#test -z "$FCP"         && FCP="wrapper fcp $FLAGS"
+#test -z "$FCP_NOFLAGS" && FCP_NOFLAGS="wrapper fcp"
+test -z "$FCP"         && FCP="@abs_top_builddir@/src/fcp $FLAGS"
+test -z "$FCP_NOFLAGS" && FCP_NOFLAGS="@abs_top_builddir@/src/fcp"
 test -z "$WRAPPER"     && WRAPPER="wrapper"
 
 PATH=`pwd`:$PATH
@@ -88,10 +90,10 @@ then
     echo "$me: checking $tool..."
     # Check that each required tool is present.
     case $tool in
-      tidy)
-        # HTMLtidy test
-        test -n "@TIDY@" || exit 77
-	;;
+#      tidy)
+#        # HTMLtidy test
+#        test -n "@TIDY@" || exit 77
+#	;;
 
       # Generic case: the tool must support --version.
       *)
