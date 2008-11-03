@@ -85,7 +85,8 @@ SUCCESS_TESTS +=				\
 	test-rules-01				\
 	test-execution-01			\
 	test-execution-02			\
-	test-execution-03
+	test-execution-03			\
+	test-memleaks-01
 
 XFAIL_TESTS  = $(FAIL_TESTS)
 TESTS	     = $(FAIL_TESTS) $(SUCCESS_TESTS)
@@ -209,6 +210,18 @@ test-execution-03: $(srcdir)/test-execution-03.in Makefile
 	}
 EXTRA_DIST += test-execution-03.in
 CLEANFILES += test-execution-03
+
+test-memleaks-01: $(srcdir)/test-memleaks-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-memleaks-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-memleaks-01.in
+CLEANFILES += test-memleaks-01
 
 clean-local:
 	rm -rf testSubDir-*
