@@ -55,16 +55,19 @@ namespace FCP {
 			regex_t    body_;
 		} re_;
 
-		std::map<std::string, std::set<FCP::Filter *> > rules_;
+		std::map<std::string,
+			 std::map<std::string,
+				  FCP::Filter *> > rules_;
 
-		void parse(const std::string & filename);
+		std::string readline(std::ifstream & stream);
+		void        parse(const std::string & filename);
 
-		bool build_chain(std::set<std::pair<std::string,
-						    std::string> > & loopset,
-				 const std::string &                 in,
-				 const std::string &                 out,
-				 int                                 mdepth,
-				 std::vector<FCP::Filter *> &        chain);
+		bool        build_chain(std::set<std::pair<std::string,
+					std::string> > &             loopset,
+					const std::string &          in,
+					const std::string &          out,
+					int                          mdepth,
+					std::vector<FCP::Filter *> & chain);
 	};
 }
 

@@ -78,8 +78,11 @@ namespace FCP {
 		regfree(&re_.comment_);
 		regfree(&re_.empty_);
 
-		std::map<std::string, std::set<FCP::Filter *> >::iterator ir;
-		std::set<FCP::Filter *>::iterator                         is;
+		std::map<std::string,
+			std::map<std::string,
+			FCP::Filter *> >::iterator ir;
+		std::map<std::string,
+			FCP::Filter *>::iterator   is;
 
 		TR_DBG("Known rules:\n");
 		for (ir  = rules_.begin();
@@ -89,10 +92,10 @@ namespace FCP {
 			for (is  = (*ir).second.begin();
 			     is != (*ir).second.end();
 			     is++) {
-				BUG_ON((*ir).first != (*is)->input());
+				BUG_ON((*ir).first != (*is).second->input());
 
 				TR_DBG("    '%s'\n",
-				       (*is)->output().c_str());
+				       (*is).second->output().c_str());
 			}
 		}
 	}
@@ -104,18 +107,20 @@ namespace FCP {
 	void Rules::dump(std::ostream & stream)
 	{
 		std::map<std::string,
-			std::set<FCP::Filter *> >::const_iterator i;
+			std::map<std::string,
+			FCP::Filter *> >::const_iterator i;
 		for (i  = rules_.begin();
 		     i != rules_.end();
 		     i++) {
-			std::set<FCP::Filter *>::const_iterator j;
+			std::map<std::string,
+				FCP::Filter *>::const_iterator j;
 			for (j  = (*i).second.begin();
 			     j != (*i).second.end();
 			     j++) {
 				stream
 					<< (*i).first
 					<< " -> "
-					<< (*j)->output()
+					<< (*j).second->output()
 					<< std::endl;
 			}
 		}
@@ -143,10 +148,31 @@ namespace FCP {
 #define DUMP_REGMATCHES(X)
 #endif
 
+	std::string Rules::readline(std::ifstream & stream)
+	{
+		std::string ret;
+		bool        stop;
+
+		stop = false;
+		while (!stop) {
+			std::string tmp;
+
+			std::getline(stream, tmp);
+			tmp = String::trim_right(tmp, " \t");
+			if (tmp.find_last_of("\\") != tmp.size()) {
+				stop = true;
+			}
+
+			ret = ret + tmp;
+		}
+
+		return ret;
+	}
+
 	void Rules::parse(const std::string & filename)
 	{
-		P_DBG("Parsing rules from file '%s'\n",
-		      filename.c_str());
+		// Always dump the file under examination
+		TR_DBG("Parsing rules from file '%s'\n", filename.c_str());
 
 		std::ifstream stream;
 
@@ -179,7 +205,7 @@ namespace FCP {
 				      state, number, line.c_str());
 
 				// Read a new line
-				std::getline(stream, line); number++;
+				line = readline(stream); number++;
 
 				P_DBG("  line %d = '%s'\n",
 				      number, line.c_str());
@@ -285,7 +311,7 @@ namespace FCP {
 				      state, number, line.c_str());
 
 				// Read a new line
-				std::getline(stream, line); number++;
+				line = readline(stream); number++;
 
 				P_DBG("  State %d, number %d, line '%s'\n",
 				      state, number, line.c_str());
@@ -343,7 +369,12 @@ namespace FCP {
 				r = new FCP::Filter(tag_in, tag_out, commands);
 				BUG_ON(r == 0);
 
-				rules_[tag_in].insert(r);
+				if ((rules_[tag_in])[tag_out]) {
+					delete (rules_[tag_in])[tag_out];
+				}
+				(rules_[tag_in])[tag_out] = r;
+
+				P_DBG("  Added rule\n");
 
 				tag_in   = "";
 				tag_out  = "";
@@ -368,7 +399,7 @@ namespace FCP {
 			r = new FCP::Filter(tag_in, tag_out, commands);
 			BUG_ON(r == 0);
 
-			rules_[tag_in].insert(r);
+			(rules_[tag_in])[tag_out] = r;
 		}
 
 		stream.close();
@@ -381,19 +412,20 @@ namespace FCP {
 				int                                 mdepth,
 				std::vector<FCP::Filter *> &        chain)
 	{
-		BUG_ON(mdepth <= 0);
+		BUG_ON(mdepth < 0);
 
-		TR_DBG("Looking for '%s' -> '%s'\n",
-		       in.c_str(), out.c_str());
+		TR_DBG("Looking for '%s' -> '%s' (mdepth = %d)\n",
+		       in.c_str(), out.c_str(), mdepth);
 
 		mdepth--;
-		if (mdepth == 0) {
+		if (mdepth < 0) { // Allow mdepth == 1
 			TR_DBG("Max filters-chain size exceeded\n");
 			return false;
 		}
 
 		std::map<std::string,
-			std::set<FCP::Filter *> >::const_iterator r;
+			std::map<std::string,
+			FCP::Filter *> >::const_iterator r;
 		r = rules_.find(in);
 		if (r == rules_.end()) {
 			TR_DBG("No rules available for '%s' -> '%s'\n",
@@ -403,30 +435,30 @@ namespace FCP {
 
 		// Loop detection
 		std::pair<std::string, std::string> t(in, out);
-
 		if (loopset.find(t) != loopset.end()) {
 			TR_DBG("Got a loop\n");
 			return false;
 		}
 		loopset.insert(t);
 
-		std::set<FCP::Filter *>::const_iterator i;
+		std::map<std::string, FCP::Filter *>::const_iterator f;
 
-		for (i = (*r).second.begin(); i != (*r).second.end(); i++) {
-			if ((*i)->output() == out) {
+		for (f = (*r).second.begin(); f != (*r).second.end(); f++) {
+			if (f->first == out) {
 				TR_DBG("Got chain end!\n");
-				chain.push_back(*i);
+				chain.push_back(f->second);
 				return true;
 			}
 
 			TR_DBG("Looking for '%s' -> '%s'\n",
-			       (*i)->output().c_str(), out.c_str());
+			       f->second->output().c_str(), out.c_str());
 			if (build_chain(loopset,
-					(*i)->output(), out,
+					f->second->output(), out,
 					mdepth, chain)) {
-				chain.push_back(*i);
+				chain.push_back(f->second);
 				TR_DBG("Got '%s' -> '%s'\n",
-				       (*i)->output().c_str(), out.c_str());
+				       f->second->output().c_str(),
+				       out.c_str());
 				return true;
 			}
 		}

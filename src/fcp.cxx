@@ -230,7 +230,7 @@ int main(int argc, char * argv[])
 					break;
 				case 'm':
 					max_depth = atoi(optarg);
-					if (max_depth <= 1) {
+					if (max_depth < 1) {
 						hint("Wrong max-depth");
 						return 1;
 					}
