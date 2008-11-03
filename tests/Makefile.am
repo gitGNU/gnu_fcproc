@@ -33,23 +33,9 @@ EXTRA_DIST =
 TESTS_ENVIRONMENT = testdir=@abs_builddir@
 
 scripts =					\
-	wrapper					\
 	defs
 
 all-local: $(scripts)
-
-# wrapper
-wrapper: $(srcdir)/wrapper.in Makefile
-	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/wrapper.in > $@.tmp && \
-	  chmod +x $@.tmp && \
-	  chmod a-w $@.tmp && \
-	  mv -f $@.tmp $@ ) || { \
-		rm -f $@ $@.tmp ; \
-		exit 1 ; \
-	}
-CLEANFILES += wrapper
-EXTRA_DIST += wrapper.in
 
 ##
 ## NOTE:
