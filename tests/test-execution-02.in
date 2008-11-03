@@ -23,9 +23,6 @@
 required="diff"
 
 cat > ./rules <<EOF
-ext1:ext4
-	echo "0" >> \$O
-
 ext1:ext2
 	echo "1" >> \$O
 
@@ -56,7 +53,9 @@ $FCP -r ./rules -m 100 -s : -t ./ test1.ext1:test2.ext4 || exit 1
 
 rm -f test.exp || exit 1
 cat > test.exp <<EOF
-0
+1
+3
+5
 EOF
 
 diff ./test.exp ./test2.ext4 || exit 1
