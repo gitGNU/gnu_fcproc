@@ -41,6 +41,7 @@ namespace FCP {
 		output_(output),
 		filters_(filters)
 	{
+		TR_DBG("Chain '%s' created\n", id.c_str());
 	}
 
 	Chain::~Chain(void)
@@ -55,11 +56,46 @@ namespace FCP {
 	void Chain::run(const std::string & dir,
 			bool                dry)
 	{
+		TR_DBG("Running filters-chain '%s'\n", id_.c_str());
+
+		if (!dry) {
+			// Check the input and output file times in order to
+			// avoid rebuilding up-to-date files
+
+			if (!input_.ispresent()) {
+				throw Exception("Missing input file "
+						"'" + input_.name() + "'");
+			}
+
+			if (output_.ispresent() &&
+			    (input_.mtime() >= output_.mtime())) {
+				TR_DBG("Output file '%s' is up-to-date\n",
+				       output_.name().c_str());
+				return;
+			}
+		}
+
 		std::vector<FCP::Filter *>::iterator i;
-		for (i  = filters_.begin();
-		     i != filters_.end();
-		     i++) {
-			(*i)->run(id_, input_, output_, dir, dry);
+		for (i  = filters_.begin(); i != filters_.end(); i++) {
+			if (dry) {
+				std::vector<std::string> commands;
+
+				commands = (*i)->commands(id_,
+							  input_,
+							  output_,
+							  dir);
+
+				std::vector<std::string>::iterator ic;
+				for (ic  = commands.begin();
+				     ic != commands.end();
+				     ic++) {
+					TR_VRB("%s\n", (*ic).c_str());
+				}
+
+				continue;
+			}
+
+			(*i)->run(id_, input_, output_, dir);
 		}
 	}
 };
