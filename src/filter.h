@@ -37,13 +37,17 @@ namespace FCP {
 		       const std::vector<std::string> & commands);
 		~Filter(void);
 
-		const std::string & input(void);
-		const std::string & output(void);
-		void                run(const std::string & id,
-					const FCP::File &   input,
-					const FCP::File &   output,
-					const std::string & tmp_dir,
-					bool                dry_run);
+		const std::string &      input(void);
+		const std::string &      output(void);
+		void                     run(const std::string & id,
+					     const FCP::File &   input,
+					     const FCP::File &   output,
+					     const std::string & tmp_dir);
+
+		std::vector<std::string> commands(const std::string & id,
+						  const FCP::File &   input,
+						  const FCP::File &   output,
+						  const std::string & tmp_dir);
 
 	protected:
 
@@ -63,7 +67,6 @@ namespace FCP {
 					       const FCP::File &   input,
 					       const FCP::File &   output,
 					       const std::string & tmp_dir);
-
 	};
 }
 

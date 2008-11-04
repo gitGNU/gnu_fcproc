@@ -150,29 +150,32 @@ namespace FCP {
 		return commands;
 	}
 
+	std::vector<std::string> Filter::commands(const std::string & id,
+						  const FCP::File &   input,
+						  const FCP::File &   output,
+						  const std::string & tmp_dir)
+	{
+		return setup(id, input, output, tmp_dir);
+	}
+
 	void Filter::run(const std::string & id,
 			 const FCP::File &   input,
 			 const FCP::File &   output,
-			 const std::string & tmp_dir,
-			 bool                dry_run)
+			 const std::string & tmp_dir)
 	{
-		std::vector<std::string>            commands;
+		TR_DBG("Running filter '%s' (transforming '%s' -> '%s')\n",
+		       id.c_str(), input.name().c_str(), output.name().c_str());
+
+		std::vector<std::string>            cmds;
 		std::vector<std::string>::iterator  ic;
-		std::vector<std::string>::size_type all;
 
-		commands = setup(id, input, output, tmp_dir);
-		all      = commands.size();
-		for (ic  = commands.begin();
-		     ic != commands.end();
-		     ic++) {
-			if (dry_run) {
-				TR_VRB("%s\n", (*ic).c_str());
-				continue;
-			}
-
+		cmds = commands(id, input, output, tmp_dir);
+		for (ic  = cmds.begin(); ic != cmds.end(); ic++) {
 			int ret;
 
 			BUG_ON((*ic).size() == 0);
+
+			TR_DBG("Calling system() for '%s'\n", (*ic).c_str());
 			ret = system((*ic).c_str());
 			if (ret == -1) {
 				throw Exception("Got fork() failure");
