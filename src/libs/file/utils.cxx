@@ -66,11 +66,23 @@ namespace File {
 		return t;
 	}
 
+	// XXX FIXME: Ugly
+	bool ispresent(const std::string & s)
+	{
+		struct stat t;
+
+		if (stat(s.c_str(), &t) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	time_t mtime(const std::string & s)
 	{
 		struct stat t;
 
-		if (stat(s.c_str(), &t)) {
+		if (stat(s.c_str(), &t) != 0) {
 			throw Exception("Cannot stat() file "
 					"'" + s + "' "
 					"(" +
