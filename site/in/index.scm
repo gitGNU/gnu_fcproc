@@ -6,9 +6,14 @@
 (p "Each filter chain is computed dinamically, using external tools (defined "
    "by the user in a configuration file).")
 
-(h3 "USAGE")
+(h3 "INSTALLATION")
+
+(h4 "Prerequisites")
+(p "In order to install FCP into your system you will need a relatively "
+   "recent C/C++ compiler.")
+
 (h4 "Installation")
-(p "FCP uses the autoconf/automake facilities. The simplest way to install "
+(p "FCP uses the autotools facilities. The simplest way to install "
    "the package in your system is:")
 (ul
  (li (kbd "cd") " to the directory containing the package's source code "
@@ -21,29 +26,20 @@
      "come with the package")
  (li "Type " (kbd "make install") " to install the programs and any data "
      "files and documentation"))
-
 (p "Use " (kbd "./configure --help") " to get a brief help of all "
-   "configuration tweaks available."
-   (br)
-   (br)
-   "You can remove the program binaries and object files from the "
+   "configuration tweaks available.")
+(p "You can remove the program binaries and object files from the "
    "source code directory by typing " (kbd "make clean") ". "
    "To also remove the files that " (samp "configure") " created (so you "
    "can compile the package for a different architecture), type "
-   (kbd "make distclean") "."
-   (br)
-   (br)
-   "You can also type " (kbd "make uninstall") " to remove the installed "
-   "files."
-   (br)
-   (br)
-   "Note that the " (samp "--prefix") " option allows installation using "
+   (kbd "make distclean") ".")
+(p "You can also type " (kbd "make uninstall") " to remove the installed "
+   "files.")
+(p "Note that the " (samp "--prefix") " option allows installation using "
    "different paths than the default ones, this option enables sandbox "
    "installations.")
 
-(h4 "Use")
-(p "")
-
+(h3 "USAGE")
 (pre (@ class "terminal")
      "
 
@@ -68,7 +64,6 @@
 
 ")
 
-(h5 "Options:")
 (p "Although some (maybe) sane default values are hardwired into the "
    "program, the following options allow overriding:")
 
@@ -87,18 +82,59 @@
      "Overrides transformation separator")
 
  (li (kbd "-q") ", " (kbd "--no-rules")   ": "
-     "Do not load default rules file, starting with an empty rules base")
+     "Do not load default rules file, starting with an empty rules-base")
 
  (li (kbd "-b") ", " (kbd "--dump-rules")   ": "
-     "Start the program, dump the rules base then exit. "
-     "Useful for debugging your rules base (and the program itself)")
+     "Start the program, dump the rules-base then exit. "
+     "Useful for debugging your rules-base (and the program itself)")
 
  (li (kbd "-n") ", " (kbd "--dry-run")     ": "
      "Run the program without modifyng any files")
  )
 
-(h4 "Rules file format:")
-(p "")
+(h4 "Rules file format")
+(p "Input rules files use a stripped-down grammar which resembles Makefile's "
+   "grammar. Input files contain: directives, comments and rules.")
+
+(h5 "Directives")
+(p "A \"directive\" is a command for `fcp' to do something special while "
+   "reading the rules file. These include:")
+(ul
+ (li "Reading another rules file")
+
+ (li "Deciding (based on the values of variables) whether to use or "
+     "ignore a part of the file [" (i "NOT YET IMPLEMENTED") "]")
+ )
+
+(h5 "Comments")
+(p "`#' in a line of a rules file starts a \"comment\". It and the rest "
+   "of the line are ignored, except that a trailing backslash not "
+   "escaped by another backslash will continue the comment across "
+   "multiple lines.  A line containing just a comment (with perhaps "
+   "spaces before it) is effectively blank, and is ignored.")
+(p "If you want a literal `#', escape it with a backslash (e.g., `\\#').")
+(p "Comments may appear on any line in the rules file, although they are "
+   "treated specially in certain situations")
+
+(h5 "Rules")
+(p "A rule says how to build one or more files, called the rule's "
+   "targets. A rule has the following format:")
+(pre (@ class "terminal")
+"<INPUT_EXTENSION>:<OUTPUT_EXTENSION>:
+	<COMMAND> [PARAMETERS]...
+	<COMMAND> [PARAMETERS]...
+")
+
+(p "The following special variables are available inside each target commands:")
+(ul
+ (li (kbd "$I") ": The transformation input file name")
+ (li (kbd "$O") ": The transformation output file name")
+ (li (kbd "$T[0-9]+") ": A temporary filename")
+ )
+
+(h4 "Examples")
+(h5 "Dumping the actual rules-base")
+(pre (@ class "terminal") "$ fcp -b")
 
 (h3 "COPYING")
 (p "FCP is licensed under the "
