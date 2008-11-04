@@ -75,6 +75,11 @@ namespace FCP {
 		return ::File::mtime(name_);
 	}
 
+	bool File::ispresent(void) const
+	{
+		return ::File::ispresent(name_);
+	}
+
 	bool File::operator ==(const FCP::File & rhs) const
 	{
 		return ((*this).name_ == rhs.name_);
