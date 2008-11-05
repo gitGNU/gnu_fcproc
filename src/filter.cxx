@@ -151,22 +151,28 @@ namespace FCP {
 	void Filter::run(const std::string & id,
 			 const FCP::File &   input,
 			 const FCP::File &   output,
-			 const std::string & tmp_dir)
+			 const std::string & tmp_dir,
+			 bool                dry_run)
 	{
 		TR_DBG("Running filter '%s' (transforming '%s' -> '%s')\n",
 		       id.c_str(), input.name().c_str(), output.name().c_str());
 
 		std::vector<std::string>            cmds;
-		std::vector<std::string>::iterator  ic;
+		std::vector<std::string>::iterator  i;
 
 		cmds = commands(id, input, output, tmp_dir);
-		for (ic  = cmds.begin(); ic != cmds.end(); ic++) {
+		for (i  = cmds.begin(); i != cmds.end(); i++) {
+			if (dry_run) {
+				TR_VRB("%s\n", (*i).c_str());
+				continue;
+			}
+
 			int ret;
 
-			BUG_ON((*ic).size() == 0);
+			BUG_ON((*i).size() == 0);
 
-			TR_DBG("Calling system() for '%s'\n", (*ic).c_str());
-			ret = system((*ic).c_str());
+			TR_DBG("Calling system() for '%s'\n", (*i).c_str());
+			ret = system((*i).c_str());
 			if (ret == -1) {
 				throw Exception("Got fork() failure");
 			}
@@ -177,7 +183,7 @@ namespace FCP {
 			}
 			if (WEXITSTATUS(ret) != 0) {
 				throw Exception("Got problems running "
-						"command '" + (*ic) + "'");
+						"command '" + (*i) + "'");
 			}
 		}
 	}

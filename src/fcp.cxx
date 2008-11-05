@@ -386,12 +386,10 @@ int main(int argc, char * argv[])
 		}
 
 		// Run all filters-chains now
-		TR_DBG("Running filters-chains\n");
+		TR_DBG("Running all filters-chains (%d)\n", filters.size());
 		std::vector<FCP::Chain *>::iterator ij;
 		try {
 			for (ij = filters.begin(); ij != filters.end(); ij++) {
-				TR_DBG("Filters chain '%s':\n",
-				       (*ij)->id().c_str());
 				(*ij)->run(temp_dir, dry_run, force);
 			}
 		} catch (std::exception & e) {

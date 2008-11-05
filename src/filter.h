@@ -42,12 +42,8 @@ namespace FCP {
 		void                     run(const std::string & id,
 					     const FCP::File &   input,
 					     const FCP::File &   output,
-					     const std::string & tmp_dir);
-
-		std::vector<std::string> commands(const std::string & id,
-						  const FCP::File &   input,
-						  const FCP::File &   output,
-						  const std::string & tmp_dir);
+					     const std::string & tmp_dir,
+					     bool                dry_run);
 
 	protected:
 
@@ -59,6 +55,11 @@ namespace FCP {
 		std::string              mktemp(const std::string & id,
 						const std::string & tmp_dir,
 						size_t              index);
+		std::vector<std::string> commands(const std::string & id,
+						  const FCP::File &   input,
+						  const FCP::File &   output,
+						  const std::string & tmp_dir);
+
 	};
 }
 

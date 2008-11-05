@@ -79,25 +79,7 @@ namespace FCP {
 
 		std::vector<FCP::Filter *>::iterator i;
 		for (i  = filters_.begin(); i != filters_.end(); i++) {
-			if (dry) {
-				std::vector<std::string> commands;
-
-				commands = (*i)->commands(id_,
-							  input_,
-							  output_,
-							  dir);
-
-				std::vector<std::string>::iterator ic;
-				for (ic  = commands.begin();
-				     ic != commands.end();
-				     ic++) {
-					TR_VRB("%s\n", (*ic).c_str());
-				}
-
-				continue;
-			}
-
-			(*i)->run(id_, input_, output_, dir);
+			(*i)->run(id_, input_, output_, dir, dry);
 		}
 	}
 };
