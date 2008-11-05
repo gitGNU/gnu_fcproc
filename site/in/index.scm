@@ -57,6 +57,8 @@
 	  -q, --no-rules	  do not load initial rules
 	  -b, --dump-rules	  dump rules base, then exit
 	  -n, --dry-run		  display commands without modifying any files
+          -f, --force             consider all files out of date
+          -c, --cache             cache temporary files
 	  -d, --debug		  enable debugging traces
 	  -v, --verbose		  verbosely report processing
 	  -h, --help		  print this help, then exit
@@ -87,6 +89,12 @@
  (li (kbd "-b") ", " (kbd "--dump-rules")   ": "
      "Start the program, dump the rules-base then exit. "
      "Useful for debugging your rules-base (and the program itself)")
+
+ (li (kbd "-f") ", " (kbd "--force")     ": "
+     "Run the program without regenerating updated files")
+
+ (li (kbd "-c") ", " (kbd "--cache")     ": "
+     "Cache temporary files for speeding up later executions")
 
  (li (kbd "-n") ", " (kbd "--dry-run")     ": "
      "Run the program without modifyng any files")
