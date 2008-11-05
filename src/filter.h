@@ -56,17 +56,9 @@ namespace FCP {
 		std::string              tag_out_;
 		std::vector<std::string> templates_;
 
-		std::map<std::string,
-			 std::string>    temps_;
-
-		size_t                   temp_count_;
-
 		std::string              mktemp(const std::string & id,
-						const std::string & tmp_dir);
-		std::vector<std::string> setup(const std::string & id,
-					       const FCP::File &   input,
-					       const FCP::File &   output,
-					       const std::string & tmp_dir);
+						const std::string & tmp_dir,
+						size_t              index);
 	};
 }
 

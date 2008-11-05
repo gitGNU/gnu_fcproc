@@ -53,31 +53,34 @@ namespace FCP {
 	}
 
 	std::string Filter::mktemp(const std::string & id,
-				   const std::string & dir)
+				   const std::string & dir,
+				   size_t              index)
 	{
 		std::string       t;
 		std::stringstream s;
 
 
-		s << temp_count_;
+		s << index;
 
 		t = dir + std::string("/") + id + std::string("-") + s.str();
-
-		temp_count_++;
 
 		return t;
 	}
 
-	// XXX FIXME: Rearrange ASAP
-	std::vector<std::string> Filter::setup(const std::string & id,
-					       const FCP::File &   input,
-					       const FCP::File &   output,
-					       const std::string & tmp_dir)
+	std::vector<std::string> Filter::commands(const std::string & id,
+						  const FCP::File &   input,
+						  const FCP::File &   output,
+						  const std::string & tmp_dir)
 	{
 		std::vector<std::string>::iterator ic;
 		std::vector<std::string>           commands;
 
 		commands = templates_;
+
+		std::map<std::string, std::string> temps;
+		size_t                             temp_count;
+
+		temp_count = 0;
 
 		//TR_DBG("Replacing variables\n")
 		for (ic  = commands.begin();
@@ -130,10 +133,13 @@ namespace FCP {
 				//TR_DBG("      v = '%s'\n", v.c_str());
 
 				std::string t;
-				t = temps_[v];
+				t = temps[v];
 				if (t == "") {
-					t         = mktemp(id, tmp_dir);
-					temps_[v] = t;
+					t        = mktemp(id,
+							  tmp_dir,
+							  temp_count);
+					temp_count++;
+					temps[v] = t;
 				}
 
 				command = String::replace(command, v, t);
@@ -148,14 +154,6 @@ namespace FCP {
 		}
 
 		return commands;
-	}
-
-	std::vector<std::string> Filter::commands(const std::string & id,
-						  const FCP::File &   input,
-						  const FCP::File &   output,
-						  const std::string & tmp_dir)
-	{
-		return setup(id, input, output, tmp_dir);
 	}
 
 	void Filter::run(const std::string & id,
