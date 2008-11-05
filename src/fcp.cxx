@@ -120,9 +120,9 @@ void hint(const std::string & message)
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
 }
 
-FCP::Chain * transform(const FCP::Transformation & transformation,
-		       FCP::Rules &                rules,
-		       int                         mdepth)
+FCP::Chain * build_filters_chain(const FCP::Transformation & transformation,
+				 FCP::Rules &                rules,
+				 int                         mdepth)
 {
 	BUG_ON(mdepth <= 0);
 
@@ -130,7 +130,7 @@ FCP::Chain * transform(const FCP::Transformation & transformation,
 	       transformation.input().name().c_str(),
 	       transformation.output().name().c_str());
 
-	// Build the filters-chain
+	// Build the filters sequence for this transformation
 	std::vector<FCP::Filter *> chain;
 	rules.chains(transformation.input().extension(),
 		     transformation.output().extension(),
@@ -142,7 +142,8 @@ FCP::Chain * transform(const FCP::Transformation & transformation,
 				"transformation");
 	}
 
-	TR_DBG("Filters chain:\n");
+	TR_DBG("Filters-chain for transformation '%s':\n",
+	       transformation.tag().c_str());
 	std::vector<FCP::Filter *>::iterator iter;
 	for (iter = chain.begin(); iter != chain.end(); iter++) {
 		TR_DBG("  '%s' -> '%s'\n",
@@ -150,7 +151,7 @@ FCP::Chain * transform(const FCP::Transformation & transformation,
 		       (*iter)->output().c_str());
 	}
 
-	// Perform transformation now
+	// Create the filters-chain from the filters sequence
 	FCP::Chain * j;
 
 	j = new FCP::Chain(transformation.tag(),
@@ -363,8 +364,8 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		// Get all filters from transformations
-		TR_DBG("Handling transformations\n");
+		// Get all filters-chains from transformations
+		TR_DBG("Building filters-chains for all transformations\n");
 		std::vector<FCP::Chain *> filters;
 		try {
 			for (it  = transformations.begin();
@@ -372,7 +373,9 @@ int main(int argc, char * argv[])
 			     it++) {
 				FCP::Chain * j;
 
-				j = transform(*(*it), *rules, max_depth);
+				j = build_filters_chain(*(*it),
+							*rules,
+							max_depth);
 				BUG_ON(j == 0);
 
 				filters.push_back(j);
