@@ -78,24 +78,18 @@ namespace FCP {
 		commands = templates_;
 
 		std::map<std::string, std::string> temps;
-		size_t                             temp_count;
+		size_t                             count;
 
-		temp_count = 0;
+		count = 0;
 
 		//TR_DBG("Replacing variables\n")
-		for (ic  = commands.begin();
-		     ic != commands.end();
-		     ic++) {
+		for (ic  = commands.begin(); ic != commands.end(); ic++) {
 			std::string command;
 
 			command = (*ic);
 
-			command = String::replace(command,
-						  "$I",
-						  input.name());
-			command = String::replace(command,
-						  "$O",
-						  output.name());
+			command = String::replace(command, "$I", input.name());
+			command = String::replace(command, "$O", output.name());
 
 			//TR_DBG("  Command '%s'\n", command.c_str());
 
@@ -135,10 +129,8 @@ namespace FCP {
 				std::string t;
 				t = temps[v];
 				if (t == "") {
-					t        = mktemp(id,
-							  tmp_dir,
-							  temp_count);
-					temp_count++;
+					t        = mktemp(id, tmp_dir, count);
+					count++;
 					temps[v] = t;
 				}
 
