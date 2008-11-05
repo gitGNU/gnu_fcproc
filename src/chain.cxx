@@ -41,7 +41,6 @@ namespace FCP {
 		output_(output),
 		filters_(filters)
 	{
-		TR_DBG("Chain '%s' created\n", id.c_str());
 	}
 
 	Chain::~Chain(void)
