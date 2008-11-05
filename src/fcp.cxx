@@ -98,6 +98,8 @@ void help(void)
 		<< "  -q, --no-rules          do not load initial rules" <<                                       std::endl
 		<< "  -b, --dump-rules        dump rules base, then exit" <<                                      std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
+		<< "  -f, --force             consider all files out of date" <<                                  std::endl
+		<< "  -c, --cache             cache temporary files" <<                                           std::endl
 		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
 		<< "  -v, --verbose           verbosely report processing" <<                                     std::endl
 		<< "  -h, --help              print this help, then exit" <<                                      std::endl
@@ -167,6 +169,8 @@ int main(int argc, char * argv[])
 
 	try {
 		bool                     dry_run     = false;
+		bool                     force       = false;
+		bool                     cache       = false;
 		bool                     dump_rules  = false;
 		std::vector<std::string> rules_files;
 
@@ -187,6 +191,8 @@ int main(int argc, char * argv[])
 				{ "separator",  1, 0, 's' },
 				{ "no-rules",   0, 0, 'q' },
 				{ "dump-rules", 0, 0, 'b' },
+				{ "force",      0, 0, 'f' },
+				{ "cache",      0, 0, 'c' },
 				{ "dry-run",    0, 0, 'n' },
 				{ "debug",      0, 0, 'd' },
 				{ "verbose",    0, 0, 'v' },
@@ -196,10 +202,10 @@ int main(int argc, char * argv[])
 			};
 
 #if USE_CONFIGURATION_FILE
-			c = getopt_long(argc, argv, "t:c:r:m:s:qbndvVh",
+			c = getopt_long(argc, argv, "t:c:r:m:s:qbfcndvVh",
 					long_options, &option_index);
 #else
-			c = getopt_long(argc, argv, "t:r:m:s:qbndvVh",
+			c = getopt_long(argc, argv, "t:r:m:s:qbfcndvVh",
 					long_options, &option_index);
 #endif
 			if (c == -1) {
@@ -237,6 +243,12 @@ int main(int argc, char * argv[])
 					break;
 				case 'b':
 					dump_rules = true;
+					break;
+				case 'f':
+					force = true;
+					break;
+				case 'c':
+					cache = true;
 					break;
 				case 'n':
 					dry_run = true;
@@ -377,7 +389,7 @@ int main(int argc, char * argv[])
 			for (ij = filters.begin(); ij != filters.end(); ij++) {
 				TR_DBG("Filters chain '%s':\n",
 				       (*ij)->id().c_str());
-				(*ij)->run(temp_dir, dry_run);
+				(*ij)->run(temp_dir, dry_run, force);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
