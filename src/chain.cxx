@@ -52,14 +52,13 @@ namespace FCP {
 		return id_;
 	}
 
-	// XXX FIXME: Ugly, consider revising
-	void Chain::run(const std::string & dir,
-			bool                dry,
+	void Chain::run(const std::string & tmp_dir,
+			bool                dry_run,
 			bool                force)
 	{
 		TR_DBG("Running filters-chain '%s'\n", id_.c_str());
 
-		if (!dry && !force) {
+		if (!dry_run && !force) {
 			// Check the input and output file times
 			// in order to avoid rebuilding up-to-date
 			// files
@@ -79,7 +78,7 @@ namespace FCP {
 
 		std::vector<FCP::Filter *>::iterator i;
 		for (i  = filters_.begin(); i != filters_.end(); i++) {
-			(*i)->run(id_, input_, output_, dir, dry);
+			(*i)->run(id_, input_, output_, tmp_dir, dry_run);
 		}
 	}
 };

@@ -37,10 +37,10 @@ namespace FCP {
 		      const FCP::File &            output);
 		~Chain(void);
 
-		const std::string &              id(void);
-		void                             run(const std::string & dir,
-						     bool                dry,
-						     bool                force);
+		const std::string & id(void);
+		void                run(const std::string & tmp_dir,
+					bool                dry_run,
+					bool                force);
 
 	protected:
 
