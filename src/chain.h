@@ -39,7 +39,8 @@ namespace FCP {
 
 		const std::string &              id(void);
 		void                             run(const std::string & dir,
-						     bool                dry);
+						     bool                dry,
+						     bool                force);
 
 	protected:
 

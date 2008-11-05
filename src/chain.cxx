@@ -53,14 +53,17 @@ namespace FCP {
 		return id_;
 	}
 
+	// XXX FIXME: Ugly, consider revising
 	void Chain::run(const std::string & dir,
-			bool                dry)
+			bool                dry,
+			bool                force)
 	{
 		TR_DBG("Running filters-chain '%s'\n", id_.c_str());
 
-		if (!dry) {
-			// Check the input and output file times in order to
-			// avoid rebuilding up-to-date files
+		if (!dry && !force) {
+			// Check the input and output file times
+			// in order to avoid rebuilding up-to-date
+			// files
 
 			if (!input_.ispresent()) {
 				throw Exception("Missing input file "
