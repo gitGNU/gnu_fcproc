@@ -61,6 +61,7 @@ tests/test-rules-01
 tests/test-execution-01
 tests/test-execution-02
 tests/test-execution-03
+tests/test-execution-04
 tests/test-memleaks-01
 
 docs/man/fcp.1

@@ -61,7 +61,8 @@ SUCCESS_TESTS =
 
 FAIL_TESTS +=					\
 	test-fail				\
-	test-parse-01
+	test-parse-01				\
+	test-execution-04
 
 SUCCESS_TESTS +=				\
 	test-success				\
@@ -196,6 +197,18 @@ test-execution-03: $(srcdir)/test-execution-03.in Makefile
 	}
 EXTRA_DIST += test-execution-03.in
 CLEANFILES += test-execution-03
+
+test-execution-04: $(srcdir)/test-execution-04.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-execution-04.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-execution-04.in
+CLEANFILES += test-execution-04
 
 test-memleaks-01: $(srcdir)/test-memleaks-01.in Makefile
 	( rm -f $@ $@.tmp && \
