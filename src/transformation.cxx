@@ -23,13 +23,15 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/exception.h"
 #include "transformation.h"
+#include "rules.h"
+#include "chain.h"
 
 namespace FCP {
 	Transformation::Transformation(const std::string & tag,
-				       char                separator) :
-		tag_(tag),
-		input_(0),
-		output_(0)
+				       char                separator,
+				       FCP::Rules &        rules,
+				       int                 mdepth) :
+		tag_(tag)
 	{
 		std::string::size_type p;
 
@@ -48,8 +50,8 @@ namespace FCP {
 					"in transformation "
 					"'" + tag_ + "'");
 		}
-		BUG_ON(tmp == "");
 		input_ = new FCP::File(tmp);
+		BUG_ON(input_ == 0);
 
 		tmp = tag_.substr(p + 1);
 		if (tmp.size() == 0) {
@@ -57,17 +59,53 @@ namespace FCP {
 					"in transformation "
 					"'" + tag_ + "'");
 		}
-		BUG_ON(tmp == "");
 		output_ = new FCP::File(tmp);
+		BUG_ON(output_ == 0);
+
+		// Build the filters-chain for this transformation
+		std::vector<FCP::Filter *> chain;
+		rules.chains(input_->extension(),
+			     output_->extension(),
+			     mdepth,
+			     chain);
+		if (chain.size() == 0) {
+			throw Exception("No filters-chain available for "
+					"'" + tag_ + "' "
+					"transformation");
+		}
+
+		TR_DBG("Filters-chain for transformation '%s':\n",
+		       tag_.c_str());
+		std::vector<FCP::Filter *>::iterator iter;
+		for (iter = chain.begin(); iter != chain.end(); iter++) {
+			TR_DBG("  '%s' -> '%s'\n",
+			       (*iter)->input().c_str(),
+			       (*iter)->output().c_str());
+		}
+
+		// Finally create the filters-chain from the filters sequence
+		chain_ = new FCP::Chain(tag_, input(), chain, output());
+		BUG_ON(chain_ == 0);
 	}
 
 	Transformation::~Transformation(void)
 	{
-		BUG_ON(input_ == 0);
 		delete input_;
-
-		BUG_ON(output_ == 0);
 		delete output_;
+		delete chain_;
+	}
+
+	void Transformation::run(const std::string & tmp_dir,
+				 bool                dry_run,
+				 bool                force)
+	{
+		BUG_ON(chain_ == 0);
+
+		TR_DBG("Transforming '%s' -> '%s'\n",
+		       input_->name().c_str(),
+		       output_->name().c_str());
+
+		chain_->run(tmp_dir, dry_run, force);
 	}
 
 	const std::string & Transformation::tag(void) const
@@ -77,13 +115,11 @@ namespace FCP {
 
 	const FCP::File & Transformation::input(void) const
 	{
-		BUG_ON(input_ == 0);
 		return *input_;
 	}
 
 	const FCP::File & Transformation::output(void) const
 	{
-		BUG_ON(output_ == 0);
 		return *output_;
 	}
 };

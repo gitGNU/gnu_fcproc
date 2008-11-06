@@ -24,13 +24,21 @@
 #include <string>
 
 #include "file.h"
+#include "rules.h"
+#include "chain.h"
 
 namespace FCP {
 	class Transformation {
 	public:
 		Transformation(const std::string & tag,
-			       char                separator);
+			       char                separator,
+			       FCP::Rules &        rules,
+			       int                 mdepth);
 		~Transformation(void);
+
+		void                run(const std::string & tmp_dir,
+					bool                dry_run,
+					bool                force);
 
 		const std::string & tag(void)    const;
 		const FCP::File &   input(void)  const;
@@ -42,9 +50,10 @@ namespace FCP {
 		void operator =(const Transformation &);
 
 	private:
-		std::string tag_;
-		FCP::File * input_;
-		FCP::File * output_;
+		std::string  tag_;
+		FCP::File *  input_;
+		FCP::File *  output_;
+		FCP::Chain * chain_;
 	};
 }
 
