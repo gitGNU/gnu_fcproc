@@ -305,6 +305,7 @@ int main(int argc, char * argv[])
 				return 1;
 			}
 		}
+		BUG_ON(transformations.size() == 0);
 
 #if USE_CONFIGURATION_FILE
 		// Read configuration file
