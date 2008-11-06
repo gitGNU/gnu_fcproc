@@ -43,6 +43,9 @@ namespace FCP {
 					bool                force);
 
 	protected:
+		// No copy allowed
+		Chain(const Chain &);
+		void operator =(const Chain &);
 
 	private:
 		std::string                id_;

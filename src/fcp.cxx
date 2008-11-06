@@ -334,9 +334,9 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		// Clean up everything
 		TR_DBG("Operations complete, cleaning up ...\n");
 
+		// Clean up everything
 		try {
 			for (it  = transformations.begin();
 			     it != transformations.end();

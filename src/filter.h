@@ -46,6 +46,9 @@ namespace FCP {
 					     bool                dry_run);
 
 	protected:
+		// No copy allowed
+		Filter(const Filter &);
+		void operator =(const Filter &);
 
 	private:
 		std::string              tag_in_;
