@@ -23,7 +23,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <dirent.h>
 
+#include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/file/utils.h"
 #include "libs/misc/exception.h"
@@ -93,3 +96,32 @@ namespace File {
 		return t.st_mtime;
 	}
 }
+
+namespace Directory {
+	bool exists(const std::string & s)
+	{
+		BUG_ON(s.size() == 0);
+
+		// XXX FIXME: Consider using gnulib replacement
+		DIR * tmp = opendir(s.c_str());
+		if (tmp == 0) {
+			switch (errno) {
+				case ENOTDIR:
+				case EACCES:
+				case ENOENT:
+					return false;
+			}
+
+			throw Exception("Cannot open directory "
+					"'" + s + "' "
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
+
+		// XXX FIXME: Maybe a check on closedir() return value ...
+		closedir(tmp);
+
+		return true;
+	}
+};

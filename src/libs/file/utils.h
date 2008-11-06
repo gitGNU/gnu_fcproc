@@ -31,4 +31,8 @@ namespace File {
 	bool        exists(const std::string & s);
 };
 
+namespace Directory {
+	bool exists(const std::string & s);
+};
+
 #endif // LIBS_FILE_UTILS_H
