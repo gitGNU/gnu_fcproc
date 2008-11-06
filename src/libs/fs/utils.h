@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef LIBS_FILE_UTILS_H
-#define LIBS_FILE_UTILS_H
+#ifndef LIBS_FS_UTILS_H
+#define LIBS_FS_UTILS_H
 
 #include "config.h"
 
@@ -35,4 +35,4 @@ namespace Directory {
 	bool exists(const std::string & s);
 };
 
-#endif // LIBS_FILE_UTILS_H
+#endif // LIBS_FS_UTILS_H

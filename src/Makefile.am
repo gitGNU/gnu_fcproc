@@ -46,7 +46,7 @@ fcp_CPPFLAGS =					\
 fcp_LDADD =					\
 	libmisc.a				\
 	libconf.a				\
-	libfile.a				\
+	libfs.a					\
 	gnulib/libgnu.a
 
 ## Libraries
@@ -54,7 +54,7 @@ fcp_LDADD =					\
 noinst_LIBRARIES =				\
 	libmisc.a				\
 	libconf.a				\
-	libfile.a
+	libfs.a
 
 libmisc_a_SOURCES =				\
 	libs/misc/exception.h			\
@@ -79,10 +79,10 @@ libconf_a_SOURCES =				\
 libconf_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
-libfile_a_SOURCES =				\
-	libs/file/utils.h			\
-	libs/file/utils.cxx
-libfile_a_CPPFLAGS =				\
+libfs_a_SOURCES =				\
+	libs/fs/utils.h				\
+	libs/fs/utils.cxx
+libfs_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 ##
@@ -94,7 +94,7 @@ all_SRCS =					\
 	$(fcp_SOURCES)				\
 	$(libmisc_a_SOURCES)			\
 	$(libconf_a_SOURCES)			\
-	$(libfile_a_SOURCES)
+	$(libfs_a_SOURCES)
 
 maintainer-check-local: Makefile
 	$(WHITESPACE_DETECT)  $(all_SRCS)

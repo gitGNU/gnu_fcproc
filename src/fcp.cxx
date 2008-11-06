@@ -29,7 +29,7 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
-#include "libs/file/utils.h"
+#include "libs/fs/utils.h"
 #include "libs/misc/exception.h"
 #include "rules.h"
 #include "transformation.h"
