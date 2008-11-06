@@ -28,7 +28,7 @@ namespace File {
 	std::string basename(const std::string & s);
 	std::string extension(const std::string & s);
 	time_t      mtime(const std::string & s);
-	bool        ispresent(const std::string & s);
+	bool        exists(const std::string & s);
 };
 
 #endif // LIBS_FILE_UTILS_H
