@@ -28,6 +28,8 @@
 #include "filter.h"
 #include "file.h"
 
+#include "libs/misc/string.h"
+
 namespace FCP {
 	Filter::Filter(const std::string &              tag_in,
 		       const std::string &              tag_out,
@@ -56,15 +58,8 @@ namespace FCP {
 				   const std::string & dir,
 				   size_t              index)
 	{
-		std::string       t;
-		std::stringstream s;
-
-
-		s << index;
-
-		t = dir + std::string("/") + id + std::string("-") + s.str();
-
-		return t;
+		return dir + std::string("/") + id + std::string("-") +
+			String::itos(index);
 	}
 
 	std::vector<std::string> Filter::commands(const std::string & id,
