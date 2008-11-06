@@ -269,6 +269,16 @@ int main(int argc, char * argv[])
 		BUG_ON((argc - optind) < 0);
 
 		// Does the temporary directory exists ?
+		try {
+			if (!Directory::exists(tmp_dir)) {
+				TR_ERR("No such '%s' directory\n",
+				       tmp_dir.c_str());
+				return 1;
+			}
+		} catch (std::exception & e) {
+			TR_ERR("%s\n", e.what());
+			return 1;
+		}
 
 		std::vector<FCP::Transformation *>           transformations;
 		std::vector<FCP::Transformation *>::iterator it;
