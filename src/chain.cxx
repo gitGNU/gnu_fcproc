@@ -59,16 +59,16 @@ namespace FCP {
 		TR_DBG("Running filters-chain '%s'\n", id_.c_str());
 
 		if (!dry_run && !force) {
-			// Check the input and output file times
-			// in order to avoid rebuilding up-to-date
-			// files
+			// Check the output file presence and its last
+			// modification time in order to avoid a rebuild
+			// if it is up-to-date
 
-			if (!input_.ispresent()) {
+			if (!input_.exists()) {
 				throw Exception("Missing input file "
 						"'" + input_.name() + "'");
 			}
 
-			if (output_.ispresent() &&
+			if (output_.exists() &&
 			    (input_.mtime() >= output_.mtime())) {
 				TR_DBG("Output file '%s' is up-to-date\n",
 				       output_.name().c_str());

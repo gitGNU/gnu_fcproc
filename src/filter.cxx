@@ -149,13 +149,14 @@ namespace FCP {
 			 const std::string & tmp_dir,
 			 bool                dry_run)
 	{
-		TR_DBG("Running filter '%s' (transforming '%s' -> '%s')\n",
+		TR_DBG("Running filter '%s' (transforming '%s' into '%s')\n",
 		       id.c_str(), input.name().c_str(), output.name().c_str());
 
-		std::vector<std::string>            cmds;
-		std::vector<std::string>::iterator  i;
+		std::vector<std::string> cmds;
 
 		cmds = commands(id, input, output, tmp_dir);
+
+		std::vector<std::string>::iterator i;
 		for (i  = cmds.begin(); i != cmds.end(); i++) {
 			if (dry_run) {
 				TR_VRB("%s\n", (*i).c_str());
@@ -167,6 +168,8 @@ namespace FCP {
 			BUG_ON((*i).size() == 0);
 
 			TR_DBG("Calling system() for '%s'\n", (*i).c_str());
+
+			// XXX FIXME: Use gnulib system()
 			ret = system((*i).c_str());
 			if (ret == -1) {
 				throw Exception("Got fork() failure");

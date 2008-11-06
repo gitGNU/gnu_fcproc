@@ -35,6 +35,7 @@ namespace FCP {
 	{
 		std::string::size_type p;
 
+		// Split the tag into input and output part
 		p = tag_.find(separator);
 		if ((p < 0) || (p > tag_.size())) {
 			throw Exception("Missing separator "
@@ -99,8 +100,6 @@ namespace FCP {
 				 bool                dry_run,
 				 bool                force)
 	{
-		BUG_ON(chain_ == 0);
-
 		TR_DBG("Transforming '%s' -> '%s'\n",
 		       input_->name().c_str(),
 		       output_->name().c_str());

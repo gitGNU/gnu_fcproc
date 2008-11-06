@@ -68,7 +68,7 @@ std::string configuration_file  =
 	 std::string("/") +			\
 	 std::string("rules"))
 int         max_depth           = 16;
-std::string temp_dir            = Environment::get("HOME") +
+std::string tmp_dir             = Environment::get("HOME") +
 												     std::string("/") +
 												     std::string(".") +
 												     std::string(PACKAGE_TARNAME) +
@@ -90,7 +90,7 @@ void help(void)
 		<< "  -m, --max-depth=NUM     use NUM as max filter-chains depth" <<                              std::endl
 		<< "                          [default " << max_depth << "]" <<                                   std::endl
 		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                  std::endl
-		<< "                          [default " << temp_dir << "]" <<                                    std::endl
+		<< "                          [default " << tmp_dir << "]" <<                                     std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
 		<< "                          [default `" << separator << "']" <<                                 std::endl
 		<< "  -q, --no-rules          do not load initial rules" <<                                       std::endl
@@ -178,7 +178,7 @@ int main(int argc, char * argv[])
 					rules_files.push_back(optarg);
 					break;
 				case 't':
-					temp_dir = optarg;
+					tmp_dir = optarg;
 					break;
 				case 's':
 					if (strlen(optarg) > 1) {
@@ -261,13 +261,14 @@ int main(int argc, char * argv[])
 			return 0;
 		}
 
-		// Handle transformations
+		// Check if at least a transformation is available
 		if (optind >= argc) {
 			hint("Missing transformation(s)");
 			return 1;
 		}
-
 		BUG_ON((argc - optind) < 0);
+
+		// Does the temporary directory exists ?
 
 		std::vector<FCP::Transformation *>           transformations;
 		std::vector<FCP::Transformation *>::iterator it;
@@ -327,7 +328,7 @@ int main(int argc, char * argv[])
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				(*it)->run(temp_dir, dry_run, force);
+				(*it)->run(tmp_dir, dry_run, force);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());

@@ -67,7 +67,7 @@ namespace File {
 	}
 
 	// XXX FIXME: Ugly
-	bool ispresent(const std::string & s)
+	bool exists(const std::string & s)
 	{
 		struct stat t;
 
