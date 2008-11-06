@@ -98,6 +98,7 @@ namespace File {
 }
 
 namespace Directory {
+	// XXX FIXME: Ugly, consider revising ...
 	bool exists(const std::string & s)
 	{
 		BUG_ON(s.size() == 0);
@@ -105,12 +106,7 @@ namespace Directory {
 		// XXX FIXME: Consider using gnulib replacement
 		DIR * tmp = opendir(s.c_str());
 		if (tmp == 0) {
-			switch (errno) {
-				case ENOTDIR:
-				case EACCES:
-				case ENOENT:
-					return false;
-			}
+			BUG_ON(errno == EBADF);
 
 			throw Exception("Cannot open directory "
 					"'" + s + "' "
