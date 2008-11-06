@@ -22,7 +22,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <sstream>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
@@ -38,9 +37,10 @@ namespace FCP {
 		     const FCP::File &            output) :
 		id_(id),
 		input_(input),
-		output_(output),
-		filters_(filters)
+		output_(output)
 	{
+		TR_DBG("Creating chain '%s'\n", id.c_str());
+		filters_ = filters;
 	}
 
 	Chain::~Chain(void)
