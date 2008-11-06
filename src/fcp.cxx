@@ -25,15 +25,12 @@
 #include <set>
 
 #include "libs/misc/debug.h"
-#include "libs/misc/string.h"
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
 #include "libs/file/utils.h"
 #include "libs/misc/exception.h"
-#include "filter.h"
 #include "rules.h"
 #include "transformation.h"
-#include "chain.h"
 #include "getopt.h"
 
 #define PROGRAM_NAME "fcp"
@@ -118,49 +115,6 @@ void hint(const std::string & message)
 	std::cout
 		<< message <<                                                 std::endl
 		<< "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
-}
-
-FCP::Chain * build_filters_chain(const FCP::Transformation & transformation,
-				 FCP::Rules &                rules,
-				 int                         mdepth)
-{
-	BUG_ON(mdepth <= 0);
-
-	TR_DBG("Transforming '%s' -> '%s'\n",
-	       transformation.input().name().c_str(),
-	       transformation.output().name().c_str());
-
-	// Build the filters sequence for this transformation
-	std::vector<FCP::Filter *> chain;
-	rules.chains(transformation.input().extension(),
-		     transformation.output().extension(),
-		     mdepth,
-		     chain);
-	if (chain.size() == 0) {
-		throw Exception("No filters-chain available for "
-				"'" + transformation.tag() + "' "
-				"transformation");
-	}
-
-	TR_DBG("Filters-chain for transformation '%s':\n",
-	       transformation.tag().c_str());
-	std::vector<FCP::Filter *>::iterator iter;
-	for (iter = chain.begin(); iter != chain.end(); iter++) {
-		TR_DBG("  '%s' -> '%s'\n",
-		       (*iter)->input().c_str(),
-		       (*iter)->output().c_str());
-	}
-
-	// Create the filters-chain from the filters sequence
-	FCP::Chain * j;
-
-	j = new FCP::Chain(transformation.tag(),
-			   transformation.input(),
-			   chain,
-			   transformation.output());
-	BUG_ON(j == 0);
-
-	return j;
 }
 
 int main(int argc, char * argv[])
@@ -326,9 +280,13 @@ int main(int argc, char * argv[])
 			try {
 				FCP::Transformation * t;
 
-				t = new FCP::Transformation(argv[i], separator);
+				t = new FCP::Transformation(argv[i],
+							    separator,
+							    *rules,
+							    max_depth);
 				BUG_ON(t == 0);
 
+				// XXX FIXME: Use an exception
 				if (t->input() == t->output()) {
 					TR_ERR("Transformation '%s' "
 					       "input and output "
@@ -338,11 +296,6 @@ int main(int argc, char * argv[])
 				}
 
 				transformations[j] = t;
-
-				TR_DBG("  '%s' = '%s' -> '%s'\n",
-				       t->tag().c_str(),
-				       t->input().name().c_str(),
-				       t->output().name().c_str());
 
 			} catch (std::exception & e) {
 				TR_ERR("%s\n", e.what());
@@ -364,33 +317,13 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		// Get all filters-chains from transformations
-		TR_DBG("Building filters-chains for all transformations\n");
-		std::vector<FCP::Chain *> filters;
+		// Run all transformations
+		TR_DBG("Running %d transformations\n", transformations.size());
 		try {
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				FCP::Chain * j;
-
-				j = build_filters_chain(*(*it),
-							*rules,
-							max_depth);
-				BUG_ON(j == 0);
-
-				filters.push_back(j);
-			}
-		} catch (std::exception & e) {
-			TR_ERR("%s\n", e.what());
-			return 1;
-		}
-
-		// Run all filters-chains now
-		TR_DBG("Running all filters-chains (%d)\n", filters.size());
-		std::vector<FCP::Chain *>::iterator ij;
-		try {
-			for (ij = filters.begin(); ij != filters.end(); ij++) {
-				(*ij)->run(temp_dir, dry_run, force);
+				(*it)->run(temp_dir, dry_run, force);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
@@ -400,15 +333,15 @@ int main(int argc, char * argv[])
 		// Clean up everything
 		TR_DBG("Operations complete, cleaning up ...\n");
 
-		for (ij  = filters.begin();
-		     ij != filters.end();
-		     ij++) {
-			delete (*ij);
-		}
-		for (it  = transformations.begin();
-		     it != transformations.end();
-		     it++) {
-			delete (*it);
+		try {
+			for (it  = transformations.begin();
+			     it != transformations.end();
+			     it++) {
+				delete (*it);
+			}
+		} catch (std::exception & e) {
+			TR_ERR("%s\n", e.what());
+			return 1;
 		}
 
 		delete rules;
