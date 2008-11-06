@@ -79,9 +79,4 @@ namespace FCP {
 	{
 		return ::File::ispresent(name_);
 	}
-
-	bool File::operator ==(const FCP::File & rhs) const
-	{
-		return ((*this).name_ == rhs.name_);
-	}
 };

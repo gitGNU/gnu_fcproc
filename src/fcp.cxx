@@ -24,6 +24,8 @@
 #include <list>
 #include <set>
 
+#include "getopt.h"
+
 #include "libs/misc/debug.h"
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
@@ -31,7 +33,6 @@
 #include "libs/misc/exception.h"
 #include "rules.h"
 #include "transformation.h"
-#include "getopt.h"
 
 #define PROGRAM_NAME "fcp"
 
@@ -253,6 +254,8 @@ int main(int argc, char * argv[])
 			TR_ERR("%s\n", e.what());
 			return 1;
 		}
+		BUG_ON(rules == 0);
+
 		if (dump_rules) {
 			rules->dump(std::cout);
 			return 0;
@@ -287,7 +290,7 @@ int main(int argc, char * argv[])
 				BUG_ON(t == 0);
 
 				// XXX FIXME: Use an exception
-				if (t->input() == t->output()) {
+				if (t->input().name() == t->output().name()) {
 					TR_ERR("Transformation '%s' "
 					       "input and output "
 					       "must be different\n",
