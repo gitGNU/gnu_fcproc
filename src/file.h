@@ -34,7 +34,7 @@ namespace FCP {
 		const std::string & basename(void)  const;
 		const std::string & extension(void) const;
 		time_t              mtime(void)     const;
-		bool                ispresent(void) const;
+		bool                exists(void)    const;
 
 	protected:
 		File(void);

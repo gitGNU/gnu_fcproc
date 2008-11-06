@@ -75,8 +75,8 @@ namespace FCP {
 		return ::File::mtime(name_);
 	}
 
-	bool File::ispresent(void) const
+	bool File::exists(void) const
 	{
-		return ::File::ispresent(name_);
+		return ::File::exists(name_);
 	}
 };
