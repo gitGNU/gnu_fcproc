@@ -120,4 +120,32 @@ namespace Directory {
 
 		return true;
 	}
+
+	void mkdir(const std::string & s)
+	{
+		BUG_ON(s.size() == 0);
+
+		if (::mkdir(s.c_str(), 0700) != 0) {
+			throw Exception("Cannot create "
+					"'" + s + "' "
+					"directory "
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
+	}
+
+	void rmdir(const std::string & s)
+	{
+		BUG_ON(s.size() == 0);
+
+		if (::rmdir(s.c_str()) != 0) {
+			throw Exception("Cannot remove "
+					"'" + s + "' "
+					"directory"
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
+	}
 };
