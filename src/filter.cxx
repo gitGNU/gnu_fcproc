@@ -62,15 +62,18 @@ namespace FCP {
 			String::itos(index);
 	}
 
-	std::vector<std::string> Filter::commands(const std::string & id,
-						  const FCP::File &   input,
-						  const FCP::File &   output,
-						  const std::string & tmp_dir)
+	// XXX FIXME: Remove id parameter ASAP
+	void Filter::setup(const std::string & id,
+			   const FCP::File &   input,
+			   const FCP::File &   output,
+			   const std::string & tmp_dir)
 	{
-		std::vector<std::string>::iterator ic;
-		std::vector<std::string>           commands;
+		TR_DBG("Setting up filter '%s' (transforming '%s' into '%s')\n",
+		       id.c_str(), input.name().c_str(), output.name().c_str());
 
-		commands = templates_;
+		std::vector<std::string>::iterator ic;
+
+		commands_ = templates_;
 
 		std::map<std::string, std::string> temps;
 		size_t                             count;
@@ -78,7 +81,7 @@ namespace FCP {
 		count = 0;
 
 		//TR_DBG("Replacing variables\n")
-		for (ic  = commands.begin(); ic != commands.end(); ic++) {
+		for (ic  = commands_.begin(); ic != commands_.end(); ic++) {
 			std::string command;
 
 			command = (*ic);
@@ -140,24 +143,16 @@ namespace FCP {
 			(*ic) = command;
 		}
 
-		return commands;
+		BUG_ON(commands_.size() != templates_.size());
 	}
 
-	void Filter::run(const std::string & id,
-			 const FCP::File &   input,
-			 const FCP::File &   output,
-			 const std::string & tmp_dir,
-			 bool                dry_run)
+	void Filter::run(bool dry_run)
 	{
-		TR_DBG("Running filter '%s' (transforming '%s' into '%s')\n",
-		       id.c_str(), input.name().c_str(), output.name().c_str());
-
-		std::vector<std::string> cmds;
-
-		cmds = commands(id, input, output, tmp_dir);
+		// XXX FIXME: Place a more specific trace ...
+		TR_DBG("Running filter\n");
 
 		std::vector<std::string>::iterator i;
-		for (i  = cmds.begin(); i != cmds.end(); i++) {
+		for (i  = commands_.begin(); i != commands_.end(); i++) {
 			if (dry_run) {
 				TR_VRB("%s\n", (*i).c_str());
 				continue;

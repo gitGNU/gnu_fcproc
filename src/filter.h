@@ -39,11 +39,11 @@ namespace FCP {
 
 		const std::string &      input(void);
 		const std::string &      output(void);
-		void                     run(const std::string & id,
-					     const FCP::File &   input,
-					     const FCP::File &   output,
-					     const std::string & tmp_dir,
-					     bool                dry_run);
+		void                     setup(const std::string & id,
+					       const FCP::File &   input,
+					       const FCP::File &   output,
+					       const std::string & tmp_dir);
+		void                     run(bool dry_run);
 
 	protected:
 		// No copy allowed
@@ -53,7 +53,9 @@ namespace FCP {
 	private:
 		std::string              tag_in_;
 		std::string              tag_out_;
+
 		std::vector<std::string> templates_;
+		std::vector<std::string> commands_;
 
 		std::string              mktemp(const std::string & id,
 						const std::string & tmp_dir,
