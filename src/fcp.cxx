@@ -24,6 +24,9 @@
 #include <list>
 #include <set>
 
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "getopt.h"
 
 #include "libs/misc/debug.h"
@@ -268,18 +271,6 @@ int main(int argc, char * argv[])
 		}
 		BUG_ON((argc - optind) < 0);
 
-		// Does the temporary directory exists ?
-		try {
-			if (!Directory::exists(tmp_dir)) {
-				TR_ERR("No such '%s' directory\n",
-				       tmp_dir.c_str());
-				return 1;
-			}
-		} catch (std::exception & e) {
-			TR_ERR("%s\n", e.what());
-			return 1;
-		}
-
 		std::vector<FCP::Transformation *>           transformations;
 		std::vector<FCP::Transformation *>::iterator it;
 
@@ -332,20 +323,41 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		// Run all transformations
-		TR_DBG("Running %d transformations\n", transformations.size());
+		std::string work_dir;
+
+		// Create working directory
+		pid_t pid = getpid(); // XXX FIXME: Use gnulib
+		work_dir  = tmp_dir + "/" + String::itos(pid);
+
 		try {
+			// Create the placeholder directory
+			if (!Directory::exists(tmp_dir)) {
+				TR_ERR("No such '%s' directory\n",
+				       tmp_dir.c_str());
+				return 1;
+			}
+
+			Directory::mkdir(work_dir);
+
+			// Run all transformations
+			TR_DBG("Running %d transformations\n",
+			       transformations.size());
+
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				(*it)->run(tmp_dir, dry_run, force);
+				(*it)->run(work_dir, dry_run, force);
 			}
+
+			Directory::rmdir(work_dir);
+
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
+			Directory::rmdir(work_dir);
 			return 1;
 		}
 
-		TR_DBG("Operations complete, cleaning up ...\n");
+		TR_DBG("Operations complete\n");
 
 		// Clean up everything
 		try {
@@ -362,7 +374,7 @@ int main(int argc, char * argv[])
 		delete rules;
 
 	} catch (std::exception & e) {
-		TR_ERR("Got exception '%s'\n", e.what());
+		TR_ERR("%s\n", e.what());
 		return 1;
 	} catch (...) {
 		BUG();
