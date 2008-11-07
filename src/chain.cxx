@@ -78,7 +78,8 @@ namespace FCP {
 
 		std::vector<FCP::Filter *>::iterator i;
 		for (i  = filters_.begin(); i != filters_.end(); i++) {
-			(*i)->run(id_, input_, output_, tmp_dir, dry_run);
+			(*i)->setup(id_, input_, output_, tmp_dir);
+			(*i)->run(dry_run);
 		}
 	}
 };
