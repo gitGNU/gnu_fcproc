@@ -35,6 +35,8 @@ fcp_SOURCES =					\
 	transformation.cxx			\
 	file.h					\
 	file.cxx				\
+	directory.h				\
+	directory.cxx				\
 	chain.h					\
 	chain.cxx				\
 	rules.h					\
