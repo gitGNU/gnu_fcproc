@@ -50,8 +50,8 @@ namespace FCP {
 
 	private:
 		std::string                id_;
-		FS::File                   input_;
-		FS::File                   output_;
+		const FS::File &           input_;
+		const FS::File &           output_;
 		std::vector<FCP::Filter *> filters_;
 	};
 }
