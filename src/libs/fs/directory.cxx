@@ -27,9 +27,8 @@
 #include <errno.h>
 
 #include "libs/misc/debug.h"
-#include "libs/fs/utils.h"
 #include "libs/misc/exception.h"
-#include "directory.h"
+#include "libs/fs/directory.h"
 
 namespace FCP {
 	Directory::Directory(const std::string & name) :

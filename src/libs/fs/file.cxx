@@ -26,9 +26,8 @@
 #include <errno.h>
 
 #include "libs/misc/debug.h"
-#include "libs/fs/utils.h"
 #include "libs/misc/exception.h"
-#include "file.h"
+#include "libs/fs/file.h"
 
 namespace FCP {
 	File::File(const std::string & name) :
