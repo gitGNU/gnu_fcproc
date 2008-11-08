@@ -28,6 +28,7 @@
 
 #include "regex.h"
 
+#include "libs/fs/file.h"
 #include "filter.h"
 
 namespace FCP {
@@ -36,14 +37,16 @@ namespace FCP {
 		Rules(const std::vector<std::string> & filenames);
 		~Rules(void);
 
-		void chains(const std::string &          in,
-			    const std::string &          out,
-			    int                          mdepth,
-			    std::vector<FCP::Filter *> & chain);
+		std::vector<FCP::Filter *> chain(const FS::File & input,
+						 const FS::File & output,
+						 int              mdepth);
 
-		void dump(std::ostream & stream);
+		void                       dump(std::ostream & stream);
 
 	protected:
+		// No copy allowed
+		Rules(const Rules &);
+		void operator =(const Rules &);
 
 	private:
 		struct {
@@ -55,9 +58,10 @@ namespace FCP {
 			regex_t    body_;
 		} re_;
 
+		// rules = (input-tag, output-tag, commands)
 		std::map<std::string,
-			 std::map<std::string,
-				  FCP::Filter *> > rules_;
+			 std::map<std::string, 
+				  std::vector<std::string> > > rules_;
 
 		std::string readline(std::ifstream & stream);
 		void        parse(const std::string & filename);
@@ -67,7 +71,7 @@ namespace FCP {
 					const std::string &          in,
 					const std::string &          out,
 					int                          mdepth,
-					std::vector<FCP::Filter *> & chain);
+					std::vector<std::vector<std::string > > & chain);
 	};
 }
 
