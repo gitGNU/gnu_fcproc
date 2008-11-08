@@ -392,12 +392,12 @@ namespace FCP {
 		stream.close();
 	}
 
-	bool Rules::build_chain(std::set<std::pair<std::string,
-						   std::string> > &      loop,
-				const std::string &                      in,
-				const std::string &                      out,
-				int                                      mdepth,
-				std::vector<std::vector<std::string> > & chain)
+	bool Rules::chain(std::set<std::pair<std::string,
+			  std::string> > &                         loop,
+			  const std::string &                      in,
+			  const std::string &                      out,
+			  int                                      mdepth,
+			  std::vector<std::vector<std::string> > & commands)
 	{
 		BUG_ON(mdepth < 0);
 
@@ -435,14 +435,14 @@ namespace FCP {
 		for (c = r->second.begin(); c != r->second.end(); c++) {
 			if (c->first == out) {
 				TR_DBG("Got chain end!\n");
-				chain.push_back(c->second);
+				commands.push_back(c->second);
 				return true;
 			}
 
 			TR_DBG("Looking for '%s' -> '%s'\n",
 			       c->first.c_str(), out.c_str());
-			if (build_chain(loop, c->first, out, mdepth, chain)) {
-				chain.push_back(c->second);
+			if (chain(loop, c->first, out, mdepth, commands)) {
+				commands.push_back(c->second);
 				TR_DBG("Got '%s' -> '%s'\n",
 				       c->first.c_str(), out.c_str());
 				return true;
@@ -464,24 +464,24 @@ namespace FCP {
 
 		std::set<std::pair<std::string, std::string> > loop;
 		std::vector<FCP::Filter *>                     ret;
-		std::vector<std::vector<std::string> >         tmp;
+		std::vector<std::vector<std::string> >         commands;
 
-		if (!build_chain(loop,
-				 input.extension(),
-				 output.extension(),
-				 mdepth,
-				 tmp)) {
+		if (!chain(loop,
+			   input.extension(),
+			   output.extension(),
+			   mdepth,
+			   commands)) {
 			TR_DBG("No filters-chain found ...\n");
-			tmp.clear();
+			commands.clear();
 			return ret;
 		}
 
 		TR_DBG("filters-chain found!\n");
-		std::reverse(tmp.begin(), tmp.end());
+		std::reverse(commands.begin(), commands.end());
 
 		// Transform the command sequence into a proper filters-chain
 		std::vector<std::vector<std::string> >::iterator i;
-		for (i = tmp.begin(); i != tmp.end(); i++) {
+		for (i = commands.begin(); i != commands.end(); i++) {
 			FCP::Filter * f;
 
 			f = new FCP::Filter(input, output, (*i));

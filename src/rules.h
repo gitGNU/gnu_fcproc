@@ -37,6 +37,7 @@ namespace FCP {
 		Rules(const std::vector<std::string> & filenames);
 		~Rules(void);
 
+		// Builds a filters-chain
 		std::vector<FCP::Filter *> chain(const FS::File & input,
 						 const FS::File & output,
 						 int              mdepth);
@@ -60,18 +61,20 @@ namespace FCP {
 
 		// rules = (input-tag, output-tag, commands)
 		std::map<std::string,
-			 std::map<std::string, 
+			 std::map<std::string,
 				  std::vector<std::string> > > rules_;
 
 		std::string readline(std::ifstream & stream);
 		void        parse(const std::string & filename);
 
-		bool        build_chain(std::set<std::pair<std::string,
-					std::string> > &             loopset,
-					const std::string &          in,
-					const std::string &          out,
-					int                          mdepth,
-					std::vector<std::vector<std::string > > & chain);
+		// Builds a commands-chain
+		bool        chain(std::set<std::pair<std::string,
+				  std::string> > &             loopset,
+				  const std::string &          in,
+				  const std::string &          out,
+				  int                          mdepth,
+				  std::vector<std::vector<std::string > >&
+				                               chain);
 	};
 }
 
