@@ -33,45 +33,46 @@ namespace FS {
 	File::File(const std::string & name) :
 		name_(name)
 	{
+		TR_DBG("File '%s':\n", name_.c_str());
+
 		if (name_ == "") {
 			throw Exception("Missing file name");
 		}
-
-		dirname_ = name_.substr(0, name_.rfind("/"));
+		// name cannot be empty
+		BUG_ON(name_ == "");
+		TR_DBG("  name      = '%s'\n", name_.c_str());
 
 		std::string::size_type p;
+
+		p = name_.rfind("/");
+		dirname_ = ((p != std::string::npos) ?
+			    name_.substr(0, p + 1) : "");
+		// dirname_ could be empty
+		TR_DBG("  dirname   = '%s'\n", dirname_.c_str());
+
 		p         = name_.rfind("/");
 		basename_ = ((p != std::string::npos) ?
-			     name_.substr(p + 1) :
-			     name_);
+			     name_.substr(p + 1) : name_);
 		if (basename_ == "") {
-			throw Exception("Malformed filename");
+			throw Exception("Malformed filename "
+					"'" + name_ + "'");
 		}
+		// basename_ cannot be empty
+		BUG_ON(basename_ == "");
+		TR_DBG("  basename  = '%s'\n", basename_.c_str());
 
-		std::string t;
-
-		t = basename_;
-		if (t != "") {
-			std::string::size_type p;
-
-			p = t.rfind(".");
-			if (p == 0) {
-				// No extension, file is ".something"
-				extension_ = "";
-			} else if (p == std::string::npos) {
-				// No extension
-				extension_ = "";
-			} else {
-				// We got it
-				extension_ = t.substr(p + 1);
-			}
+		p = basename_.rfind(".");
+		if (p == 0) {
+			// No extension, file is ".something"
+			extension_ = "";
+		} else if (p == std::string::npos) {
+			// No extension
+			extension_ = "";
 		} else {
-			extension_ = t;
+			// We got it
+			extension_ = basename_.substr(p + 1);
 		}
-		if (extension_ == "") {
-			throw Exception("Missing extension in "
-					"filename '" + name_ + "'");
-		}
+		TR_DBG("  extension = '%s'\n", extension_.c_str());
 	}
 
 	File::~File(void)
