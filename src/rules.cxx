@@ -78,7 +78,7 @@ namespace FCP {
 		regfree(&re_.comment_);
 		regfree(&re_.empty_);
 
-		// XXX FIXME: This is only for debugging ... remove ASAP
+#if 0
 		std::map<std::string,
 			std::map<std::string,
 			std::vector<std::string> > >::const_iterator in;
@@ -99,6 +99,7 @@ namespace FCP {
 				TR_DBG("    '%s'\n", out->first.c_str());
 			}
 		}
+#endif
 	}
 
 	Rules::~Rules(void)
