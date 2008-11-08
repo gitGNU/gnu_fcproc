@@ -23,7 +23,7 @@
 
 #include <string>
 
-namespace FCP {
+namespace FS {
 	class File {
 	public:
 		File(const std::string & name);

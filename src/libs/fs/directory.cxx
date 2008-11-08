@@ -30,7 +30,7 @@
 #include "libs/misc/exception.h"
 #include "libs/fs/directory.h"
 
-namespace FCP {
+namespace FS {
 	Directory::Directory(const std::string & name) :
 		name_(name)
 	{

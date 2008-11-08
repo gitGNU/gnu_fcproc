@@ -23,7 +23,7 @@
 
 #include <string>
 
-namespace FCP {
+namespace FS {
 	class Directory {
 	public:
 		Directory(const std::string & name);

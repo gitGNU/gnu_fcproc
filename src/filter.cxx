@@ -65,9 +65,9 @@ namespace FCP {
 
 	// XXX FIXME: Remove id parameter ASAP
 	void Filter::setup(const std::string &    id,
-			   const FCP::File &      input,
-			   const FCP::File &      output,
-			   const FCP::Directory & tmp_dir)
+			   const FS::File &       input,
+			   const FS::File &       output,
+			   const FS::Directory &  tmp_dir)
 	{
 		TR_DBG("Setting up filter '%s' (transforming '%s' into '%s')\n",
 		       id.c_str(), input.name().c_str(), output.name().c_str());

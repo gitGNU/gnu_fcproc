@@ -33,15 +33,15 @@ namespace FCP {
 	class Chain {
 	public:
 		Chain(const std::string &          id,
-		      const FCP::File &            input,
+		      const FS::File &             input,
 		      std::vector<FCP::Filter *> & filters,
-		      const FCP::File &            output);
+		      const FS::File &             output);
 		~Chain(void);
 
 		const std::string & id(void);
-		void                run(const FCP::Directory & tmp_dir,
-					bool                   dry_run,
-					bool                   force);
+		void                run(const FS::Directory & tmp_dir,
+					bool                  dry_run,
+					bool                  force);
 
 	protected:
 		// No copy allowed
@@ -50,8 +50,8 @@ namespace FCP {
 
 	private:
 		std::string                id_;
-		FCP::File                  input_;
-		FCP::File                  output_;
+		FS::File                   input_;
+		FS::File                   output_;
 		std::vector<FCP::Filter *> filters_;
 	};
 }

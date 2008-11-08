@@ -37,13 +37,13 @@ namespace FCP {
 			       int                 mdepth);
 		~Transformation(void);
 
-		void                run(const FCP::Directory & tmp_dir,
-					bool                   dry_run,
-					bool                   force);
+		void                run(const FS::Directory & tmp_dir,
+					bool                  dry_run,
+					bool                  force);
 
 		const std::string & tag(void)    const;
-		const FCP::File &   input(void)  const;
-		const FCP::File &   output(void) const;
+		const FS::File &    input(void)  const;
+		const FS::File &    output(void) const;
 
 	protected:
 		// No copy allowed
@@ -52,8 +52,8 @@ namespace FCP {
 
 	private:
 		std::string  tag_;
-		FCP::File *  input_;
-		FCP::File *  output_;
+		FS::File *   input_;
+		FS::File *   output_;
 		FCP::Chain * chain_;
 	};
 }

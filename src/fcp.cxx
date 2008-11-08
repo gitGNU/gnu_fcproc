@@ -54,9 +54,9 @@ void version(void)
 
 #define USE_CONFIGURATION_FILE 0
 
-char           separator          = ':';
+char          separator          = ':';
 #if USE_CONFIGURATION_FILE
-std::string    configuration_file =
+std::string   configuration_file =
 												     Environment::get("HOME") +
 												     std::string("/") +
 												     std::string(".") +
@@ -64,15 +64,15 @@ std::string    configuration_file =
 												     std::string("/") +
 												     std::string("configuration");
 #endif
-#define        DFLT_RULES			\
+#define       DFLT_RULES			\
 	(Environment::get("HOME") +		\
 	 std::string("/") +			\
 	 std::string(".") +			\
 	 std::string(PACKAGE_TARNAME) +		\
 	 std::string("/") +			\
 	 std::string("rules"))
-int            max_depth          = 16;
-FCP::Directory tmp_dir            = Environment::get("HOME") +
+int           max_depth          = 16;
+FS::Directory tmp_dir            = Environment::get("HOME") +
 												     std::string("/") +
 												     std::string(".") +
 												     std::string(PACKAGE_TARNAME) +
@@ -182,7 +182,7 @@ int main(int argc, char * argv[])
 					rules_files.push_back(optarg);
 					break;
 				case 't':
-					tmp_dir = FCP::Directory(optarg);
+					tmp_dir = FS::Directory(optarg);
 					break;
 				case 's':
 					if (strlen(optarg) > 1) {
@@ -324,7 +324,9 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		FCP::Directory work_dir(tmp_dir.name() + "/" + String::itos(getpid()));
+		FS::Directory work_dir(tmp_dir.name() +
+				       "/" +
+				       String::itos(getpid()));
 
 		try {
 			if (!tmp_dir.exists()) {

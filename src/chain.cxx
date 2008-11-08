@@ -33,9 +33,9 @@
 
 namespace FCP {
 	Chain::Chain(const std::string &          id,
-		     const FCP::File &            input,
+		     const FS::File &             input,
 		     std::vector<FCP::Filter *> & filters,
-		     const FCP::File &            output) :
+		     const FS::File &             output) :
 		id_(id),
 		input_(input),
 		output_(output)
@@ -53,7 +53,7 @@ namespace FCP {
 		return id_;
 	}
 
-	void Chain::run(const FCP::Directory & tmp_dir,
+	void Chain::run(const FS::Directory &  tmp_dir,
 			bool                   dry_run,
 			bool                   force)
 	{

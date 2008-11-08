@@ -41,9 +41,9 @@ namespace FCP {
 		const std::string &      input(void);
 		const std::string &      output(void);
 		void                     setup(const std::string &    id,
-					       const FCP::File &      input,
-					       const FCP::File &      output,
-					       const FCP::Directory & tmp_dir);
+					       const FS::File &       input,
+					       const FS::File &       output,
+					       const FS::Directory &  tmp_dir);
 		void                     run(bool dry_run);
 
 	protected:
@@ -62,8 +62,8 @@ namespace FCP {
 						const std::string & tmp_dir,
 						size_t              index);
 		std::vector<std::string> commands(const std::string & id,
-						  const FCP::File &   input,
-						  const FCP::File &   output,
+						  const FS::File &    input,
+						  const FS::File &    output,
 						  const std::string & tmp_dir);
 
 	};

@@ -29,7 +29,7 @@
 #include "libs/misc/exception.h"
 #include "libs/fs/file.h"
 
-namespace FCP {
+namespace FS {
 	File::File(const std::string & name) :
 		name_(name)
 	{

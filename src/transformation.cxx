@@ -22,6 +22,7 @@
 
 #include "libs/misc/debug.h"
 #include "libs/misc/exception.h"
+#include "libs/fs/directory.h"
 #include "transformation.h"
 #include "rules.h"
 #include "chain.h"
@@ -51,7 +52,7 @@ namespace FCP {
 					"in transformation "
 					"'" + tag_ + "'");
 		}
-		input_ = new FCP::File(tmp);
+		input_ = new FS::File(tmp);
 		BUG_ON(input_ == 0);
 
 		tmp = tag_.substr(p + 1);
@@ -60,7 +61,7 @@ namespace FCP {
 					"in transformation "
 					"'" + tag_ + "'");
 		}
-		output_ = new FCP::File(tmp);
+		output_ = new FS::File(tmp);
 		BUG_ON(output_ == 0);
 
 		// Build the filters-chain for this transformation
@@ -96,9 +97,9 @@ namespace FCP {
 		delete chain_;
 	}
 
-	void Transformation::run(const FCP::Directory & tmp_dir,
-				 bool                   dry_run,
-				 bool                   force)
+	void Transformation::run(const FS::Directory & tmp_dir,
+				 bool                  dry_run,
+				 bool                  force)
 	{
 		TR_DBG("Transforming '%s' -> '%s'\n",
 		       input_->name().c_str(),
@@ -112,12 +113,12 @@ namespace FCP {
 		return tag_;
 	}
 
-	const FCP::File & Transformation::input(void) const
+	const FS::File & Transformation::input(void) const
 	{
 		return *input_;
 	}
 
-	const FCP::File & Transformation::output(void) const
+	const FS::File & Transformation::output(void) const
 	{
 		return *output_;
 	}
