@@ -32,10 +32,10 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/environment.h"
 #include "libs/conf/configuration.h"
-#include "libs/fs/utils.h"
 #include "libs/misc/exception.h"
+#include "libs/fs/directory.h"
+#include "libs/fs/utils.h"
 #include "rules.h"
-#include "directory.h"
 #include "transformation.h"
 
 #define PROGRAM_NAME "fcp"

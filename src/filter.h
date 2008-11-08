@@ -26,8 +26,8 @@
 #include <set>
 #include <map>
 
-#include "file.h"
-#include "directory.h"
+#include "libs/fs/file.h"
+#include "libs/fs/directory.h"
 
 namespace FCP {
 	// XXX FIXME: tag_in and tag_out could be useless, please check ASAP

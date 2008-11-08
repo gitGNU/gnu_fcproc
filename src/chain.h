@@ -25,8 +25,8 @@
 #include <string>
 #include <map>
 
-#include "file.h"
-#include "directory.h"
+#include "libs/fs/file.h"
+#include "libs/fs/directory.h"
 #include "filter.h"
 
 namespace FCP {

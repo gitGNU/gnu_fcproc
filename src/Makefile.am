@@ -33,10 +33,6 @@ fcp_SOURCES =					\
 	fcp.cxx					\
 	transformation.h			\
 	transformation.cxx			\
-	file.h					\
-	file.cxx				\
-	directory.h				\
-	directory.cxx				\
 	chain.h					\
 	chain.cxx				\
 	rules.h					\
@@ -82,6 +78,10 @@ libconf_a_CPPFLAGS =				\
 	$(EXTRA_CPPFLAGS)
 
 libfs_a_SOURCES =				\
+	libs/fs/file.h				\
+	libs/fs/file.cxx			\
+	libs/fs/directory.h			\
+	libs/fs/directory.cxx			\
 	libs/fs/utils.h				\
 	libs/fs/utils.cxx
 libfs_a_CPPFLAGS =				\

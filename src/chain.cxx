@@ -26,9 +26,9 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/exception.h"
+#include "libs/fs/file.h"
+#include "libs/fs/directory.h"
 #include "chain.h"
-#include "file.h"
-#include "directory.h"
 #include "filter.h"
 
 namespace FCP {
