@@ -27,6 +27,7 @@
 #include "libs/misc/exception.h"
 #include "filter.h"
 #include "file.h"
+#include "directory.h"
 
 #include "libs/misc/string.h"
 
@@ -63,10 +64,10 @@ namespace FCP {
 	}
 
 	// XXX FIXME: Remove id parameter ASAP
-	void Filter::setup(const std::string & id,
-			   const FCP::File &   input,
-			   const FCP::File &   output,
-			   const std::string & tmp_dir)
+	void Filter::setup(const std::string &    id,
+			   const FCP::File &      input,
+			   const FCP::File &      output,
+			   const FCP::Directory & tmp_dir)
 	{
 		TR_DBG("Setting up filter '%s' (transforming '%s' into '%s')\n",
 		       id.c_str(), input.name().c_str(), output.name().c_str());
@@ -127,7 +128,9 @@ namespace FCP {
 				std::string t;
 				t = temps[v];
 				if (t == "") {
-					t        = mktemp(id, tmp_dir, count);
+					t        = mktemp(id,
+							  tmp_dir.name(),
+							  count);
 					count++;
 					temps[v] = t;
 				}
@@ -149,7 +152,7 @@ namespace FCP {
 	void Filter::run(bool dry_run)
 	{
 		// XXX FIXME: Place a more specific trace ...
-		TR_DBG("Running filter\n");
+		TR_DBG("Running filter commands\n");
 
 		std::vector<std::string>::iterator i;
 		for (i  = commands_.begin(); i != commands_.end(); i++) {

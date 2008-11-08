@@ -96,9 +96,9 @@ namespace FCP {
 		delete chain_;
 	}
 
-	void Transformation::run(const std::string & tmp_dir,
-				 bool                dry_run,
-				 bool                force)
+	void Transformation::run(const FCP::Directory & tmp_dir,
+				 bool                   dry_run,
+				 bool                   force)
 	{
 		TR_DBG("Transforming '%s' -> '%s'\n",
 		       input_->name().c_str(),

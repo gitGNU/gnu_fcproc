@@ -24,6 +24,7 @@
 #include <string>
 
 #include "file.h"
+#include "directory.h"
 #include "rules.h"
 #include "chain.h"
 
@@ -36,9 +37,9 @@ namespace FCP {
 			       int                 mdepth);
 		~Transformation(void);
 
-		void                run(const std::string & tmp_dir,
-					bool                dry_run,
-					bool                force);
+		void                run(const FCP::Directory & tmp_dir,
+					bool                   dry_run,
+					bool                   force);
 
 		const std::string & tag(void)    const;
 		const FCP::File &   input(void)  const;

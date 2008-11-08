@@ -35,6 +35,7 @@
 #include "libs/fs/utils.h"
 #include "libs/misc/exception.h"
 #include "rules.h"
+#include "directory.h"
 #include "transformation.h"
 
 #define PROGRAM_NAME "fcp"
@@ -53,9 +54,9 @@ void version(void)
 
 #define USE_CONFIGURATION_FILE 0
 
-char        separator           = ':';
+char           separator          = ':';
 #if USE_CONFIGURATION_FILE
-std::string configuration_file  =
+std::string    configuration_file =
 												     Environment::get("HOME") +
 												     std::string("/") +
 												     std::string(".") +
@@ -63,15 +64,15 @@ std::string configuration_file  =
 												     std::string("/") +
 												     std::string("configuration");
 #endif
-#define     DFLT_RULES				\
+#define        DFLT_RULES			\
 	(Environment::get("HOME") +		\
 	 std::string("/") +			\
 	 std::string(".") +			\
 	 std::string(PACKAGE_TARNAME) +		\
 	 std::string("/") +			\
 	 std::string("rules"))
-int         max_depth           = 16;
-std::string tmp_dir             = Environment::get("HOME") +
+int            max_depth          = 16;
+FCP::Directory tmp_dir            = Environment::get("HOME") +
 												     std::string("/") +
 												     std::string(".") +
 												     std::string(PACKAGE_TARNAME) +
@@ -93,7 +94,7 @@ void help(void)
 		<< "  -m, --max-depth=NUM     use NUM as max filter-chains depth" <<                              std::endl
 		<< "                          [default " << max_depth << "]" <<                                   std::endl
 		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                  std::endl
-		<< "                          [default " << tmp_dir << "]" <<                                     std::endl
+		<< "                          [default " << tmp_dir.name().c_str() << "]" <<                      std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
 		<< "                          [default `" << separator << "']" <<                                 std::endl
 		<< "  -q, --no-rules          do not load initial rules" <<                                       std::endl
@@ -181,7 +182,7 @@ int main(int argc, char * argv[])
 					rules_files.push_back(optarg);
 					break;
 				case 't':
-					tmp_dir = optarg;
+					tmp_dir = FCP::Directory(optarg);
 					break;
 				case 's':
 					if (strlen(optarg) > 1) {
@@ -323,24 +324,19 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		std::string work_dir;
-
-		// Create working directory
-		pid_t pid = getpid(); // XXX FIXME: Use gnulib
-		work_dir  = tmp_dir + "/" + String::itos(pid);
+		FCP::Directory work_dir(tmp_dir.name() + "/" + String::itos(getpid()));
 
 		try {
-			// Create the placeholder directory
-			if (!Directory::exists(tmp_dir)) {
+			if (!tmp_dir.exists()) {
 				TR_ERR("No such '%s' directory\n",
-				       tmp_dir.c_str());
+				       tmp_dir.name().c_str());
 				return 1;
 			}
 
-			Directory::mkdir(work_dir);
+			work_dir.create();
 
 			// Run all transformations
-			TR_DBG("Running %d transformations\n",
+			TR_DBG("Running %d transformation(s)\n",
 			       transformations.size());
 
 			for (it  = transformations.begin();
@@ -349,11 +345,11 @@ int main(int argc, char * argv[])
 				(*it)->run(work_dir, dry_run, force);
 			}
 
-			Directory::rmdir(work_dir);
+			work_dir.remove();
 
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
-			Directory::rmdir(work_dir);
+			work_dir.remove();
 			return 1;
 		}
 

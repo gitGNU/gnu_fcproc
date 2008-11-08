@@ -27,6 +27,7 @@
 #include <map>
 
 #include "file.h"
+#include "directory.h"
 
 namespace FCP {
 	// XXX FIXME: tag_in and tag_out could be useless, please check ASAP
@@ -39,10 +40,10 @@ namespace FCP {
 
 		const std::string &      input(void);
 		const std::string &      output(void);
-		void                     setup(const std::string & id,
-					       const FCP::File &   input,
-					       const FCP::File &   output,
-					       const std::string & tmp_dir);
+		void                     setup(const std::string &    id,
+					       const FCP::File &      input,
+					       const FCP::File &      output,
+					       const FCP::Directory & tmp_dir);
 		void                     run(bool dry_run);
 
 	protected:

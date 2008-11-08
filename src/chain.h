@@ -26,6 +26,7 @@
 #include <map>
 
 #include "file.h"
+#include "directory.h"
 #include "filter.h"
 
 namespace FCP {
@@ -38,9 +39,9 @@ namespace FCP {
 		~Chain(void);
 
 		const std::string & id(void);
-		void                run(const std::string & tmp_dir,
-					bool                dry_run,
-					bool                force);
+		void                run(const FCP::Directory & tmp_dir,
+					bool                   dry_run,
+					bool                   force);
 
 	protected:
 		// No copy allowed

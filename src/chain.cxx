@@ -28,6 +28,7 @@
 #include "libs/misc/exception.h"
 #include "chain.h"
 #include "file.h"
+#include "directory.h"
 #include "filter.h"
 
 namespace FCP {
@@ -52,9 +53,9 @@ namespace FCP {
 		return id_;
 	}
 
-	void Chain::run(const std::string & tmp_dir,
-			bool                dry_run,
-			bool                force)
+	void Chain::run(const FCP::Directory & tmp_dir,
+			bool                   dry_run,
+			bool                   force)
 	{
 		TR_DBG("Running filters-chain '%s'\n", id_.c_str());
 
@@ -77,6 +78,7 @@ namespace FCP {
 		}
 
 		std::vector<FCP::Filter *>::iterator i;
+
 		for (i  = filters_.begin(); i != filters_.end(); i++) {
 			(*i)->setup(id_, input_, output_, tmp_dir);
 			(*i)->run(dry_run);
