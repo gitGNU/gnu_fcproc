@@ -66,10 +66,7 @@ namespace FCP {
 
 		// Build the filters-chain for this transformation
 		std::vector<FCP::Filter *> chain;
-		rules.chains(input_->extension(),
-			     output_->extension(),
-			     mdepth,
-			     chain);
+		chain = rules.chain(*input_, *output_, mdepth);
 		if (chain.size() == 0) {
 			throw Exception("No filters-chain available for "
 					"'" + tag_ + "' "
@@ -81,8 +78,8 @@ namespace FCP {
 		std::vector<FCP::Filter *>::iterator iter;
 		for (iter = chain.begin(); iter != chain.end(); iter++) {
 			TR_DBG("  '%s' -> '%s'\n",
-			       (*iter)->input().c_str(),
-			       (*iter)->output().c_str());
+			       (*iter)->input().name().c_str(),
+			       (*iter)->output().name().c_str());
 		}
 
 		// Finally create the filters-chain from the filters sequence
