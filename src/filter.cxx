@@ -32,11 +32,11 @@
 #include "libs/misc/string.h"
 
 namespace FCP {
-	Filter::Filter(const std::string &              tag_in,
-		       const std::string &              tag_out,
+	Filter::Filter(const FS::File &                 input,
+		       const FS::File &                 output,
 		       const std::vector<std::string> & commands) :
-		tag_in_(tag_in),
-		tag_out_(tag_out),
+		input_(input),
+		output_(output),
 		templates_(commands)
 	{
 	}
@@ -45,14 +45,14 @@ namespace FCP {
 	{
 	}
 
-	const std::string & Filter::input(void)
+	const FS::File & Filter::input(void)
 	{
-		return tag_in_;
+		return input_;
 	}
 
-	const std::string & Filter::output(void)
+	const FS::File & Filter::output(void)
 	{
-		return tag_out_;
+		return output_;
 	}
 
 	std::string Filter::mktemp(const std::string & id,
@@ -65,12 +65,12 @@ namespace FCP {
 
 	// XXX FIXME: Remove id parameter ASAP
 	void Filter::setup(const std::string &    id,
-			   const FS::File &       input,
-			   const FS::File &       output,
 			   const FS::Directory &  tmp_dir)
 	{
 		TR_DBG("Setting up filter '%s' (transforming '%s' into '%s')\n",
-		       id.c_str(), input.name().c_str(), output.name().c_str());
+		       id.c_str(),
+		       input_.name().c_str(),
+		       output_.name().c_str());
 
 		std::vector<std::string>::iterator ic;
 
@@ -87,8 +87,12 @@ namespace FCP {
 
 			command = (*ic);
 
-			command = String::replace(command, "$I", input.name());
-			command = String::replace(command, "$O", output.name());
+			command = String::replace(command,
+						  "$I",
+						  input_.name().c_str());
+			command = String::replace(command,
+						  "$O",
+						  output_.name().c_str());
 
 			//TR_DBG("  Command '%s'\n", command.c_str());
 

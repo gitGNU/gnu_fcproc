@@ -30,21 +30,18 @@
 #include "libs/fs/directory.h"
 
 namespace FCP {
-	// XXX FIXME: tag_in and tag_out could be useless, please check ASAP
 	class Filter {
 	public:
-		Filter(const std::string &              tag_in,
-		       const std::string &              tag_out,
+		Filter(const FS::File &                 input,
+		       const FS::File &                 output,
 		       const std::vector<std::string> & commands);
 		~Filter(void);
 
-		const std::string &      input(void);
-		const std::string &      output(void);
-		void                     setup(const std::string &    id,
-					       const FS::File &       input,
-					       const FS::File &       output,
-					       const FS::Directory &  tmp_dir);
-		void                     run(bool dry_run);
+		const FS::File & input(void);
+		const FS::File & output(void);
+		void             setup(const std::string &   id,
+				       const FS::Directory & tmp_dir);
+		void             run(bool dry_run);
 
 	protected:
 		// No copy allowed
@@ -52,8 +49,8 @@ namespace FCP {
 		void operator =(const Filter &);
 
 	private:
-		std::string              tag_in_;
-		std::string              tag_out_;
+		const FS::File &         input_;
+		const FS::File &         output_;
 
 		std::vector<std::string> templates_;
 		std::vector<std::string> commands_;
@@ -65,7 +62,6 @@ namespace FCP {
 						  const FS::File &    input,
 						  const FS::File &    output,
 						  const std::string & tmp_dir);
-
 	};
 }
 
