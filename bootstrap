@@ -27,23 +27,23 @@ ME=bootstrap
 #
 missing ()
 {
-  PROGRAM=$1
+    PROGRAM=$1
 
-  if test x"$PROGRAM" = x""; then
-    return 1
-  fi
-  IFS=":"
+    if test x"$PROGRAM" = x""; then
+	return 1
+    fi
+    IFS=":"
 
-  for i in $PATH
+    for i in $PATH
     do
 
-    if test -f $i/$PROGRAM; then
-      echo $i/$PROGRAM
-      return 0
-    fi
-  done
+	if test -f $i/$PROGRAM; then
+	    echo $i/$PROGRAM
+	    return 0
+	fi
+    done
 
-  return 1
+    return 1
 }
 
 #
@@ -71,7 +71,7 @@ for tool in	\
     $AUTOMAKE	\
     $AUTORECONF	\
     $GNULIBTOOL \
-;
+    ;
 do
     if test -n "$tool" ; then
 	TOOLVER=`$tool --version | head -1`
@@ -96,14 +96,22 @@ echo "$ME: Building configure.ac from configure.ac.in"
 rm -f configure.ac
 VERSION=`git tag -l | sort -s -t '.' -k 1,1n -k 2,2n -k 3,3n | tail -n 1`
 cat configure.ac.in | sed -e 's,[@]VERSION[@],'$VERSION',' > configure.ac || \
-{ rm -f configure.ac ; exit 1 ; }
+    { rm -f configure.ac ; exit 1 ; }
 chmod a-w configure.ac
 
 #
 # Call gnulib
 #
 if test -n "$GNULIBTOOL" ; then
-    $GNULIBTOOL --lgpl --no-changelog --aux-dir ./tools/autotools --m4-base ./tools/autotools/m4 --source-base=./src/gnulib --macro-prefix GNULIB --no-vc-files --import sys_stat regex getopt || exit 1
+    $GNULIBTOOL \
+	--lgpl \
+	--no-changelog \
+	--macro-prefix GNULIB \
+	--no-vc-files \
+	--aux-dir=./tools/autotools \
+	--m4-base=./tools/autotools/m4 \
+	--source-base=./src/gnulib \
+	--import sys_stat regex getopt || exit 1
 fi
 
 #
@@ -113,7 +121,7 @@ echo "$ME: Handling autotools bootstrap ..."
 
 echo "$ME: Running autoreconf ..."
 $ACLOCAL    --force --install -I ./tools/autotools/m4 && \
-$AUTORECONF --verbose --force --install -Wall         || {
+    $AUTORECONF --verbose --force --install -Wall         || {
     exit 1
 }
 
