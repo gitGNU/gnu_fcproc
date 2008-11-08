@@ -16,8 +16,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef FILE_H
-#define FILE_H
+#ifndef LIBS_FS_FILE_H
+#define LIBS_FS_FILE_H
 
 #include "config.h"
 
@@ -47,4 +47,4 @@ namespace FCP {
 	};
 }
 
-#endif // FILE_H
+#endif // LIBS_FS_FILE_H
