@@ -20,6 +20,12 @@
 
 #include <string>
 
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <errno.h>
+
 #include "libs/misc/debug.h"
 #include "libs/fs/utils.h"
 #include "libs/misc/exception.h"
@@ -45,16 +51,45 @@ namespace FCP {
 
 	void Directory::create(void) const
 	{
-		::Directory::mkdir(name_);
+		if (::mkdir(name_.c_str(), 0700) != 0) {
+			throw Exception("Cannot create "
+					"'" + name_ + "' "
+					"directory "
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
 	}
 
 	void Directory::remove(void) const
 	{
-		::Directory::rmdir(name_);
+		if (::rmdir(name_.c_str()) != 0) {
+			throw Exception("Cannot remove "
+					"'" + name_ + "' "
+					"directory"
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
 	}
 
 	bool Directory::exists(void) const
 	{
-		return ::Directory::exists(name_);
+		// XXX FIXME: Consider using gnulib replacement
+		DIR * tmp = opendir(name_.c_str());
+		if (tmp == 0) {
+			BUG_ON(errno == EBADF);
+
+			throw Exception("Cannot open directory "
+					"'" + name_ + "' "
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
+
+		// XXX FIXME: Maybe a check on closedir() return value ...
+		closedir(tmp);
+
+		return true;
 	}
 };

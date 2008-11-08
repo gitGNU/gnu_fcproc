@@ -19,12 +19,11 @@
 #include "config.h"
 
 #include <iostream>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
-#include <sys/types.h>
-#include <dirent.h>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
@@ -96,56 +95,3 @@ namespace File {
 		return t.st_mtime;
 	}
 }
-
-namespace Directory {
-	// XXX FIXME: Ugly, consider revising ...
-	bool exists(const std::string & s)
-	{
-		BUG_ON(s.size() == 0);
-
-		// XXX FIXME: Consider using gnulib replacement
-		DIR * tmp = opendir(s.c_str());
-		if (tmp == 0) {
-			BUG_ON(errno == EBADF);
-
-			throw Exception("Cannot open directory "
-					"'" + s + "' "
-					"(" +
-					std::string(strerror(errno)) +
-					")");
-		}
-
-		// XXX FIXME: Maybe a check on closedir() return value ...
-		closedir(tmp);
-
-		return true;
-	}
-
-	void mkdir(const std::string & s)
-	{
-		BUG_ON(s.size() == 0);
-
-		if (::mkdir(s.c_str(), 0700) != 0) {
-			throw Exception("Cannot create "
-					"'" + s + "' "
-					"directory "
-					"(" +
-					std::string(strerror(errno)) +
-					")");
-		}
-	}
-
-	void rmdir(const std::string & s)
-	{
-		BUG_ON(s.size() == 0);
-
-		if (::rmdir(s.c_str()) != 0) {
-			throw Exception("Cannot remove "
-					"'" + s + "' "
-					"directory"
-					"(" +
-					std::string(strerror(errno)) +
-					")");
-		}
-	}
-};

@@ -31,10 +31,4 @@ namespace File {
 	bool        exists(const std::string & s);
 };
 
-namespace Directory {
-	bool exists(const std::string & s);
-	void mkdir(const std::string & s);
-	void rmdir(const std::string & s);
-};
-
 #endif // LIBS_FS_UTILS_H
