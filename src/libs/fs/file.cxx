@@ -20,6 +20,11 @@
 
 #include <string>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
+
 #include "libs/misc/debug.h"
 #include "libs/fs/utils.h"
 #include "libs/misc/exception.h"
@@ -33,15 +38,37 @@ namespace FCP {
 			throw Exception("Missing file name");
 		}
 
-		dirname_   = ::File::dirname(name_);
-		basename_  = ::File::basename(name_);
+		dirname_ = name_.substr(0, name_.rfind("/"));
 
+		std::string::size_type p;
+		p         = name_.rfind("/");
+		basename_ = ((p != std::string::npos) ?
+			     name_.substr(p + 1) :
+			     name_);
 		if (basename_ == "") {
 			throw Exception("Malformed filename");
 		}
 
-		extension_ = ::File::extension(name_);
+		std::string t;
 
+		t = basename_;
+		if (t != "") {
+			std::string::size_type p;
+
+			p = t.rfind(".");
+			if (p == 0) {
+				// No extension, file is ".something"
+				extension_ = "";
+			} else if (p == std::string::npos) {
+				// No extension
+				extension_ = "";
+			} else {
+				// We got it
+				extension_ = t.substr(p + 1);
+			}
+		} else {
+			extension_ = t;
+		}
 		if (extension_ == "") {
 			throw Exception("Missing extension in "
 					"filename '" + name_ + "'");
@@ -61,10 +88,12 @@ namespace FCP {
 	{
 		return dirname_;
 	}
+
 	const std::string & File::basename(void) const
 	{
 		return basename_;
 	}
+
 	const std::string & File::extension(void) const
 	{
 		return extension_;
@@ -72,11 +101,28 @@ namespace FCP {
 
 	time_t File::mtime(void) const
 	{
-		return ::File::mtime(name_);
+		struct stat t;
+
+		if (stat(name_.c_str(), &t) != 0) {
+			throw Exception("Cannot stat() file "
+					"'" + name_ + "' "
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
+
+		return t.st_mtime;
 	}
 
+	// XXX FIXME: Ugly
 	bool File::exists(void) const
 	{
-		return ::File::exists(name_);
+		struct stat t;
+
+		if (stat(name_.c_str(), &t) == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 };

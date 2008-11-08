@@ -19,16 +19,4 @@
 #ifndef LIBS_FS_UTILS_H
 #define LIBS_FS_UTILS_H
 
-#include "config.h"
-
-#include <string>
-
-namespace File {
-	std::string dirname(const std::string & s);
-	std::string basename(const std::string & s);
-	std::string extension(const std::string & s);
-	time_t      mtime(const std::string & s);
-	bool        exists(const std::string & s);
-};
-
 #endif // LIBS_FS_UTILS_H
