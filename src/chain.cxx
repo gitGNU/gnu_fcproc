@@ -41,7 +41,9 @@ namespace FCP {
 		input_(input),
 		output_(output)
 	{
-		TR_DBG("Creating chain '%s'\n", id.c_str());
+		TR_DBG("Creating chain '%s' (working directory '%s')\n",
+		       id.c_str(), work.name().c_str());
+
 		filters_ = filters;
 
 		std::vector<FCP::Filter *>::iterator i;

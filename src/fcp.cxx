@@ -340,7 +340,12 @@ int main(int argc, char * argv[])
 		}
 
 		try {
-			work_dir.create();
+			bool created = false;
+
+			if (!work_dir.exists()) {
+				work_dir.create();
+				created = true;
+			}
 
 			// Run all transformations
 			TR_DBG("Running %d transformation(s)\n",
@@ -352,7 +357,9 @@ int main(int argc, char * argv[])
 				(*it)->run(dry_run, force);
 			}
 
-			work_dir.remove();
+			if (created) {
+				work_dir.remove();
+			}
 
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());

@@ -67,7 +67,7 @@ namespace FCP {
 	void Filter::setup(const std::string &   id,
 			   const FS::Directory & work_dir)
 	{
-		TR_DBG("Setting up filter '%s' in temporary directory '%s'\n",
+		TR_DBG("Filter '%s' setup (working directory '%s')\n",
 		       id.c_str(), work_dir.name().c_str());
 
 		std::vector<std::string>::iterator ic;
@@ -165,7 +165,7 @@ namespace FCP {
 
 			BUG_ON((*i).size() == 0);
 
-			TR_DBG("Calling system() for '%s'\n", (*i).c_str());
+			TR_DBG("  Calling system(\"%s\")\n", (*i).c_str());
 
 			// XXX FIXME: Use gnulib system()
 			ret = system((*i).c_str());
