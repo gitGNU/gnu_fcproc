@@ -24,31 +24,31 @@ required="diff"
 
 cat > ./include-4 <<EOF
 ext5:ext6
-	echo "5" >> \$O
+	cat \$I >> \$O
 EOF
 
 cat > ./include-3 <<EOF
 include "./include-4"
 ext4:ext5
-	echo "4" >> \$O
+	cat \$I >> \$O
 EOF
 
 cat > ./include-2 <<EOF
 include "./include-3"	
 ext3:ext4
-	echo "3" >> \$O
+	cat \$I >> \$O
 EOF
 
 cat > ./include-1 <<EOF
 include "./include-2"    
 ext2:ext3
-	echo "2" >> \$O
+	cat \$I >> \$O
 EOF
 
 cat > ./rules <<EOF
 include "./include-1"
 ext1:ext2
-	echo "1" >> \$O
+	cat \$I >> \$O
 EOF
 
 rm -f ./test1.ext1      || exit 1
@@ -59,11 +59,7 @@ $FCP -r ./rules -m 100 -s : -t ./ test1.ext1:test2.ext6 || exit 1
 
 rm -f test.exp || exit 1
 cat > test.exp <<EOF
-1
-2
-3
-4
-5
+0
 EOF
 
 diff ./test.exp ./test2.ext6 || exit 1

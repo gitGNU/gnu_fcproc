@@ -24,24 +24,31 @@ required="diff"
 
 cat > ./rules <<EOF
 ext1:ext2
+	cat \$I  >> \$O
 	echo "1" >> \$O
 
 ext2:ext1
+	cat \$I  >> \$O
 	echo "2" >> \$O
 
 ext2:ext3
+	cat \$I  >> \$O
 	echo "3" >> \$O
 
 ext3:ext2
+	cat \$I  >> \$O
 	echo "4" >> \$O
 
 ext3:ext4
+	cat \$I  >> \$O
 	echo "5" >> \$O
 
 ext4:ext3
+	cat \$I  >> \$O
 	echo "6" >> \$O
 
 ext4:ext1
+	cat \$I  >> \$O
 	echo "7" >> \$O
 EOF
 

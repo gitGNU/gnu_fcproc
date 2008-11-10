@@ -357,8 +357,11 @@ int main(int argc, char * argv[])
 				(*it)->run(dry_run, force);
 			}
 
+			TR_DBG("All transformations completed\n");
+
 			if (created) {
-				work_dir.remove();
+				// Recursively remove all contents in our dir
+				work_dir.remove(true);
 			}
 
 		} catch (std::exception & e) {
