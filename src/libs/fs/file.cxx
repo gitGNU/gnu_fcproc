@@ -131,6 +131,8 @@ namespace FS {
 
 	void File::remove(void) const
 	{
+		TR_DBG("Removing file '%s'\n", name_.c_str());
+
 		if (::unlink(name_.c_str()) != 0) {
 			throw Exception("Cannot remove "
 					"'" + name_ + "' "

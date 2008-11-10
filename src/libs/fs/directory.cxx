@@ -79,6 +79,7 @@ namespace FS {
 
 	void Directory::remove(bool recursive) const
 	{
+		TR_DBG("Removing directory '%s'\n", name_.c_str());
 		if (recursive) {
 			DIR * dir;
 
@@ -94,20 +95,21 @@ namespace FS {
 
 			struct dirent * entry;
 			while ((entry = readdir(dir)) != 0) {
+				std::string t(entry->d_name);
+
 				switch (entry->d_type) {
 					case DT_REG: {
-						File f(entry->d_name);
+						File f(name_ + "/" + t);
 						f.remove();
 						break;
 					}
 					case DT_DIR: {
-						Directory d(entry->d_name);
 						// Skip '.' and '..'
-						if ((d.name() == ".")   ||
-						    (d.name() == "..")) {
+						if ((t == ".") || (t == "..")) {
 							break;
 						}
 
+						Directory d(name_ + "/" + t);
 						d.remove(recursive);
 						break;
 					}
