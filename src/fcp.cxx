@@ -241,6 +241,7 @@ int main(int argc, char * argv[])
 #endif
 		TR_DBG("Max depth     '%d'\n", max_depth);
 		BUG_ON(max_depth <= 0);
+		TR_DBG("Temporary dir '%s'\n", tmp_dir.name().c_str());
 
 		// Read rules file
 		if (rules_files.size() == 0) {
@@ -277,6 +278,13 @@ int main(int argc, char * argv[])
 
 		transformations.resize(argc - optind);
 
+		FS::Directory work_dir(tmp_dir.name() +
+				       "/" +
+				       std::string(PROGRAM_NAME) +
+				       "-" +
+				       String::itos(getpid()));
+		TR_DBG("Working directory is '%s'\n", work_dir.name().c_str());
+
 		TR_DBG("Transformations:\n");
 		int i;
 		for (i = optind; i < argc; i++) {
@@ -289,7 +297,8 @@ int main(int argc, char * argv[])
 				t = new FCP::Transformation(argv[i],
 							    separator,
 							    *rules,
-							    max_depth);
+							    max_depth,
+							    work_dir);
 				BUG_ON(t == 0);
 
 				// XXX FIXME: Use an exception
@@ -324,17 +333,13 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		FS::Directory work_dir(tmp_dir.name() +
-				       "/" +
-				       String::itos(getpid()));
+		if (!tmp_dir.exists()) {
+			TR_ERR("No such '%s' directory\n",
+			       tmp_dir.name().c_str());
+			return 1;
+		}
 
 		try {
-			if (!tmp_dir.exists()) {
-				TR_ERR("No such '%s' directory\n",
-				       tmp_dir.name().c_str());
-				return 1;
-			}
-
 			work_dir.create();
 
 			// Run all transformations
@@ -344,7 +349,7 @@ int main(int argc, char * argv[])
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
-				(*it)->run(work_dir, dry_run, force);
+				(*it)->run(dry_run, force);
 			}
 
 			work_dir.remove();
