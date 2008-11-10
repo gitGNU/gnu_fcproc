@@ -33,46 +33,50 @@ namespace FS {
 	File::File(const std::string & name) :
 		name_(name)
 	{
-		TR_DBG("File '%s':\n", name_.c_str());
+		// TR_DBG("File '%s':\n", name_.c_str());
 
 		if (name_ == "") {
 			throw Exception("Missing file name");
 		}
 		// name cannot be empty
 		BUG_ON(name_ == "");
-		TR_DBG("  name      = '%s'\n", name_.c_str());
+		// TR_DBG("  name      = '%s'\n", name_.c_str());
 
 		std::string::size_type p;
 
 		p = name_.rfind("/");
-		dirname_ = ((p != std::string::npos) ?
-			    name_.substr(0, p + 1) : "");
-		// dirname_ could be empty
-		TR_DBG("  dirname   = '%s'\n", dirname_.c_str());
 
-		p         = name_.rfind("/");
-		basename_ = ((p != std::string::npos) ?
-			     name_.substr(p + 1) : name_);
-		if (basename_ == "") {
+		dirname_ = ((p != std::string::npos) ?
+			    name_.substr(0, p - 1) : "");
+		// dirname_ could be empty
+		// TR_DBG("  dirname   = '%s'\n", dirname_.c_str());
+
+		std::string tmp;
+		tmp = ((p != std::string::npos) ?
+		       name_.substr(p + 1) : name_);
+		if (tmp == "") {
 			throw Exception("Malformed filename "
 					"'" + name_ + "'");
 		}
-		// basename_ cannot be empty
-		BUG_ON(basename_ == "");
-		TR_DBG("  basename  = '%s'\n", basename_.c_str());
+		// basename cannot be empty
+		BUG_ON(tmp == "");
+		// TR_DBG("  basename  = '%s'\n", basename_.c_str());
 
-		p = basename_.rfind(".");
-		if (p == 0) {
+		std::string::size_type q;
+		q = tmp.rfind(".");
+
+		basename_.prefix = tmp.substr(0, q);
+		if (q == 0) {
 			// No extension, file is ".something"
-			extension_ = "";
-		} else if (p == std::string::npos) {
+			basename_.suffix = "";
+		} else if (q == std::string::npos) {
 			// No extension
-			extension_ = "";
+			basename_.suffix = "";
 		} else {
 			// We got it
-			extension_ = basename_.substr(p + 1);
+			basename_.suffix = tmp.substr(q + 1);
 		}
-		TR_DBG("  extension = '%s'\n", extension_.c_str());
+		// TR_DBG("  extension = '%s'\n", extension_.c_str());
 	}
 
 	File::~File(void)
@@ -89,14 +93,25 @@ namespace FS {
 		return dirname_;
 	}
 
-	const std::string & File::basename(void) const
+	std::string File::basename(bool strip_suffix) const
 	{
-		return basename_;
+		std::string ret;
+
+		ret = basename_.prefix;
+		if (strip_suffix) {
+			return ret;
+		}
+
+		if (basename_.suffix.size() != 0) {
+			ret = ret + "." + basename_.suffix;
+		}
+
+		return ret;
 	}
 
 	const std::string & File::extension(void) const
 	{
-		return extension_;
+		return basename_.suffix;
 	}
 
 	time_t File::mtime(void) const

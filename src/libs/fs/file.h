@@ -29,12 +29,12 @@ namespace FS {
 		File(const std::string & name);
 		~File(void);
 
-		const std::string & name(void)      const;
-		const std::string & dirname(void)   const;
-		const std::string & basename(void)  const;
-		const std::string & extension(void) const;
-		time_t              mtime(void)     const;
-		bool                exists(void)    const;
+		const std::string & name(void)                           const;
+		const std::string & dirname(void)                        const;
+		std::string         basename(bool strip_suffix = false)  const;
+		const std::string & extension(void)                      const;
+		time_t              mtime(void)                          const;
+		bool                exists(void)                         const;
 
 	protected:
 		File(void);
@@ -42,8 +42,10 @@ namespace FS {
 	private:
 		std::string name_;
 		std::string dirname_;
-		std::string basename_;
-		std::string extension_;
+		struct {
+			std::string prefix;
+			std::string suffix;
+		} basename_;
 	};
 }
 
