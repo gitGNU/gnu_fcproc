@@ -94,6 +94,10 @@ namespace FS {
 		if (tmp == 0) {
 			BUG_ON(errno == EBADF);
 
+			if (errno == ENOENT) {
+				return false;
+			}
+
 			throw Exception("Cannot open "
 					"'" + name_ + "' "
 					"directory "
