@@ -29,6 +29,7 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/exception.h"
 #include "libs/fs/directory.h"
+#include "libs/fs/file.h"
 
 namespace FS {
 	Directory::Directory(const std::string & name)
@@ -72,10 +73,53 @@ namespace FS {
 					std::string(strerror(errno)) +
 					")");
 		}
+
+		TR_DBG("Directory '%s' created successfully\n", name_.c_str());
 	}
 
-	void Directory::remove(void) const
+	void Directory::remove(bool recursive) const
 	{
+		if (recursive) {
+			DIR * dir;
+
+			dir = opendir(name_.c_str());
+			if (!dir) {
+				throw Exception("Cannot open "
+						"'" + name_ + "' "
+						"directory "
+						"(" +
+						std::string(strerror(errno)) +
+						")");
+			}
+
+			struct dirent * entry;
+			while ((entry = readdir(dir)) != 0) {
+				switch (entry->d_type) {
+					case DT_REG: {
+						File f(entry->d_name);
+						f.remove();
+						break;
+					}
+					case DT_DIR: {
+						Directory d(entry->d_name);
+						// Skip '.' and '..'
+						if ((d.name() == ".")   ||
+						    (d.name() == "..")) {
+							break;
+						}
+
+						d.remove(recursive);
+						break;
+					}
+					default:
+						BUG();
+						break;
+				}
+			}
+
+			closedir(dir);
+		}
+
 		// XXX FIXME: Consider using the gnulib replacement
 		if (::rmdir(name_.c_str()) != 0) {
 			throw Exception("Cannot remove "
@@ -85,6 +129,8 @@ namespace FS {
 					std::string(strerror(errno)) +
 					")");
 		}
+
+		TR_DBG("Directory '%s' removed successfully\n", name_.c_str());
 	}
 
 	bool Directory::exists(void) const

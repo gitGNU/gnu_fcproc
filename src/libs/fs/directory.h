@@ -29,10 +29,10 @@ namespace FS {
 		Directory(const std::string & name);
 		~Directory(void);
 
-		const std::string & name(void)   const;
-		void                create(void) const;
-		void                remove(void) const;
-		bool                exists(void) const;
+		const std::string & name(void)                     const;
+		void                create(void)                   const;
+		void                remove(bool recursive = false) const;
+		bool                exists(void)                   const;
 
 	protected:
 		Directory(void);
