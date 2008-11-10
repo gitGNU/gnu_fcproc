@@ -34,14 +34,21 @@
 namespace FCP {
 	Chain::Chain(const std::string &          id,
 		     const FS::File &             input,
+		     const FS::File &             output,
 		     std::vector<FCP::Filter *> & filters,
-		     const FS::File &             output) :
+		     const FS::Directory &        work) :
 		id_(id),
 		input_(input),
 		output_(output)
 	{
 		TR_DBG("Creating chain '%s'\n", id.c_str());
 		filters_ = filters;
+
+		std::vector<FCP::Filter *>::iterator i;
+		for (i = filters_.begin(); i != filters_.end(); i++) {
+			BUG_ON((*i) == 0);
+			(*i)->setup(id_, work);
+		}
 	}
 
 	Chain::~Chain(void)
@@ -53,9 +60,8 @@ namespace FCP {
 		return id_;
 	}
 
-	void Chain::run(const FS::Directory &  tmp_dir,
-			bool                   dry_run,
-			bool                   force)
+	void Chain::run(bool dry_run,
+			bool force)
 	{
 		TR_DBG("Running filters-chain '%s'\n", id_.c_str());
 
@@ -78,9 +84,8 @@ namespace FCP {
 		}
 
 		std::vector<FCP::Filter *>::iterator i;
-
-		for (i  = filters_.begin(); i != filters_.end(); i++) {
-			(*i)->setup(id_, tmp_dir);
+		for (i = filters_.begin(); i != filters_.end(); i++) {
+			BUG_ON((*i) == 0);
 			(*i)->run(dry_run);
 		}
 	}

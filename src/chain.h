@@ -34,14 +34,14 @@ namespace FCP {
 	public:
 		Chain(const std::string &          id,
 		      const FS::File &             input,
+		      const FS::File &             output,
 		      std::vector<FCP::Filter *> & filters,
-		      const FS::File &             output);
+		      const FS::Directory &        work);
 		~Chain(void);
 
 		const std::string & id(void);
-		void                run(const FS::Directory & tmp_dir,
-					bool                  dry_run,
-					bool                  force);
+		void                run(bool dry_run,
+					bool force);
 
 	protected:
 		// No copy allowed
