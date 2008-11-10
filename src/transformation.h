@@ -31,15 +31,15 @@
 namespace FCP {
 	class Transformation {
 	public:
-		Transformation(const std::string & tag,
-			       char                separator,
-			       FCP::Rules &        rules,
-			       int                 mdepth);
+		Transformation(const std::string &   tag,
+			       char                  separator,
+			       FCP::Rules &          rules,
+			       int                   depth,
+			       const FS::Directory & tmp);
 		~Transformation(void);
 
-		void                run(const FS::Directory & tmp_dir,
-					bool                  dry_run,
-					bool                  force);
+		void                run(bool dry_run,
+					bool force);
 
 		const std::string & tag(void)    const;
 		const FS::File &    input(void)  const;

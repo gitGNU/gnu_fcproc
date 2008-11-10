@@ -28,10 +28,11 @@
 #include "chain.h"
 
 namespace FCP {
-	Transformation::Transformation(const std::string & tag,
-				       char                separator,
-				       FCP::Rules &        rules,
-				       int                 mdepth) :
+	Transformation::Transformation(const std::string &   tag,
+				       char                  separator,
+				       FCP::Rules &          rules,
+				       int                   depth,
+				       const FS::Directory & tmp) :
 		tag_(tag)
 	{
 		std::string::size_type p;
@@ -44,29 +45,29 @@ namespace FCP {
 					"'" + tag_ + "'");
 		}
 
-		std::string tmp;
+		std::string t;
 
-		tmp = tag_.substr(0, p);
-		if (tmp.size() == 0) {
+		t = tag_.substr(0, p);
+		if (t.size() == 0) {
 			throw Exception("Missing input file "
 					"in transformation "
 					"'" + tag_ + "'");
 		}
-		input_ = new FS::File(tmp);
+		input_ = new FS::File(t);
 		BUG_ON(input_ == 0);
 
-		tmp = tag_.substr(p + 1);
-		if (tmp.size() == 0) {
+		t = tag_.substr(p + 1);
+		if (t.size() == 0) {
 			throw Exception("Missing output file "
 					"in transformation "
 					"'" + tag_ + "'");
 		}
-		output_ = new FS::File(tmp);
+		output_ = new FS::File(t);
 		BUG_ON(output_ == 0);
 
 		// Build the filters-chain for this transformation
 		std::vector<FCP::Filter *> chain;
-		chain = rules.chain(*input_, *output_, mdepth);
+		chain = rules.chain(*input_, *output_, depth, tmp);
 		if (chain.size() == 0) {
 			throw Exception("No filters-chain available for "
 					"'" + tag_ + "' "
@@ -83,7 +84,7 @@ namespace FCP {
 		}
 
 		// Finally create the filters-chain from the filters sequence
-		chain_ = new FCP::Chain(tag_, input(), chain, output());
+		chain_ = new FCP::Chain(tag_, input(), output(), chain, tmp);
 		BUG_ON(chain_ == 0);
 	}
 
@@ -94,15 +95,14 @@ namespace FCP {
 		delete chain_;
 	}
 
-	void Transformation::run(const FS::Directory & tmp_dir,
-				 bool                  dry_run,
-				 bool                  force)
+	void Transformation::run(bool dry_run,
+				 bool force)
 	{
 		TR_DBG("Transforming '%s' -> '%s'\n",
 		       input_->name().c_str(),
 		       output_->name().c_str());
 
-		chain_->run(tmp_dir, dry_run, force);
+		chain_->run(dry_run, force);
 	}
 
 	const std::string & Transformation::tag(void) const
