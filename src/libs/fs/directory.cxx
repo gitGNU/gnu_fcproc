@@ -31,12 +31,25 @@
 #include "libs/fs/directory.h"
 
 namespace FS {
-	Directory::Directory(const std::string & name) :
-		name_(name)
+	Directory::Directory(const std::string & name)
 	{
-		if (name_ == "") {
+		if (name == "") {
 			throw Exception("Missing directory name");
 		}
+
+		// Remove trailing '/'
+		std::string::size_type p;
+
+		p = name.rfind("/");
+		//TR_DBG("name = '%s', p = %d, size = %d\n",
+		//       name.c_str(), p, name.size());
+
+		if (p == (name.size() - 1)) {
+			name_ = name.substr(0, p);
+			return;
+		}
+
+		name_ = name;
 	}
 
 	Directory::~Directory(void)
@@ -50,6 +63,7 @@ namespace FS {
 
 	void Directory::create(void) const
 	{
+		// XXX FIXME: Consider using the gnulib replacement
 		if (::mkdir(name_.c_str(), 0700) != 0) {
 			throw Exception("Cannot create "
 					"'" + name_ + "' "
@@ -62,10 +76,11 @@ namespace FS {
 
 	void Directory::remove(void) const
 	{
+		// XXX FIXME: Consider using the gnulib replacement
 		if (::rmdir(name_.c_str()) != 0) {
 			throw Exception("Cannot remove "
 					"'" + name_ + "' "
-					"directory"
+					"directory "
 					"(" +
 					std::string(strerror(errno)) +
 					")");
@@ -74,13 +89,14 @@ namespace FS {
 
 	bool Directory::exists(void) const
 	{
-		// XXX FIXME: Consider using gnulib replacement
+		// XXX FIXME: Consider using the gnulib replacement
 		DIR * tmp = opendir(name_.c_str());
 		if (tmp == 0) {
 			BUG_ON(errno == EBADF);
 
-			throw Exception("Cannot open directory "
+			throw Exception("Cannot open "
 					"'" + name_ + "' "
+					"directory "
 					"(" +
 					std::string(strerror(errno)) +
 					")");
