@@ -25,10 +25,12 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
 
 #include "regex.h"
 
 #include "libs/fs/file.h"
+#include "libs/fs/directory.h"
 #include "filter.h"
 
 namespace FCP {
@@ -38,9 +40,10 @@ namespace FCP {
 		~Rules(void);
 
 		// Builds a filters-chain
-		std::vector<FCP::Filter *> chain(const FS::File & input,
-						 const FS::File & output,
-						 int              mdepth);
+		std::vector<FCP::Filter *> chain(const FS::File &      input,
+						 const FS::File &      output,
+						 int                   mdepth,
+						 const FS::Directory & work);
 
 		void                       dump(std::ostream & stream);
 
@@ -67,14 +70,35 @@ namespace FCP {
 		std::string readline(std::ifstream & stream);
 		void        parse(const std::string & filename);
 
+		typedef std::pair<std::string, std::vector<std::string> > fcd_t;
+
+		class Antiloop {
+		private:
+			std::set<std::pair<std::string, std::string> > set_;
+
+		public:
+			Antiloop(void)  { };
+			~Antiloop(void) { };
+
+			bool insert(const std::string & in,
+				    const std::string & out) {
+				std::pair<std::string, std::string> t(in,out);
+
+				if (set_.find(t) != set_.end()) {
+					return false;
+				}
+				set_.insert(t);
+				return true;
+			}
+		};
+
 		// Builds a commands-chain
-		bool        chain(std::set<std::pair<std::string,
-				  std::string> > &             loopset,
-				  const std::string &          in,
-				  const std::string &          out,
-				  int                          mdepth,
-				  std::vector<std::vector<std::string > >&
-				                               chain);
+		bool
+		chain(Antiloop &           antiloop,
+		      const std::string &  tag_in,
+		      const std::string &  tag_out,
+		      int                  mdepth,
+		      std::vector<fcd_t> & data);
 	};
 }
 

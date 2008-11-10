@@ -30,6 +30,8 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/exception.h"
+#include "libs/fs/file.h"
+#include "libs/fs/directory.h"
 #include "rules.h"
 
 namespace FCP {
@@ -127,7 +129,7 @@ namespace FCP {
 		}
 	}
 
-#define PARSER_DEBUGS 1
+#define PARSER_DEBUGS 0
 #if PARSER_DEBUGS
 #define P_DBG(FMT,ARGS...) TR_DBG(FMT, ##ARGS);
 #else
@@ -392,59 +394,62 @@ namespace FCP {
 		stream.close();
 	}
 
-	bool Rules::chain(std::set<std::pair<std::string,
-			  std::string> > &                         loop,
-			  const std::string &                      in,
-			  const std::string &                      out,
-			  int                                      mdepth,
-			  std::vector<std::vector<std::string> > & commands)
+	typedef std::pair<std::string, std::vector<std::string> > fcdata_t;
+
+	bool Rules::chain(Antiloop &           antiloop,
+			  const std::string &  tag_in,
+			  const std::string &  tag_out,
+			  int                  depth,
+			  std::vector<fcd_t> & data)
 	{
-		BUG_ON(mdepth < 0);
+		BUG_ON(depth < 0); // Allow depth == 1
 
-		TR_DBG("Looking for '%s' -> '%s' (mdepth = %d)\n",
-		       in.c_str(), out.c_str(), mdepth);
+		TR_DBG("Walking '%s' -> '%s' (depth = %d)\n",
+		       tag_in.c_str(), tag_out.c_str(), depth);
 
-		mdepth--;
-		if (mdepth < 0) { // Allow mdepth == 1
+		depth--;
+		if (depth < 0) {
 			TR_DBG("Max filters-chain size exceeded\n");
 			return false;
 		}
 
 		std::map<std::string,
 			std::map<std::string,
-			std::vector<std::string> > >::const_iterator r;
-		r = rules_.find(in);
-		if (r == rules_.end()) {
+			std::vector<std::string> > >::const_iterator i;
+		i = rules_.find(tag_in);
+		if (i == rules_.end()) {
 			TR_DBG("No rules available for '%s' -> '%s'\n",
-			       in.c_str(), out.c_str());
+			       tag_in.c_str(), tag_out.c_str());
 			return false;
 		}
 
-		// Loop detection
-		std::pair<std::string, std::string> t(in, out);
-		if (loop.find(t) != loop.end()) {
-			TR_DBG("Got a loop while "
-			       "looking for '%s' -> '%s'\n",
-			       in.c_str(), out.c_str());
+		// Antiloop detection check
+		if (!antiloop.insert(tag_in, tag_out)) {
+			TR_DBG("Got a loop while walking '%s' -> '%s'\n",
+			       tag_in.c_str(), tag_out.c_str());
 			return false;
 		}
-		loop.insert(t);
 
 		std::map<std::string,
-			std::vector<std::string> >::const_iterator c;
-		for (c = r->second.begin(); c != r->second.end(); c++) {
-			if (c->first == out) {
-				TR_DBG("Got chain end!\n");
-				commands.push_back(c->second);
+			std::vector<std::string> >::const_iterator j;
+		for (j = i->second.begin(); j != i->second.end(); j++) {
+			if (j->first == tag_out) {
+				TR_DBG("Got chain end ('%s' -> '%s')\n",
+				       i->first.c_str(), j->first.c_str());
+
+				fcd_t t(j->first, j->second);
+				data.push_back(t);
+
 				return true;
 			}
 
-			TR_DBG("Looking for '%s' -> '%s'\n",
-			       c->first.c_str(), out.c_str());
-			if (chain(loop, c->first, out, mdepth, commands)) {
-				commands.push_back(c->second);
-				TR_DBG("Got '%s' -> '%s'\n",
-				       c->first.c_str(), out.c_str());
+			if (chain(antiloop, j->first, tag_out, depth, data)) {
+				TR_DBG("Got chain node ('%s' -> '%s')\n",
+				       i->first.c_str(), j->first.c_str());
+
+				fcd_t t(j->first, j->second);
+				data.push_back(t);
+
 				return true;
 			}
 		}
@@ -452,40 +457,59 @@ namespace FCP {
 		return false;
 	}
 
-	std::vector<FCP::Filter *> Rules::chain(const FS::File & input,
-						const FS::File & output,
-						int              mdepth)
+	std::vector<FCP::Filter *> Rules::chain(const FS::File &      input,
+						const FS::File &      output,
+						int                   depth,
+						const FS::Directory & work)
 	{
-		BUG_ON(mdepth <= 0);
+		BUG_ON(depth <= 0);
 
-		TR_DBG("Looking for filters-chain for '%s' -> '%s' "
+		TR_DBG("Looking for filters-chain '%s' -> '%s' "
 		       "(max depth %d)\n",
-		       input.name().c_str(), output.name().c_str(), mdepth);
+		       input.name().c_str(), output.name().c_str(), depth);
 
-		std::set<std::pair<std::string, std::string> > loop;
+		std::set<std::pair<std::string,	std::string> > loop;
 		std::vector<FCP::Filter *>                     ret;
-		std::vector<std::vector<std::string> >         commands;
 
-		if (!chain(loop,
+		// Build filters-chain based on extensions
+		std::vector<fcd_t> data;
+		Antiloop           antiloop;
+		if (!chain(antiloop,
 			   input.extension(),
 			   output.extension(),
-			   mdepth,
-			   commands)) {
+			   depth,
+			   data)) {
 			TR_DBG("No filters-chain found ...\n");
-			commands.clear();
+			data.clear();
 			return ret;
 		}
+		TR_DBG("Filters-chain found!\n");
 
-		TR_DBG("filters-chain found!\n");
-		std::reverse(commands.begin(), commands.end());
+		std::reverse(data.begin(), data.end());
 
-		// Transform the command sequence into a proper filters-chain
-		std::vector<std::vector<std::string> >::iterator i;
-		for (i = commands.begin(); i != commands.end(); i++) {
-			FCP::Filter * f;
+		// Transform the fcd_t sequence into a proper filters-chain
+		std::vector<fcd_t>::size_type i;
 
-			f = new FCP::Filter(input, output, (*i));
+		FS::File src(input);
+		for (i = 0; i < data.size(); i++) {
+			std::string tmp;
+
+			if (i == (data.size() - 1)) {
+				tmp = output.name();
+			} else {
+				tmp = work.name() +
+					"/" +
+					src.basename(true) +
+					"." +
+					data[i].first;
+			}
+
+			FS::File      dst(tmp);
+			FCP::Filter * f = new FCP::Filter(src, dst,
+							  data[i].second);
 			ret.push_back(f);
+
+			src = dst;
 		}
 
 		return ret;
