@@ -129,6 +129,18 @@ namespace FS {
 		return t.st_mtime;
 	}
 
+	void File::remove(void) const
+	{
+		if (::unlink(name_.c_str()) != 0) {
+			throw Exception("Cannot remove "
+					"'" + name_ + "' "
+					"file "
+					"(" +
+					std::string(strerror(errno)) +
+					")");
+		}
+	}
+
 	// XXX FIXME: Ugly
 	bool File::exists(void) const
 	{

@@ -35,6 +35,7 @@ namespace FS {
 		const std::string & extension(void)                      const;
 		time_t              mtime(void)                          const;
 		bool                exists(void)                         const;
+		void                remove(void)                         const;
 
 	protected:
 		File(void);
