@@ -64,13 +64,11 @@ namespace FCP {
 	}
 
 	// XXX FIXME: Remove id parameter ASAP
-	void Filter::setup(const std::string &    id,
-			   const FS::Directory &  tmp_dir)
+	void Filter::setup(const std::string &   id,
+			   const FS::Directory & work_dir)
 	{
-		TR_DBG("Setting up filter '%s' (transforming '%s' into '%s')\n",
-		       id.c_str(),
-		       input_.name().c_str(),
-		       output_.name().c_str());
+		TR_DBG("Setting up filter '%s' in temporary directory '%s'\n",
+		       id.c_str(), work_dir.name().c_str());
 
 		std::vector<std::string>::iterator ic;
 
@@ -132,9 +130,7 @@ namespace FCP {
 				std::string t;
 				t = temps[v];
 				if (t == "") {
-					t        = mktemp(id,
-							  tmp_dir.name(),
-							  count);
+					t = mktemp(id, work_dir.name(), count);
 					count++;
 					temps[v] = t;
 				}

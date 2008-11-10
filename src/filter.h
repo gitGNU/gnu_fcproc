@@ -40,7 +40,7 @@ namespace FCP {
 		const FS::File & input(void);
 		const FS::File & output(void);
 		void             setup(const std::string &   id,
-				       const FS::Directory & tmp_dir);
+				       const FS::Directory & tmp);
 		void             run(bool dry_run);
 
 	protected:
@@ -49,9 +49,8 @@ namespace FCP {
 		void operator =(const Filter &);
 
 	private:
-		const FS::File &         input_;
-		const FS::File &         output_;
-
+		FS::File                 input_;
+		FS::File                 output_;
 		std::vector<std::string> templates_;
 		std::vector<std::string> commands_;
 
@@ -61,7 +60,7 @@ namespace FCP {
 		std::vector<std::string> commands(const std::string & id,
 						  const FS::File &    input,
 						  const FS::File &    output,
-						  const std::string & tmp_dir);
+						  const std::string & work_dir);
 	};
 }
 
