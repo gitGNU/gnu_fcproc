@@ -51,14 +51,13 @@
 	  -m, --max-depth=NUM	  use NUM as max filter-chains depth
 				  [default 16]
 	  -t, --temp-dir=DIR	  use DIR as temporary directory
-				  [default $HOME/.fcp/cache]
+				  [default $HOME/.fcp/tmp]
 	  -s, --separator=CHAR	  use CHAR as INPUTFILE/OUTPUTFILE separator
 				  [default `:']
 	  -q, --no-rules	  do not load initial rules
 	  -b, --dump-rules	  dump rules base, then exit
 	  -n, --dry-run		  display commands without modifying any files
           -f, --force             consider all files out of date
-          -c, --cache             cache temporary files
 	  -d, --debug		  enable debugging traces
 	  -v, --verbose		  verbosely report processing
 	  -h, --help		  print this help, then exit
@@ -92,9 +91,6 @@
 
  (li (kbd "-f") ", " (kbd "--force")     ": "
      "Run the program without regenerating updated files")
-
- (li (kbd "-c") ", " (kbd "--cache")     ": "
-     "Cache temporary files for speeding up later executions")
 
  (li (kbd "-n") ", " (kbd "--dry-run")     ": "
      "Run the program without modifyng any files")
