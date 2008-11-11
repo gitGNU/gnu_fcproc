@@ -56,13 +56,12 @@ void version(void)
 
 char          separator          = ':';
 #if USE_CONFIGURATION_FILE
-std::string   configuration_file =
-												     Environment::get("HOME") +
-												     std::string("/") +
-												     std::string(".") +
-												     std::string(PACKAGE_TARNAME) +
-												     std::string("/") +
-												     std::string("configuration");
+std::string   configuration_file = (Environment::get("HOME") +
+				    std::string("/") +
+				    std::string(".") +
+				    std::string(PACKAGE_TARNAME) +
+				    std::string("/") +
+				    std::string("configuration"));
 #endif
 #define       DFLT_RULES			\
 	(Environment::get("HOME") +		\
@@ -72,12 +71,12 @@ std::string   configuration_file =
 	 std::string("/") +			\
 	 std::string("rules"))
 int           max_depth          = 16;
-FS::Directory tmp_dir            = Environment::get("HOME") +
-												     std::string("/") +
-												     std::string(".") +
-												     std::string(PACKAGE_TARNAME) +
-												     std::string("/") +
-												     std::string("cache");
+FS::Directory tmp_dir            = (Environment::get("HOME") +
+				    std::string("/") +
+				    std::string(".") +
+				    std::string(PACKAGE_TARNAME) +
+				    std::string("/") +
+				    std::string("tmp"));
 
 void help(void)
 {
@@ -101,7 +100,6 @@ void help(void)
 		<< "  -b, --dump-rules        dump rules base, then exit" <<                                      std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
 		<< "  -f, --force             consider all files out of date" <<                                  std::endl
-		<< "  -c, --cache             cache temporary files" <<                                           std::endl
 		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
 		<< "  -v, --verbose           verbosely report processing" <<                                     std::endl
 		<< "  -h, --help              print this help, then exit" <<                                      std::endl
@@ -130,7 +128,6 @@ int main(int argc, char * argv[])
 	try {
 		bool                     dry_run     = false;
 		bool                     force       = false;
-		bool                     cache       = false;
 		bool                     dump_rules  = false;
 		std::vector<std::string> rules_files;
 
@@ -152,7 +149,6 @@ int main(int argc, char * argv[])
 				{ "no-rules",   0, 0, 'q' },
 				{ "dump-rules", 0, 0, 'b' },
 				{ "force",      0, 0, 'f' },
-				{ "cache",      0, 0, 'c' },
 				{ "dry-run",    0, 0, 'n' },
 				{ "debug",      0, 0, 'd' },
 				{ "verbose",    0, 0, 'v' },
@@ -162,10 +158,10 @@ int main(int argc, char * argv[])
 			};
 
 #if USE_CONFIGURATION_FILE
-			c = getopt_long(argc, argv, "t:c:r:m:s:qbfcndvVh",
+			c = getopt_long(argc, argv, "t:c:r:m:s:qbfndvVh",
 					long_options, &option_index);
 #else
-			c = getopt_long(argc, argv, "t:r:m:s:qbfcndvVh",
+			c = getopt_long(argc, argv, "t:r:m:s:qbfndvVh",
 					long_options, &option_index);
 #endif
 			if (c == -1) {
@@ -207,9 +203,6 @@ int main(int argc, char * argv[])
 				case 'f':
 					force = true;
 					break;
-				case 'c':
-					cache = true;
-					break;
 				case 'n':
 					dry_run = true;
 					break;
@@ -241,9 +234,7 @@ int main(int argc, char * argv[])
 #endif
 		TR_DBG("Max depth     '%d'\n", max_depth);
 		BUG_ON(max_depth <= 0);
-		TR_DBG("Temporary dir '%s'\n", tmp_dir.name().c_str());
 
-		// Read rules file
 		if (rules_files.size() == 0) {
 			hint("No rules available");
 			return 1;
@@ -251,6 +242,7 @@ int main(int argc, char * argv[])
 		TR_DBG("Rules         '%d'\n", rules_files.size());
 		BUG_ON(rules_files.size() == 0);
 
+		// Read rules file
 		FCP::Rules * rules;
 
 		try {
@@ -273,17 +265,24 @@ int main(int argc, char * argv[])
 		}
 		BUG_ON((argc - optind) < 0);
 
-		std::vector<FCP::Transformation *>           transformations;
-		std::vector<FCP::Transformation *>::iterator it;
-
-		transformations.resize(argc - optind);
+		// Setup working and temporary directories
+		TR_DBG("Temporary dir '%s'\n", tmp_dir.name().c_str());
+		if (!tmp_dir.exists()) {
+			hint("No such '" + tmp_dir.name() + "' directory");
+			return 1;
+		}
 
 		FS::Directory work_dir(tmp_dir.name() +
 				       "/" +
 				       std::string(PROGRAM_NAME) +
 				       "-" +
 				       String::itos(getpid()));
-		TR_DBG("Working directory is '%s'\n", work_dir.name().c_str());
+		TR_DBG("Working dir   '%s'\n", work_dir.name().c_str());
+
+		std::vector<FCP::Transformation *>           transformations;
+		std::vector<FCP::Transformation *>::iterator it;
+
+		transformations.resize(argc - optind);
 
 		TR_DBG("Transformations:\n");
 		int i;
@@ -303,11 +302,10 @@ int main(int argc, char * argv[])
 
 				// XXX FIXME: Use an exception
 				if (t->input().name() == t->output().name()) {
-					TR_ERR("Transformation '%s' "
-					       "input and output "
-					       "must be different\n",
-					       t->tag().c_str());
-					return 1;
+					throw Exception("Transformation "
+							"'" + t->tag() + "' "
+							"input and output "
+							"must be different");
 				}
 
 				transformations[j] = t;
@@ -318,6 +316,10 @@ int main(int argc, char * argv[])
 			}
 		}
 		BUG_ON(transformations.size() == 0);
+
+		// We don't need rules anymore ...
+		delete rules;
+		rules = 0;
 
 #if USE_CONFIGURATION_FILE
 		// Read configuration file
@@ -333,18 +335,12 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		if (!tmp_dir.exists()) {
-			TR_ERR("No such '%s' directory\n",
-			       tmp_dir.name().c_str());
-			return 1;
-		}
+		bool remove_work_dir = false;
 
 		try {
-			bool created = false;
-
 			if (!work_dir.exists()) {
 				work_dir.create();
-				created = true;
+				remove_work_dir = true;
 			}
 
 			// Run all transformations
@@ -359,14 +355,16 @@ int main(int argc, char * argv[])
 
 			TR_DBG("All transformations completed\n");
 
-			if (created) {
+			if (remove_work_dir) {
 				// Recursively remove all contents in our dir
 				work_dir.remove(true);
 			}
 
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
-			work_dir.remove();
+			if (remove_work_dir) {
+				work_dir.remove();
+			}
 			return 1;
 		}
 
@@ -383,8 +381,6 @@ int main(int argc, char * argv[])
 			TR_ERR("%s\n", e.what());
 			return 1;
 		}
-
-		delete rules;
 
 	} catch (std::exception & e) {
 		TR_ERR("%s\n", e.what());
