@@ -52,7 +52,9 @@ rm -f ./test1.ext1 || exit 1
 touch ./test1.ext1
 rm -f ./test2.ext4 || exit 1
 
-valgrind --error-exitcode=1 $FCP -r ./rules -m 1 -s : -t ./ test1.ext1:test2.ext4 || exit 1
+mkdir test_dir || exit 1
+
+valgrind --error-exitcode=1 $FCP -r ./rules -m 1 -s : -t ./test_dir test1.ext1:test2.ext4 || exit 1
 
 rm -f test.exp || exit 1
 cat > test.exp <<EOF

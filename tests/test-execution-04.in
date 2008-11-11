@@ -31,6 +31,6 @@ touch ./test1.ext1 || exit 1
 rm -r -f test_dir  || exit 1
 rm -f ./test2.ext5 || exit 1
 
-$FCP -r ./rules -m 100 -s : -t ./test_dir test1.ext1:test2.ext6 || exit 1
+$FCP -r ./rules -m 100 -s : -t ./nonexistent_dir test1.ext1:test2.ext6 || exit 1
 
 exit 0

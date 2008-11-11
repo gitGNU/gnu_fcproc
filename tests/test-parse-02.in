@@ -49,6 +49,8 @@ ext1:ext2
 
 EOF
 
-$FCP -r ./rules -m 100 -s : -t ./ -n test1.ext1:test2.ext2 || exit 1
+mkdir test_dir || exit 1
+
+$FCP -r ./rules -m 100 -s : -t ./test_dir -n test1.ext1:test2.ext2 || exit 1
 
 exit 0

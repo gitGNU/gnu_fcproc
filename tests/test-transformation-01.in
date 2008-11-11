@@ -51,6 +51,8 @@ EOF
 rm -f ./test1.ext1      || exit 1
 echo "0" > ./test1.ext1 || exit 1
 
-$FCP -r ./rules -m 100 -s : -t ./ test1.ext1:test1.ext1 || exit 1
+mkdir test_dir || exit 1
+
+$FCP -r ./rules -m 100 -s : -t ./test_dir test1.ext1:test1.ext1 || exit 1
 
 exit 0
