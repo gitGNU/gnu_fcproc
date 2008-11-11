@@ -62,6 +62,7 @@ SUCCESS_TESTS =
 FAIL_TESTS +=					\
 	test-fail				\
 	test-parse-01				\
+	test-transformation-01			\
 	test-execution-04			\
 	test-execution-05
 
@@ -102,6 +103,18 @@ test-fail: $(srcdir)/test-fail.in Makefile
 	}
 EXTRA_DIST += test-fail.in
 CLEANFILES += test-fail
+
+test-transformation-01: $(srcdir)/test-transformation-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-transformation-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-transformation-01.in
+CLEANFILES += test-transformation-01
 
 test-parse-01: $(srcdir)/test-parse-01.in Makefile
 	( rm -f $@ $@.tmp && \
