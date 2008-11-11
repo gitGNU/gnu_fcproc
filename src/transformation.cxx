@@ -95,14 +95,14 @@ namespace FCP {
 		delete chain_;
 	}
 
-	void Transformation::run(bool dry_run,
+	void Transformation::run(bool dry,
 				 bool force)
 	{
 		TR_DBG("Transforming '%s' -> '%s'\n",
 		       input_->name().c_str(),
 		       output_->name().c_str());
 
-		chain_->run(dry_run, force);
+		chain_->run(dry, force);
 	}
 
 	const std::string & Transformation::tag(void) const

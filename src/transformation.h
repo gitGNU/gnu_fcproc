@@ -38,7 +38,7 @@ namespace FCP {
 			       const FS::Directory & tmp);
 		~Transformation(void);
 
-		void                run(bool dry_run,
+		void                run(bool dry,
 					bool force);
 
 		const std::string & tag(void)    const;
