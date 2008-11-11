@@ -62,12 +62,12 @@ namespace FCP {
 		return id_;
 	}
 
-	void Chain::run(bool dry_run,
+	void Chain::run(bool dry,
 			bool force)
 	{
 		TR_DBG("Running filters-chain '%s'\n", id_.c_str());
 
-		if (!dry_run && !force) {
+		if (!dry && !force) {
 			// Check the output file presence and its last
 			// modification time in order to avoid a rebuild
 			// if it is up-to-date
@@ -88,7 +88,7 @@ namespace FCP {
 		std::vector<FCP::Filter *>::iterator i;
 		for (i = filters_.begin(); i != filters_.end(); i++) {
 			BUG_ON((*i) == 0);
-			(*i)->run(dry_run);
+			(*i)->run(dry);
 		}
 	}
 };

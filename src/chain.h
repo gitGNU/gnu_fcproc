@@ -40,7 +40,7 @@ namespace FCP {
 		~Chain(void);
 
 		const std::string & id(void);
-		void                run(bool dry_run,
+		void                run(bool dry,
 					bool force);
 
 	protected:
