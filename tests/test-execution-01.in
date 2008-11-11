@@ -53,7 +53,7 @@ EOF
 
 rm -f ./test1.ext1      || exit 1
 echo "0" > ./test1.ext1 || exit 1
-rm -f ./test2.ext5
+rm -f ./test2.ext6
 
 $FCP -r ./rules -m 100 -s : -t ./ test1.ext1:test2.ext6 || exit 1
 
