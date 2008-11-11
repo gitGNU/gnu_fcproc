@@ -16,25 +16,22 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef LIBS_MISC_EXCEPTION_H
-#define LIBS_MISC_EXCEPTION_H
-
 #include "config.h"
 
 #include <string>
 
-class Exception : public std::exception {
- public:
-	Exception(const std::string & description);
-	~Exception(void) throw();
+#include "libs/misc/exception.h"
 
-	virtual const char * what(void) const throw();
+Exception::Exception(const std::string & description) :
+	description_(description)
+{
+}
 
- protected:
-	Exception(void);
+Exception::~Exception(void) throw()
+{
+}
 
- private:
-	std::string description_;
-};
-
-#endif // LIBS_MISC_EXCEPTION_H
+const char * Exception::what(void) const throw()
+{
+	return description_.c_str();
+}
