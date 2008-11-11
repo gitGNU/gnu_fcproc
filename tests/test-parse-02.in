@@ -20,6 +20,8 @@
 
 . $testdir/defs || exit 1
 
+required=""
+
 cat > ./rules <<EOF
 
 # command2

@@ -20,7 +20,7 @@
 
 . $testdir/defs || exit 1
 
-required="diff"
+required=""
 
 cat > ./rules <<EOF
 ext1:ext2

@@ -20,6 +20,8 @@
 
 . $testdir/defs || exit 1
 
+required=""
+
 cat > ./include-4 <<EOF
 ext5:ext6
 	command

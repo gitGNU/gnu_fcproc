@@ -20,6 +20,8 @@
 
 . $testdir/defs || exit 1
 
+required="diff"
+
 cat > ./include-4 <<EOF
 ext5:ext6
 	command
@@ -49,9 +51,9 @@ ext1:ext2
 	command1
 EOF
 
-$FCP_NOFLAGS -q -b -r ./rules                       > test1.exp || exit 1
-$FCP_NOFLAGS -q -b -r ./rules -r ./rules            > test2.exp || exit 1
-$FCP_NOFLAGS -q -b -r ./rules -r ./rules -r ./rules > test3.exp || exit 1
+$FCP_NOFLAGS -b -r ./rules                       > test1.exp || exit 1
+$FCP_NOFLAGS -b -r ./rules -r ./rules            > test2.exp || exit 1
+$FCP_NOFLAGS -b -r ./rules -r ./rules -r ./rules > test3.exp || exit 1
 
 diff test1.exp test2.exp || exit 1
 diff test2.exp test3.exp || exit 1
