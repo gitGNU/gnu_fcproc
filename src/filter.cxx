@@ -149,14 +149,14 @@ namespace FCP {
 		BUG_ON(commands_.size() != templates_.size());
 	}
 
-	void Filter::run(bool dry_run)
+	void Filter::run(bool dry)
 	{
 		// XXX FIXME: Place a more specific trace ...
 		TR_DBG("Running filter commands\n");
 
 		std::vector<std::string>::iterator i;
 		for (i  = commands_.begin(); i != commands_.end(); i++) {
-			if (dry_run) {
+			if (dry) {
 				TR_VRB("%s\n", (*i).c_str());
 				continue;
 			}

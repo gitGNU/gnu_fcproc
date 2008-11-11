@@ -41,7 +41,7 @@ namespace FCP {
 		const FS::File & output(void);
 		void             setup(const std::string &   id,
 				       const FS::Directory & tmp);
-		void             run(bool dry_run);
+		void             run(bool dry);
 
 	protected:
 		// No copy allowed
