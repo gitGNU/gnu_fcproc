@@ -56,6 +56,7 @@ noinst_LIBRARIES =				\
 
 libmisc_a_SOURCES =				\
 	libs/misc/exception.h			\
+	libs/misc/exception.cxx			\
 	libs/misc/debug.h			\
 	libs/misc/debug.cxx			\
 	libs/misc/trace.h			\
