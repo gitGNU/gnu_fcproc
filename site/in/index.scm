@@ -57,7 +57,7 @@
 	  -q, --no-rules	  do not load initial rules
 	  -b, --dump-rules	  dump rules base, then exit
 	  -n, --dry-run		  display commands without modifying any files
-          -f, --force             consider all files out of date
+	  -f, --force             consider all files out of date
 	  -d, --debug		  enable debugging traces
 	  -v, --verbose		  verbosely report processing
 	  -h, --help		  print this help, then exit
