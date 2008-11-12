@@ -491,8 +491,10 @@ namespace FCP {
 			return ret;
 		}
 
-		// Some checks before beginning
-		BUG_ON(data.size() <= 1);
+		// Some basic check(s) before beginning
+
+		// Our chains must have 1 node at least
+		BUG_ON(data.size() < 1);
 
 		std::reverse(data.begin(), data.end());
 		TR_DBG("Filters-chain found!\n");
