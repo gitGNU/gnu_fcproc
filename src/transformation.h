@@ -35,7 +35,7 @@ namespace FCP {
 			       char                  separator,
 			       FCP::Rules &          rules,
 			       int                   depth,
-			       const FS::Directory & tmp);
+			       const FS::Directory & work);
 		~Transformation(void);
 
 		void                run(bool dry,

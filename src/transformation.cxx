@@ -32,7 +32,7 @@ namespace FCP {
 				       char                  separator,
 				       FCP::Rules &          rules,
 				       int                   depth,
-				       const FS::Directory & tmp) :
+				       const FS::Directory & work) :
 		tag_(tag)
 	{
 		std::string::size_type p;
@@ -47,6 +47,7 @@ namespace FCP {
 
 		std::string t;
 
+		// Get the input part
 		t = tag_.substr(0, p);
 		if (t.size() == 0) {
 			throw Exception("Missing input file "
@@ -56,6 +57,7 @@ namespace FCP {
 		input_ = new FS::File(t);
 		BUG_ON(input_ == 0);
 
+		// Get the output part
 		t = tag_.substr(p + 1);
 		if (t.size() == 0) {
 			throw Exception("Missing output file "
@@ -67,7 +69,7 @@ namespace FCP {
 
 		// Build the filters-chain for this transformation
 		std::vector<FCP::Filter *> chain;
-		chain = rules.chain(*input_, *output_, depth, tmp);
+		chain = rules.chain(*input_, *output_, depth, work);
 		if (chain.size() == 0) {
 			throw Exception("No filters-chain available for "
 					"'" + tag_ + "' "
@@ -84,7 +86,7 @@ namespace FCP {
 		}
 
 		// Finally create the filters-chain from the filters sequence
-		chain_ = new FCP::Chain(tag_, input(), output(), chain, tmp);
+		chain_ = new FCP::Chain(tag_, input(), output(), chain, work);
 		BUG_ON(chain_ == 0);
 	}
 
