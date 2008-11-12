@@ -396,11 +396,11 @@ namespace FCP {
 
 	typedef std::pair<std::string, std::vector<std::string> > fcdata_t;
 
-	bool Rules::chain(Antiloop &           antiloop,
-			  const std::string &  tag_in,
-			  const std::string &  tag_out,
-			  int                  depth,
-			  std::vector<fcd_t> & data)
+	bool Rules::chain_nodes(Antiloop &            antiloop,
+				const std::string &   tag_in,
+				const std::string &   tag_out,
+				int                   depth,
+				std::vector<node_t> & data)
 	{
 		BUG_ON(depth < 0); // Allow depth == 1
 
@@ -433,21 +433,28 @@ namespace FCP {
 		std::map<std::string,
 			std::vector<std::string> >::const_iterator j;
 		for (j = i->second.begin(); j != i->second.end(); j++) {
+
+			// We have got a node
+			node_t t(j->first, j->second);
+
 			if (j->first == tag_out) {
+				// This node is the last node in the chain
 				TR_DBG("Got chain end ('%s' -> '%s')\n",
 				       i->first.c_str(), j->first.c_str());
-
-				fcd_t t(j->first, j->second);
 				data.push_back(t);
 
 				return true;
 			}
 
-			if (chain(antiloop, j->first, tag_out, depth, data)) {
+			// This is not the last one, let us recurse in order
+			// to find our way out
+			if (chain_nodes(antiloop,
+					j->first,
+					tag_out,
+					depth,
+					data)) {
 				TR_DBG("Got chain node ('%s' -> '%s')\n",
 				       i->first.c_str(), j->first.c_str());
-
-				fcd_t t(j->first, j->second);
 				data.push_back(t);
 
 				return true;
@@ -471,32 +478,43 @@ namespace FCP {
 		std::set<std::pair<std::string,	std::string> > loop;
 		std::vector<FCP::Filter *>                     ret;
 
-		// Build filters-chain based on extensions
-		std::vector<fcd_t> data;
-		Antiloop           antiloop;
-		if (!chain(antiloop,
-			   input.extension(),
-			   output.extension(),
-			   depth,
-			   data)) {
+		// Build filters-chain data based on extensions
+		std::vector<node_t> data;
+		Antiloop            antiloop;
+		if (!chain_nodes(antiloop,
+				 input.extension(),
+				 output.extension(),
+				 depth,
+				 data)) {
 			TR_DBG("No filters-chain found ...\n");
 			data.clear();
 			return ret;
 		}
-		TR_DBG("Filters-chain found!\n");
+
+		// Some checks before beginning
+		BUG_ON(data.size() <= 1);
 
 		std::reverse(data.begin(), data.end());
+		TR_DBG("Filters-chain found!\n");
 
-		// Transform the fcd_t sequence into a proper filters-chain
-		std::vector<fcd_t>::size_type i;
+		// We must transform the node_t sequence into a proper
+		// filters-chain. During such transformation we must tweak the
+		// paths along the chain. The starting point is the input
+		// path, the ending point is the output path while we must work
+		// on the 'work' path on all remaining nodes
 
+		// The starting point lives on the input path
 		FS::File src(input);
+
+		std::vector<node_t>::size_type i;
 		for (i = 0; i < data.size(); i++) {
 			std::string tmp;
 
 			if (i == (data.size() - 1)) {
+				// The ending point lives on the output path
 				tmp = output.name();
 			} else {
+				// All the others must live in the work path
 				tmp = work.name() +
 					"/" +
 					src.basename(true) +

@@ -70,7 +70,8 @@ namespace FCP {
 		std::string readline(std::ifstream & stream);
 		void        parse(const std::string & filename);
 
-		typedef std::pair<std::string, std::vector<std::string> > fcd_t;
+		typedef std::pair<std::string,
+				  std::vector<std::string> > node_t;
 
 		class Antiloop {
 		private:
@@ -85,6 +86,8 @@ namespace FCP {
 				std::pair<std::string, std::string> t(in,out);
 
 				if (set_.find(t) != set_.end()) {
+					// The node is already present, we have
+					// got a loop ...
 					return false;
 				}
 				set_.insert(t);
@@ -92,13 +95,11 @@ namespace FCP {
 			}
 		};
 
-		// Builds a commands-chain
-		bool
-		chain(Antiloop &           antiloop,
-		      const std::string &  tag_in,
-		      const std::string &  tag_out,
-		      int                  mdepth,
-		      std::vector<fcd_t> & data);
+		bool	    chain_nodes(Antiloop &            antiloop,
+					const std::string &   tag_in,
+					const std::string &   tag_out,
+					int                   mdepth,
+					std::vector<node_t> & data);
 	};
 }
 
