@@ -335,8 +335,10 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		bool remove_work_dir = false;
+		TR_VRB("Running %d transformation(s)\n",
+		       transformations.size());
 
+		bool remove_work_dir = false;
 		try {
 			if (!work_dir.exists()) {
 				work_dir.create();
@@ -344,16 +346,11 @@ int main(int argc, char * argv[])
 			}
 
 			// Run all transformations
-			TR_DBG("Running %d transformation(s)\n",
-			       transformations.size());
-
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
 				(*it)->run(dry_run, force);
 			}
-
-			TR_DBG("All transformations completed\n");
 
 			if (remove_work_dir) {
 				// Recursively remove all contents in our dir
@@ -368,7 +365,7 @@ int main(int argc, char * argv[])
 			return 1;
 		}
 
-		TR_DBG("Operations complete\n");
+		TR_VRB("Operations complete\n");
 
 		// Clean up everything
 		try {
