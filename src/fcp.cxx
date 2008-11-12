@@ -319,7 +319,7 @@ int main(int argc, char * argv[])
 
 		// We don't need rules anymore ...
 		delete rules;
-		rules = 0;
+		rules = 0; // Catch the bug as soon as possible :-)
 
 #if USE_CONFIGURATION_FILE
 		// Read configuration file
@@ -335,7 +335,7 @@ int main(int argc, char * argv[])
 		}
 #endif
 
-		TR_VRB("Running %d transformation(s)\n",
+		TR_VRB("Performing %d transformation(s)\n",
 		       transformations.size());
 
 		bool remove_work_dir = false;
@@ -349,6 +349,8 @@ int main(int argc, char * argv[])
 			for (it  = transformations.begin();
 			     it != transformations.end();
 			     it++) {
+				TR_VRB("Running transformation '%s'\n",
+				       (*it)->tag().c_str());
 				(*it)->run(dry_run, force);
 			}
 
