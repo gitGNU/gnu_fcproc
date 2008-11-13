@@ -72,6 +72,7 @@ AC_SUBST([EXTRA_CPPFLAGS],$TEMP_FLAGS)
 AX_PATH_MISSING([HELP2MAN],        [help2man])
 AX_PATH_MISSING([SITETOOL],        [sitetool])
 AX_PATH_MISSING([WGET],            [wget])
+AX_PATH_MISSING([DEVTODO],         [devtodo])
 
 AC_PATH_PROG([PERL],               [perl])
 
