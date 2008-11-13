@@ -55,6 +55,8 @@ noinst_LIBRARIES =				\
 	libfs.a
 
 libmisc_a_SOURCES =				\
+	libs/misc/stream.h			\
+	libs/misc/stream.cxx			\
 	libs/misc/exception.h			\
 	libs/misc/exception.cxx			\
 	libs/misc/debug.h			\
