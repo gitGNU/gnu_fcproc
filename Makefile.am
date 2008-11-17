@@ -33,11 +33,11 @@ SUBDIRS =					\
 TOOLSDIR   = $(top_builddir)/tools
 SCRIPTSDIR = $(TOOLSDIR)/scripts
 
-#
-# NOTE:
-#     Options listed in AUTOMAKE_OPTIONS variable are applied on a
-#     per-`Makefile' basis.
-#
+##
+## NOTE:
+##     Options listed in AUTOMAKE_OPTIONS variable are applied on a
+##     per-`Makefile' basis.
+##
 AUTOMAKE_OPTIONS = check-news
 
 ##
