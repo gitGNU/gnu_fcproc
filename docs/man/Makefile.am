@@ -36,7 +36,7 @@ fcp.1: $(top_srcdir)/src/fcp.cxx $(top_srcdir)/configure.ac
 	    --manual="User Commands" \
 	    --section=1	\
 	    --output=fcp.1 \
-	    $(top_builddir)/src/fcp$(EXEEXT)
+	    $(top_builddir)/src/fcp
 
 ##
 ## Maintainer related targets
