@@ -47,7 +47,8 @@ AUTOMAKE_OPTIONS = check-news
 EXTRA_DIST =							\
 	BUGS TODO README NEWS COPYING AUTHORS INSTALL THANKS	\
 	bootstrap						\
-	configure.ac.in
+	configure.ac.in						\
+	.todo
 
 ##
 ## Maintainer related targets
