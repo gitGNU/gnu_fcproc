@@ -81,34 +81,34 @@ FS::Directory tmp_dir            = (Environment::get("HOME") +
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..."<<                              std::endl
-		<<                                                                                                std::endl
-		<< "Options: " <<                                                                                 std::endl
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..." <<                               std::endl
+		<<                                                                                                  std::endl
+		<< "Options: " <<                                                                                   std::endl
 #if USE_CONFIGURATION_FILE
-		<< "  -c, --config=FILE       use alternate configuration file" <<                                std::endl
-		<< "                          [" << configuration_file << "]" <<                                  std::endl
+		<< "  -c, --config=FILE       use alternate configuration file" <<                                  std::endl
+		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/configuration')" << std::endl
 #endif
-		<< "  -r, --rules=FILE        use alternate rules file" <<                                        std::endl
-		<< "                          [default " << DFLT_RULES << "]" <<                                  std::endl
-		<< "  -m, --max-depth=NUM     use NUM as max filter-chains depth" <<                              std::endl
-		<< "                          [default " << max_depth << "]" <<                                   std::endl
-		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                  std::endl
-		<< "                          [default " << tmp_dir.name().c_str() << "]" <<                      std::endl
-		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                      std::endl
-		<< "                          [default `" << separator << "']" <<                                 std::endl
-		<< "  -q, --no-rules          do not load initial rules" <<                                       std::endl
-		<< "  -b, --dump-rules        dump rules base, then exit" <<                                      std::endl
-		<< "  -n, --dry-run           display commands without modifying any files" <<                    std::endl
-		<< "  -f, --force             consider all files out of date" <<                                  std::endl
-		<< "  -d, --debug             enable debugging traces" <<                                         std::endl
-		<< "  -v, --verbose           verbosely report processing" <<                                     std::endl
-		<< "  -h, --help              print this help, then exit" <<                                      std::endl
-		<< "  -V, --version           print version number, then exit" <<                                 std::endl
-		<<                                                                                                std::endl
-		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." <<                   std::endl
-		<< "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." <<   std::endl
-		<<                                                                                                std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                                              std::endl;
+		<< "  -r, --rules=FILE        use alternate rules file" <<                                          std::endl
+		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/rules')" <<         std::endl
+		<< "  -m, --max-depth=NUM     use NUM as max filter-chains depth" <<                                std::endl
+		<< "                          (the default is `" << max_depth << "')" <<                            std::endl
+		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                    std::endl
+		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/tmp')" <<           std::endl
+		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                        std::endl
+		<< "                          (the default is `" << separator << "')" <<                            std::endl
+		<< "  -q, --no-rules          do not load initial rules" <<                                         std::endl
+		<< "  -b, --dump-rules        dump rules base, then exit" <<                                        std::endl
+		<< "  -n, --dry-run           display commands without modifying any files" <<                      std::endl
+		<< "  -f, --force             consider all files out of date" <<                                    std::endl
+		<< "  -d, --debug             enable debugging traces" <<                                           std::endl
+		<< "  -v, --verbose           verbosely report processing" <<                                       std::endl
+		<< "  -h, --help              print this help, then exit" <<                                        std::endl
+		<< "  -V, --version           print version number, then exit" <<                                   std::endl
+		<<                                                                                                  std::endl
+		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." <<                     std::endl
+		<< "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." <<     std::endl
+		<<                                                                                                  std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                                                std::endl;
 }
 
 void hint(const std::string & message)
