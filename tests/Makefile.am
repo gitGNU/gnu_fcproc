@@ -64,7 +64,9 @@ FAIL_TESTS +=					\
 	test-parse-01				\
 	test-transformation-01			\
 	test-execution-04			\
-	test-execution-05
+	test-execution-05			\
+	test-samefile-01			\
+	test-multipath-01
 
 SUCCESS_TESTS +=				\
 	test-success				\
@@ -75,7 +77,10 @@ SUCCESS_TESTS +=				\
 	test-execution-01			\
 	test-execution-02			\
 	test-execution-03			\
-	test-memleaks-01
+	test-execution-06			\
+	test-multiline-01			\
+	test-memleaks-01			\
+	test-antiloop-01
 
 XFAIL_TESTS  = $(FAIL_TESTS)
 TESTS	     = $(FAIL_TESTS) $(SUCCESS_TESTS)
@@ -103,6 +108,18 @@ test-fail: $(srcdir)/test-fail.in Makefile
 	}
 EXTRA_DIST += test-fail.in
 CLEANFILES += test-fail
+
+test-samefile-01: $(srcdir)/test-samefile-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-samefile-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-samefile-01.in
+CLEANFILES += test-samefile-01
 
 test-transformation-01: $(srcdir)/test-transformation-01.in Makefile
 	( rm -f $@ $@.tmp && \
@@ -235,6 +252,54 @@ test-execution-05: $(srcdir)/test-execution-05.in Makefile
 	}
 EXTRA_DIST += test-execution-05.in
 CLEANFILES += test-execution-05
+
+test-execution-06: $(srcdir)/test-execution-06.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-execution-06.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-execution-06.in
+CLEANFILES += test-execution-06
+
+test-multipath-01: $(srcdir)/test-multipath-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-multipath-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-multipath-01.in
+CLEANFILES += test-multipath-01
+
+test-multiline-01: $(srcdir)/test-multiline-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-multiline-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-multiline-01.in
+CLEANFILES += test-multiline-01
+
+test-antiloop-01: $(srcdir)/test-antiloop-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-antiloop-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-antiloop-01.in
+CLEANFILES += test-antiloop-01
 
 test-memleaks-01: $(srcdir)/test-memleaks-01.in Makefile
 	( rm -f $@ $@.tmp && \
