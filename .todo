@@ -24,6 +24,9 @@
     <note priority="medium" time="1226585740">
         Add Stream class in order to wrap the std::stream, obtaining a multithread logging mechanism
     </note>
+    <note priority="medium" time="1227560699">
+        Add a script to translate fcp rule files into graphviz format
+    </note>
     <note priority="low" time="1226590640">
         Replace all those ugly TR_XXX macros
     </note>
