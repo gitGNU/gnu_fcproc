@@ -6,6 +6,9 @@
             Removed EXEEXT usage (temporarely)
         </comment>
     </note>
+    <note priority="veryhigh" time="1228259379">
+        Add multi-input/single-output handling
+    </note>
     <note priority="high" time="1226585252">
         Add parallel transformations
         <note priority="high" time="1226585122">
