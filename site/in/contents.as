@@ -11,6 +11,90 @@ contents = {
 		};
 	};
 
+	content = {
+		id      = "p1_map";
+		source  = "@work_dir@/maps/p1.map";
+		filters = {
+			filter[0] = {
+				source      = "map";
+				destination = "sxml";
+				parameters  = "-l menu.scm";
+			};
+		};
+	};
+
+	content = {
+		id      = "p2_body";
+		source  = "development.scm";
+		filters = {
+			filter[0] = {
+				source      = "sxml";
+				destination = "sxml";
+				parameters  = "-l menu.scm";
+			};
+		};
+	};
+
+	content = {
+		id      = "p2_map";
+		source  = "@work_dir@/maps/p2.map";
+		filters = {
+			filter[0] = {
+				source      = "map";
+				destination = "sxml";
+				parameters  = "-l menu.scm";
+			};
+		};
+	};
+
+	content = {
+		id      = "p3_body";
+		source  = "documentation.scm";
+		filters = {
+			filter[0] = {
+				source      = "sxml";
+				destination = "sxml";
+				parameters  = "-l menu.scm";
+			};
+		};
+	};
+
+	content = {
+		id      = "p3_map";
+		source  = "@work_dir@/maps/p3.map";
+		filters = {
+			filter[0] = {
+				source      = "map";
+				destination = "sxml";
+				parameters  = "-l menu.scm";
+			};
+		};
+	};
+
+	content = {
+		id      = "p4_body";
+		source  = "downloads.scm";
+		filters = {
+			filter[0] = {
+				source      = "sxml";
+				destination = "sxml";
+				parameters  = "-l menu.scm";
+			};
+		};
+	};
+
+	content = {
+		id      = "p4_map";
+		source  = "@work_dir@/maps/p4.map";
+		filters = {
+			filter[0] = {
+				source      = "map";
+				destination = "sxml";
+				parameters  = "-l menu.scm";
+			};
+		};
+	};
+
         content = {
                 id     = "footer";
                 source = "./footer.sxml";
