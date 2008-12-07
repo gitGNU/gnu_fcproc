@@ -19,16 +19,55 @@ body {
   border-style: none;
 }
 
+#main_wrapper {
+  margin: 24px;
+  padding: 0px;
+}
+
+#main_menu {
+  float: left;
+  width: 160px;
+  margin: 0px;
+  padding: 8px 0px 8px 24px;
+  font-size: small;
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+
+#main_menu ul {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: square;
+  color: silver;
+}
+
+#main_menu li {
+  margin: 0px;
+  padding: 0px;
+}
+
+#main_menu li:hover {
+  color: red;
+}
+
 #main_body {
-  margin: 8px 16px 8px 16px;
+  margin: 0px 0px 0px 208px;
+  padding: 0px 16px 8px 8px;
 }
 
 #main_body p {
-  padding: 0px 0px 0px 8px;
+  padding: 0px 8px 0px 8px;
 }
 
-#main_body h5 {
-  margin: 0px 0px 0px 8px;
+#main_body h3 {
+  border-style: none none dotted none;
+  border-color: black;
+  border-width: 1px;
+}
+
+#main_body h4 {
+  padding: 0px 8px 0px 8px;
 }
 
 #main_body ul {
@@ -54,17 +93,24 @@ body {
 }
 
 #main_footer img {
-  margin: 0px;
-  padding: 0px 4px 0px 0px;
+  float: right;
+  margin: 4px;
+  padding: 0px;
   border-style: none;
 }
 
+.float_clear {
+  clear: both;
+  margin: 0px;
+  padding: 0px;
+}
+
 .terminal {
-  margin: 4px 8px 4px 8px;
-  padding: 2px;
-  border-style: dotted solid solid dotted;
-  border-width: 1px 2px 2px 1px;
-  border-color: black;
-  background: rgb(240,240,240);
+  margin: 32px;
+  padding: 8px;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: gray;
+  background-color: #F5F5F5;
   font-family: monospace;
 }
