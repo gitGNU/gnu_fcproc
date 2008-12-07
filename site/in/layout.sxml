@@ -42,6 +42,8 @@
  (body
   (div (@ (id "main_header"))
    ,as_page_content_HEADER)
+  (div (@ (id "main_menu"))
+   ,as_page_content_MAP)
   (div (@ (id "main_body"))
    ,as_page_content_BODY)
   (div (@ (id "main_footer"))
