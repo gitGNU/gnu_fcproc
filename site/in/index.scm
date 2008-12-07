@@ -41,28 +41,25 @@
 
 (h3 "USAGE")
 (pre (@ class "terminal")
-     "
+"Usage: fcp [OPTION]... [TRANSFORMATION]...
 
-	Usage: fcp [OPTION]... [TRANSFORMATION]...
-
-	Options:
-	  -r, --rules=FILE	  use alternate rules file
-				  [default $HOME/.fcp/rules]
-	  -m, --max-depth=NUM	  use NUM as max filter-chains depth
-				  [default 16]
-	  -t, --temp-dir=DIR	  use DIR as temporary directory
-				  [default $HOME/.fcp/tmp]
-	  -s, --separator=CHAR	  use CHAR as INPUTFILE/OUTPUTFILE separator
-				  [default `:']
-	  -q, --no-rules	  do not load initial rules
-	  -b, --dump-rules	  dump rules base, then exit
-	  -n, --dry-run		  display commands without modifying any files
-	  -f, --force             consider all files out of date
-	  -d, --debug		  enable debugging traces
-	  -v, --verbose		  verbosely report processing
-	  -h, --help		  print this help, then exit
-	  -V, --version		  print version number, then exit
-
+Options:
+  -r, --rules=FILE	  use alternate rules file
+			  [default $HOME/.fcp/rules]
+  -m, --max-depth=NUM	  use NUM as max filter-chains depth
+			  [default 16]
+  -t, --temp-dir=DIR	  use DIR as temporary directory
+			  [default $HOME/.fcp/tmp]
+  -s, --separator=CHAR	  use CHAR as INPUTFILE/OUTPUTFILE separator
+			  [default `:']
+  -q, --no-rules	  do not load initial rules
+  -b, --dump-rules	  dump rules base, then exit
+  -n, --dry-run		  display commands without modifying any files
+  -f, --force             consider all files out of date
+  -d, --debug		  enable debugging traces
+  -v, --verbose		  verbosely report processing
+  -h, --help		  print this help, then exit
+  -V, --version		  print version number, then exit
 ")
 
 (p "Although some (maybe) sane default values are hardwired into the "
@@ -124,9 +121,9 @@
 (p "A rule says how to build one or more files, called the rule's "
    "targets. A rule has the following format:")
 (pre (@ class "terminal")
-     "<INPUT_EXTENSION>:<OUTPUT_EXTENSION>:
-	<COMMAND> [PARAMETERS]...
-	<COMMAND> [PARAMETERS]...
+"<INPUT_EXTENSION>:<OUTPUT_EXTENSION>:
+         <COMMAND> [PARAMETERS]...
+         <COMMAND> [PARAMETERS]...
 ")
 
 (p "The following special variables are available inside each target commands:")
@@ -187,8 +184,8 @@
 (h4 "Getting a copy of the Git Repository")
 (p "Anonymous checkout:")
 (pre (@ class "terminal")
-     (a (@ (href "http://savannah.gnu.org/maintenance/UsingGit")) "git")
-     " clone git://git.savannah.nongnu.org/fcproc.git")
+(a (@ (href "http://savannah.gnu.org/maintenance/UsingGit")) "git")
+" clone git://git.savannah.nongnu.org/fcproc.git")
 
 (h4 "Contribute")
 (p "If you have time and programming skills, you can help us by developing "
