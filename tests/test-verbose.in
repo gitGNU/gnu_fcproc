@@ -31,9 +31,10 @@ rm -f test2.log
 $FCP_NOFLAGS           > test1.log || exit 1
 $FCP_NOFLAGS --verbose > test2.log || exit 1
 
-diff test1.log test2.log || exit 1
+diff test1.log test2.log || {
+     rm -f test1.log
+     rm -f test2.log
+     exit 0
+}
 
-rm -f test1.log
-rm -f test2.log
-
-exit 0
+exit 1
