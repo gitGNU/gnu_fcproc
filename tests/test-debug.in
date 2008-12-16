@@ -25,11 +25,14 @@ required="diff"
 
 . $testdir/defs || exit 1
 
+cat > ./rules <<EOF
+EOF
+
 rm -f test1.log
 rm -f test2.log
 
-$FCP_NOFLAGS         > test1.log || exit 1
-$FCP_NOFLAGS --debug > test2.log || exit 1
+$FCP_NOFLAGS         --dump-rules -r ./rules > test1.log || exit 1
+$FCP_NOFLAGS --debug --dump-rules -r ./rules > test2.log || exit 1
 
 diff test1.log test2.log || {
      rm -f test1.log
