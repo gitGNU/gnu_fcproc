@@ -57,6 +57,7 @@ tests/test-fail
 tests/test-success
 tests/test-debug
 tests/test-verbose
+tests/test-dump-01
 tests/test-transformation-01
 tests/test-parse-01
 tests/test-parse-02
