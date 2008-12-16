@@ -1,0 +1,54 @@
+#! @SHELL@
+
+#
+# Copyright (C) 2007, 2008 Francesco Salvestrini
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+. $testdir/defs || exit 1
+
+required="diff"
+
+cat > ./rules <<EOF
+ext5:ext6
+	command
+
+ext4:ext5
+	command4
+
+ext3:ext4
+	command3
+
+ext2:ext3
+	command2
+
+ext1:ext2
+	command1
+EOF
+
+$FCP_NOFLAGS --dump-rules -r ./rules > test1.log || exit 1
+
+cat > test2.log <<EOF
+ext1 -> ext2
+ext2 -> ext3
+ext3 -> ext4
+ext4 -> ext5
+ext5 -> ext6
+EOF
+
+diff test1.log test2.log || exit 1
+
+exit 0
