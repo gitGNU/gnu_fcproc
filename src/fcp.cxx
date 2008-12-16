@@ -168,6 +168,8 @@ int main(int argc, char * argv[])
 				break;
 			}
 
+                        TR_DBG("Handling option character '%c'\n", c)
+
 			switch (c) {
 #if USE_CONFIGURATION_FILE
 				case 'c':
@@ -254,6 +256,7 @@ int main(int argc, char * argv[])
 		BUG_ON(rules == 0);
 
 		if (dump_rules) {
+                        TR_VRB("Rules:\n");
 			rules->dump(std::cout);
 			return 0;
 		}
