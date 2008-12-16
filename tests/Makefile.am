@@ -70,6 +70,7 @@ FAIL_TESTS +=					\
 
 SUCCESS_TESTS +=				\
 	test-success				\
+	test-dump-01				\
 	test-debug				\
 	test-verbose				\
 	test-parse-02				\
@@ -98,6 +99,18 @@ test-success: $(srcdir)/test-success.in Makefile
 	}
 EXTRA_DIST += test-success.in
 CLEANFILES += test-success
+
+test-dump-01: $(srcdir)/test-dump-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-dump-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-dump-01.in
+CLEANFILES += test-dump-01
 
 test-debug: $(srcdir)/test-debug.in Makefile
 	( rm -f $@ $@.tmp && \
