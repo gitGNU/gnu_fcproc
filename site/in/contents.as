@@ -18,7 +18,7 @@ contents = {
 			filter[0] = {
 				source      = "map";
 				destination = "sxml";
-				parameters  = "-l menu.scm";
+				parameters  = "-l menu.scm -l tree.scm";
 			};
 		};
 	};
@@ -42,7 +42,7 @@ contents = {
 			filter[0] = {
 				source      = "map";
 				destination = "sxml";
-				parameters  = "-l menu.scm";
+				parameters  = "-l menu.scm -l tree.scm";
 			};
 		};
 	};
@@ -66,7 +66,7 @@ contents = {
 			filter[0] = {
 				source      = "map";
 				destination = "sxml";
-				parameters  = "-l menu.scm";
+				parameters  = "-l menu.scm -l tree.scm";
 			};
 		};
 	};
@@ -90,7 +90,7 @@ contents = {
 			filter[0] = {
 				source      = "map";
 				destination = "sxml";
-				parameters  = "-l menu.scm";
+				parameters  = "-l menu.scm -l tree.scm";
 			};
 		};
 	};
