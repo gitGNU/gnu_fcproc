@@ -19,126 +19,43 @@
 ;; 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ;;
 
-(define node-id
-  (lambda (n)
-    (car (cadr n))))
+(define tree-id->pagemap
+  (lambda (p i)
+    (map
+     (lambda (n)
+       (if (null? n)
+	   '()
+	   (list (node-attributes n)
+		 (if (and (null? (find-node (node-children n) i))
+			  (not (equal? (node-id n) i)))
+		     '()
+		     (tree-id->pagemap (node-children n) i)))))
+     p)))
 
-(define node-title
-  (lambda (n)
-   (cadr (cadr n))))
-
-(define node-href
-  (lambda (n)
-    (car (cddr (cadr n)))))
-
-(define node-children
-  (lambda (n)
-    (cadr (cddr (cadr n)))))
-
-(define node-is-leaf?
-  (lambda (n)
-    (equal? (car (cdar n)) 'leaf)))
-
-(define node-is-node?
-  (lambda (n)
-    (equal? (car (cdar n)) 'node)))
-
-(define leaf-in-here?
-  (lambda (l n)
-    (call-with-current-continuation
-     (lambda (break)
-       (do ((n n (cdr n)))
-	   ((null? n) #f)
-	 (if (pair? n)
-	     (if (node-is-leaf? (car n))
-		 (if (equal? (node-id (car n)) l)
-		     (break #t)))))))))
-
-(define node-in-here?
-  (lambda (l n)
-    (call-with-current-continuation
-     (lambda (break)
-       (do ((n n (cdr n)))
-	   ((null? n) #f)
-	 (if (pair? n)
-	     (if (node-is-node? (car n))
-		 (if (equal? (node-id (car n)) l)
-		     (break #t)))))))))
-
-(define node-in-node?
-  (lambda (l n)
-    (call-with-current-continuation
-     (lambda (break)
-       (do ((n n (cdr n)))
-	   ((null? n) #f)
-	 (if (pair? n)
-	     (if (or (leaf-in-here? l n)
-		     (node-in-here? l n))
-		 (break #t)
-		 (if (and (node-is-node? (car n))
-			  (node-in-node? l (node-children (car n))))
-		     (break #t)))))))))
-
-;; (define tree->sxml
-;;   (lambda (l t)
-;;     (let ((s '()))
-;;       `(ul
-;;	,@(call-with-current-continuation
-;;	   (lambda (break)
-;;	     (do ((t t (cdr t)))
-;;		 ((null? t))
-;;	       (if (pair? t)
-;;		   (if (node-is-node? (car t))
-;;		       (if (or (node-in-node? l (node-children (car t)))
-;;			       (equal? (node-id (car t)) l))
-;;			   (set! s
-;;				 (cons
-;;				  `(li (a (@ (href ,(node-href (car t))))
-;;					  ,(node-title (car t)))
-;;				       ,(tree->sxml l (node-children (car t))))
-;;				  s))
-;;			   (set! s
-;;				 (cons
-;;				  `(li  (a (@ (href ,(node-href (car t))))
-;;					   ,(node-title (car t))))
-;;				  s)))
-;;		       (set! s
-;;			     (cons
-;;			      `(li  (a (@ (href ,(node-href (car t))))
-;;				       ,(node-title (car t))))
-;;			      s)))))
-;;	     (reverse s)))))))
-
-(define tree->sxml
-  (lambda (l t)
-    (let ((s '()))
-      `(ul
-	,@(call-with-current-continuation
-	   (lambda (break)
-	     (do ((t t (cdr t)))
-		 ((null? t))
-	       (if (pair? t)
-		   (if (node-is-node? (car t))
-		       (set! s
-			     (cons
-			      `(li (@ (class "father"))
-				   (a (@ (href ,(node-href (car t))))
-				      ,(node-title (car t)))
-				   ,(tree->sxml l (node-children (car t))))
-			      s))
-		       (set! s
-			     (cons
-			      `(li (@ (class "child"))
-				   (a (@ (href ,(node-href (car t))))
-				       ,(node-title (car t))))
-			      s)))))
-	     (reverse s)))))))
+(define pagemap-clean-up
+  (lambda (p)
+    (map
+     (lambda (n)
+       (if (null? (car (node-children n)))
+	   (list (node-attributes n))
+	   (list (node-attributes n)
+		 (menu-clean-up (car (node-children n))))))
+     (reverse (cdr (reverse p))))))
 
 (define pagemap->sxml
   (lambda (p)
-    (tree->sxml (car p) (node-children (cadr p)))))
+    `(ul
+      ,@(map
+	(lambda (n)
+	  (if (null? (node-children n))
+	      `(li (a (@ (href ,@(cdadar n))) ,(caadar n)))
+	      `(li (a (@ (href ,@(cdadar n))) ,(caadar n))
+		   ,(pagemap->sxml (car (node-children n))))))
+	p))))
 
 (define map->sxml
   (lambda (in-port out-port)
-    (write (pagemap->sxml (read in-port)) out-port)
-    ))
+    (write (pagemap->sxml
+	    (pagemap-clean-up
+	     (tree-id->pagemap
+	      (map-tree (read in-port)) "p1"))) out-port)))
