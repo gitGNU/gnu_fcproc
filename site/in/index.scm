@@ -1,4 +1,4 @@
-(h3 "DESCRIPTION")
+(h2 "DESCRIPTION")
 (p "Filter Chains Processor (FCP) is a command line utility that "
    "handles multiple files transformations, automatically building filter "
    "chains in order to transform each input file from its format to the "
@@ -6,13 +6,13 @@
 (p "Each filter chain is computed dinamically, using external tools (defined "
    "by the user in a configuration file).")
 
-(h3 "INSTALLATION")
+(h2 "INSTALLATION")
 
-(h4 "Prerequisites")
+(h3 "Prerequisites")
 (p "In order to install FCP into your system you will need a relatively "
    "recent C/C++ compiler.")
 
-(h4 "Installation")
+(h3 "Installation")
 (p "FCP uses the autotools facilities. The simplest way to install "
    "the package in your system is:")
 (ul
@@ -39,7 +39,7 @@
    "different paths than the default ones, this option enables sandbox "
    "installations.")
 
-(h3 "USAGE")
+(h2 "USAGE")
 (pre (@ class "terminal")
 "Usage: fcp [OPTION]... [TRANSFORMATION]...
 
@@ -93,7 +93,7 @@ Options:
      "Run the program without modifyng any files")
  )
 
-(h4 "Rules file format")
+(h3 "Rules file format")
 (p "Input rules files use a stripped-down grammar which resembles Makefile's "
    "grammar. Input files contain: directives, comments and rules.")
 
@@ -133,25 +133,25 @@ Options:
  (li (kbd "$T[0-9]+") ": A temporary filename")
  )
 
-(h4 "Examples")
+(h3 "Examples")
 (h5 "Dumping the actual rules-base")
 (pre (@ class "terminal") "$ fcp -b")
 
-(h3 "COPYING")
+(h2 "COPYING")
 (p "FCP is licensed under the "
    (a (@ (href "http://www.gnu.org/licenses/licenses.html"))
       "GNU General Public License, version 2"))
 
-(h3 "MAINTAINERS")
+(h2 "MAINTAINERS")
 (p "Francesco Salvestrini <salvestrini AT gmail DOT com>")
 
-(h3 "AUTHORS")
+(h2 "AUTHORS")
 (p "Francesco Salvestrini <salvestrini AT gmail DOT com>")
 
-(h3 "RELEASES")
+(h2 "RELEASES")
 (p "Sorry, no public release available at the moment.")
 
-(h3 "MAILING LISTS")
+(h2 "MAILING LISTS")
 (p "The project has a single moderated mailing list, with an archive. "
    "In order to post a message to the mailing list you must be subscribed. "
    "Please consult the "
@@ -159,7 +159,7 @@ Options:
       "mailing list page")
    " for more information on subscribing to the mailing list.")
 
-(h3 "REPORT A BUG")
+(h2 "REPORT A BUG")
 (p "If you think you have found a bug then please send as complete a report "
    "as possible to "
    "<fcproc-generic AT nongnu DOT org>. "
@@ -170,9 +170,9 @@ Options:
    "the latest repository sources, please be so kind to create it using the "
    "repository sources, not the release sources.")
 
-(h3 "DEVELOPMENT")
+(h2 "DEVELOPMENT")
 
-(h4 "Browsing sources")
+(h3 "Browsing sources")
 (p "You can browse the "
    (a (@ (href "http://git.savannah.nongnu.org/gitweb/?p=fcproc.git"))
       "Git repository")
@@ -181,13 +181,13 @@ Options:
    "the complete histories of any file in the repository as well as "
    "differences among two versions.")
 
-(h4 "Getting a copy of the Git Repository")
+(h3 "Getting a copy of the Git Repository")
 (p "Anonymous checkout:")
 (pre (@ class "terminal")
 (a (@ (href "http://savannah.gnu.org/maintenance/UsingGit")) "git")
 " clone git://git.savannah.nongnu.org/fcproc.git")
 
-(h4 "Contribute")
+(h3 "Contribute")
 (p "If you have time and programming skills, you can help us by developing "
    "missing features, regression tests or bug-fixing the present codebase. "
    "Subscribe to the "
