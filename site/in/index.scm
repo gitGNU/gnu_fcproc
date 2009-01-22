@@ -13,7 +13,10 @@
    "recent C/C++ compiler.")
 
 (h3 "Installation")
-(p "FCP uses the autotools facilities. The simplest way to install "
+(p "The following notes do not override your system's package management "
+   "software, please follow your system's guidelines to install the software.")
+
+(p "FCP uses the autotools facilities, the simplest way to install "
    "the package in your system is:")
 (ul
  (li (kbd "cd") " to the directory containing the package's source code "
@@ -22,10 +25,11 @@
      "Running " (kbd "configure") " might take a while. While running, "
      "it prints some messages telling which features it is checking for")
  (li "Type " (kbd "make") " to compile the package")
- (li "Optionally, type " (kbd "make check") " to run any self-tests that "
+ (li "Optionally, type " (kbd "make check") " to run all self-tests that "
      "come with the package")
  (li "Type " (kbd "make install") " to install the programs and any data "
      "files and documentation"))
+
 (p "Use " (kbd "./configure --help") " to get a brief help of all "
    "configuration tweaks available.")
 (p "You can remove the program binaries and object files from the "
