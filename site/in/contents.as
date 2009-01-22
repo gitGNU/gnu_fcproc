@@ -18,7 +18,7 @@ contents = {
 			filter[0] = {
 				source      = "map";
 				destination = "sxml";
-				parameters  = "-l menu.scm -l tree.scm";
+				parameters  = "";
 			};
 		};
 	};
@@ -30,7 +30,7 @@ contents = {
 			filter[0] = {
 				source      = "sxml";
 				destination = "sxml";
-				parameters  = "-l menu.scm";
+				parameters  = "";
 			};
 		};
 	};
@@ -42,19 +42,19 @@ contents = {
 			filter[0] = {
 				source      = "map";
 				destination = "sxml";
-				parameters  = "-l menu.scm -l tree.scm";
+				parameters  = "";
 			};
 		};
 	};
 
 	content = {
 		id      = "p3_body";
-		source  = "documentation.scm";
+		source  = "downloads.scm";
 		filters = {
 			filter[0] = {
 				source      = "sxml";
 				destination = "sxml";
-				parameters  = "-l menu.scm";
+				parameters  = "";
 			};
 		};
 	};
@@ -66,19 +66,19 @@ contents = {
 			filter[0] = {
 				source      = "map";
 				destination = "sxml";
-				parameters  = "-l menu.scm -l tree.scm";
+				parameters  = "";
 			};
 		};
 	};
 
 	content = {
 		id      = "p4_body";
-		source  = "downloads.scm";
+		source  = "installation.scm";
 		filters = {
 			filter[0] = {
 				source      = "sxml";
 				destination = "sxml";
-				parameters  = "-l menu.scm";
+				parameters  = "";
 			};
 		};
 	};
@@ -90,7 +90,7 @@ contents = {
 			filter[0] = {
 				source      = "map";
 				destination = "sxml";
-				parameters  = "-l menu.scm -l tree.scm";
+				parameters  = "";
 			};
 		};
 	};

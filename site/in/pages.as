@@ -1,5 +1,5 @@
 pages = {
-	page = {
+        page = {
 		id          = "p1";
 		destination = "index.html";
 		contents = {
@@ -31,7 +31,7 @@ pages = {
 
 	page = {
 		id          = "p3";
-		destination = "documentation.html";
+		destination = "downloads.html";
 		contents = {
 			body   = "p3_body";
 			header = "header";
@@ -39,14 +39,14 @@ pages = {
 			map    = "p3_map";
 		};
 		vars = {
-			title = "Documentation";
+			title = "Downloads";
 			css   = "site.css";
 		};
 	};
 
 	page = {
 		id          = "p4";
-		destination = "downloads.html";
+		destination = "installation.html";
 		contents = {
 			body   = "p4_body";
 			header = "header";
@@ -54,7 +54,7 @@ pages = {
 			map    = "p4_map";
 		};
 		vars = {
-			title = "Downloads";
+			title = "Installation";
 			css   = "site.css";
 		};
 	};
