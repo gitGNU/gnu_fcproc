@@ -4,7 +4,7 @@
 (p "In order to install " ,as_site_variable_PROGRAMNAME " into your system "
    "you will need:"
    (ul
-    (li "a relatively recent C/C++ compiler.")
+    (li "A relatively recent C/C++ compiler")
     )
    )
 
