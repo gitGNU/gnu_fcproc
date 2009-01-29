@@ -81,4 +81,6 @@ docs/info/fcp.info
 
 site/in/.sitetool
 site/in/site.stamp
+site/in/todos.sxml
+site/in/todos.dump
 site/out/*
