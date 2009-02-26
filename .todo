@@ -14,8 +14,11 @@
                 Removed EXEEXT usage (temporarely)
             </comment>
         </note>
-        <note priority="veryhigh" time="1235495476">
+        <note priority="veryhigh" time="1235495476" done="1235682607">
             Fix the NEWS and TODOs site pages generation in site/in directory
+            <comment>
+                Done
+            </comment>
         </note>
         <note priority="high" time="1226590365">
             Make the rules parser more robust
