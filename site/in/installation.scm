@@ -1,7 +1,7 @@
 (h2 "INSTALLATION")
 
 (h3 "Prerequisites")
-(p "In order to install " ,as_site_variable_PROGRAMNAME " into your system "
+(p "In order to install Filter Chains Processor into your system "
    "you will need:"
    (ul
     (li "A relatively recent C/C++ compiler")
