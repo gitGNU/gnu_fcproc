@@ -157,32 +157,6 @@ sleep='sleep @MODIFICATION_DELAY@'
 testsrcdir=$srcdir
 unset srcdir
 
-# COMMAND_run STATUS COMMAND [OPTIONS...]
-# --------------------------------
-# Run COMMAND with OPTIONS, and fail if COMMAND
-# does not exit with STATUS.
-COMMAND_run ()
-{
-  expected_exitcode=$1
-  command=$2
-  shift
-  shift
-  exitcode=0
-  $command ${1+"$@"} 2>stderr >stdout || exitcode=$?
-  cat stderr
-  cat stdout
-  test $exitcode = $expected_exitcode || exit 1
-}
-
-# COMMAND_fails COMMAND [OPTIONS...]
-# ---------------------------
-# Run COMMAND with OPTIONS, and fail if COMMAND
-# does not exit with STATUS.
-COMMAND_fails ()
-{
-  COMMAND_run 1 ${1+"$@"}
-}
-
 # Turn on shell traces when VERBOSE=x.
 if test "x$VERBOSE" = xx; then
   set -x
