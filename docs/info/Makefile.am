@@ -20,8 +20,8 @@
 
 include $(top_srcdir)/Makefile.sub
 
-info_TEXINFOS     = fcp.texi
-sitetool_TEXINFOS = fdl.texi
+info_TEXINFOS = fcp.texi
+fcp_TEXINFOS  = fdl.texi
 
 ##
 ## Maintainer related targets
