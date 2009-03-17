@@ -29,6 +29,7 @@ HOST = "http://autoconf-archive.cryp.to"
 EXTERNAL =					\
 	ax_missing_prog.m4			\
 	ax_path_missing.m4			\
+	ax_split_version.m4			\
         ax_cxxcpp_check_flag.m4			\
 	ax_print_to_file.m4			\
 	ax_file_escapes.m4
