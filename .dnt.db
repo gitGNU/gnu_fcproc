@@ -5,9 +5,9 @@
             Rearrange the site in order to be multi-page
             </entry><entry priority="high" start="1227122445" end="1227122687">
             Fix the EXEEXT usage in src and docs/man Makefile.am
-            </entry><entry priority="veryhigh" start="1235495476">
+            </entry><entry priority="veryhigh" start="1235495476" end="1235682607">
             Fix the NEWS and TODOs site pages generation in site/in directory
-        </entry><entry priority="high" start="1226590365">
+            </entry><entry priority="high" start="1226590365">
             Make the rules parser more robust
         </entry><entry priority="medium" start="1227560699">
             Add a script to translate fcp rule files into graphviz format
