@@ -13,8 +13,9 @@ Makefile
 aclocal.m4
 autom4te.cache
 
-#ChangeLog
+ChangeLog
 VERSION
+NEWS
 TODO
 
 configure
