@@ -29,10 +29,6 @@ SUBDIRS =					\
 	tests					\
 	site
 
-# Base directories
-TOOLSDIR   = $(top_builddir)/tools
-SCRIPTSDIR = $(TOOLSDIR)/scripts
-
 ##
 ## NOTE:
 ##     Options listed in AUTOMAKE_OPTIONS variable are applied on a
