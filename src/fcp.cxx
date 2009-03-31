@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2007, 2008 Francesco Salvestrini
+// Copyright (C) 2008, 2009 Francesco Salvestrini
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ void version(void)
 	std::cout
 		<< PROGRAM_NAME << " (" << PACKAGE_NAME  << ") " << PACKAGE_VERSION <<               std::endl
 		<<                                                                                   std::endl
-		<< "Copyright (C) 2007, 2008 Francesco Salvestrini" <<                               std::endl
+		<< "Copyright (C) 2008, 2009 Francesco Salvestrini" <<                               std::endl
 		<<                                                                                   std::endl
 		<< "This is free software.  You may redistribute copies of it under the terms of" << std::endl
 		<< "the GNU General Public License <http://www.gnu.org/licenses/gpl.html>." <<       std::endl
