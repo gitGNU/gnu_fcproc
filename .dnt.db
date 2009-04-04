@@ -1,32 +1,58 @@
 <?xml version="1.0"?>
 <root><entry priority="veryhigh" start="1233736716">
         Release 0.1.0
-        <entry priority="high" start="1226871195" end="1233306143">
-            Rearrange the site in order to be multi-page
-            </entry><entry priority="high" start="1227122445" end="1227122687">
-            Fix the EXEEXT usage in src and docs/man Makefile.am
-            </entry><entry priority="veryhigh" start="1235495476" end="1235682607">
+        <entry end="1235682607" priority="veryhigh" start="1235495476">
             Fix the NEWS and TODOs site pages generation in site/in directory
-            </entry><entry priority="high" start="1226590365">
+            <comment>
+                Done
+            </comment></entry>
+    <entry end="1233306143" priority="high" start="1226871195">
+            Rearrange the site in order to be multi-page
+            <comment>
+                Done
+            </comment></entry>
+    <entry end="1227122687" priority="high" start="1227122445">
+            Fix the EXEEXT usage in src and docs/man Makefile.am
+            <comment>
+                Removed EXEEXT usage (temporarely)
+            </comment></entry>
+    <entry priority="high" start="1226590365">
             Make the rules parser more robust
-        </entry><entry priority="medium" start="1227560699">
+        </entry>
+    <entry priority="medium" start="1227560699">
             Add a script to translate fcp rule files into graphviz format
-        </entry><entry priority="low" start="1227122737">
+        </entry>
+    <entry priority="low" start="1227122737">
             Rearrange the build process in order to use EXEEXT (if needed)
-        </entry></entry><entry priority="high" start="1233736742">
+        </entry>
+    <entry end="1238532816" priority="verylow" start="1238244109">
+            Update all copyright dates
+            <comment>
+                Done
+            </comment></entry>
+    </entry>
+    <entry priority="high" start="1233736742">
         Release 0.2.0
         <entry priority="veryhigh" start="1228259379">
             Add multi-input/single-output handling
-        </entry></entry><entry priority="medium" start="1233738977">
+        </entry>
+    </entry>
+    <entry priority="medium" start="1233738977">
         Release 0.3.0
         <entry priority="veryhigh" start="1226585740">
             Add Stream class in order to wrap the std::stream, obtaining a multithread logging mechanism
             <entry priority="low" start="1226590640">
                 Replace all those ugly TR_XXX macros
-            </entry></entry><entry priority="high" start="1226585252">
+            </entry>
+    </entry>
+    <entry priority="high" start="1226585252">
             Add parallel transformations
             <entry priority="high" start="1226585122">
                 Add Thread class
-            </entry><entry priority="low" start="1226590197">
+            </entry>
+    <entry priority="low" start="1226590197">
                 Add inter-chain locking mechanisms
-            </entry></entry></entry></root>
+            </entry>
+    </entry>
+    </entry>
+    </root>
