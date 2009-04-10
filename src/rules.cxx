@@ -24,6 +24,7 @@
 #include <set>
 #include <map>
 #include <fstream>
+#include <algorithm>
 
 #include "regex.h"
 

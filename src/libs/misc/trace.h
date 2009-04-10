@@ -26,8 +26,8 @@
 //     This tracing interface is really awful. It will be replaced ASAP.
 //
 
-extern int     trace_level;
-extern char *  trace_prefix;
+extern int          trace_level;
+extern const char * trace_prefix;
 
 // Trace levels
 #define TR_LVL_CRITICAL 5

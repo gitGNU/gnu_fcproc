@@ -18,10 +18,11 @@
 
 #include "config.h"
 
+#include <string.h>
 #include <string>
 
-#include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <errno.h>

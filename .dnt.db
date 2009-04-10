@@ -16,25 +16,25 @@
             <comment>
                 Removed EXEEXT usage (temporarely)
             </comment></entry>
-    <entry priority="high" start="1226590365">
-            Make the rules parser more robust
-        </entry>
-    <entry priority="medium" start="1227560699">
-            Add a script to translate fcp rule files into graphviz format
-        </entry>
-    <entry priority="low" start="1227122737">
-            Rearrange the build process in order to use EXEEXT (if needed)
-        </entry>
     <entry end="1238532816" priority="verylow" start="1238244109">
             Update all copyright dates
             <comment>
                 Done
             </comment></entry>
+    <entry priority="medium" start="1227560699">
+            Add a script to translate fcp rule files into graphviz format
+        </entry>
     </entry>
     <entry priority="high" start="1233736742">
         Release 0.2.0
         <entry priority="veryhigh" start="1228259379">
             Add multi-input/single-output handling
+        </entry>
+    <entry priority="high" start="1226590365">
+            Make the rules parser more robust
+        </entry>
+    <entry priority="low" start="1227122737">
+            Rearrange the build process in order to use EXEEXT (if needed)
         </entry>
     </entry>
     <entry priority="medium" start="1233738977">
