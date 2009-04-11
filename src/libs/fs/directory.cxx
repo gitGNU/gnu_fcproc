@@ -18,14 +18,14 @@
 
 #include "config.h"
 
-#include <string.h>
+#include <cstring>
 #include <string>
+#include <cerrno>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
-#include <errno.h>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/exception.h"
