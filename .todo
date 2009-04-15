@@ -38,6 +38,9 @@
         <note priority="high" time="1226590365">
             Make the rules parser more robust
         </note>
+        <note priority="medium" time="1239781503">
+            Add commands show while dumping rules
+        </note>
         <note priority="low" time="1227122737">
             Rearrange the build process in order to use EXEEXT (if needed)
         </note>
