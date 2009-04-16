@@ -19,7 +19,7 @@ Options:
 			  [default $HOME/.fcp/tmp]
   -s, --separator=CHAR	  use CHAR as INPUTFILE/OUTPUTFILE separator
 			  [default `:']
-  -q, --no-rules	  do not load initial rules
+  -q, --no-std-rules	  do not load standard rules
   -b, --dump-rules	  dump rules base, then exit
   -n, --dry-run		  display commands without modifying any files
   -f, --force             consider all files out of date
