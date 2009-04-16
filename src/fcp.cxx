@@ -97,7 +97,7 @@ void help(void)
 		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/tmp')" <<           std::endl
 		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                        std::endl
 		<< "                          (the default is `" << separator << "')" <<                            std::endl
-		<< "  -q, --no-rules          do not load initial rules" <<                                         std::endl
+		<< "  -q, --no-std-rules      do not load standard rules" <<                                        std::endl
 		<< "  -b, --dump-rules        dump rules base, then exit" <<                                        std::endl
 		<< "  -n, --dry-run           display commands without modifying any files" <<                      std::endl
 		<< "  -f, --force             consider all files out of date" <<                                    std::endl
@@ -127,13 +127,21 @@ int main(int argc, char * argv[])
 	TR_CONFIG_PFX(PROGRAM_NAME);
 
 	try {
-		bool                     dry_run     = false;
-		bool                     force       = false;
-		bool                     dump_rules  = false;
-		std::vector<std::string> rules_files;
+		bool                     dry_run       = false;
+		bool                     force         = false;
+		bool                     dump_rules    = false;
 
-		rules_files.clear();
-		rules_files.push_back(DFLT_RULES);
+		std::vector<std::string> rules_all;
+                std::vector<std::string> rules_default;
+                std::vector<std::string> rules_user;
+
+                // Useless
+		rules_all.clear();
+		rules_default.clear();
+		rules_user.clear();
+
+                // Push default rules
+                rules_default.push_back(DFLT_RULES);
 
 		int c;
 		// int digit_optind = 0;
@@ -142,20 +150,20 @@ int main(int argc, char * argv[])
 			int option_index       = 0;
 
 			static struct option long_options[] = {
-				{ "temp-dir",   1, 0, 't' },
-				{ "config",     1, 0, 'c' },
-				{ "rules",      1, 0, 'r' },
-				{ "max-depth",  1, 0, 'm' },
-				{ "separator",  1, 0, 's' },
-				{ "no-rules",   0, 0, 'q' },
-				{ "dump-rules", 0, 0, 'b' },
-				{ "force",      0, 0, 'f' },
-				{ "dry-run",    0, 0, 'n' },
-				{ "debug",      0, 0, 'd' },
-				{ "verbose",    0, 0, 'v' },
-				{ "version",    0, 0, 'V' },
-				{ "help",       0, 0, 'h' },
-				{ 0,            0, 0, 0   }
+				{ "temp-dir",     1, 0, 't' },
+				{ "config",       1, 0, 'c' },
+				{ "rules",        1, 0, 'r' },
+				{ "max-depth",    1, 0, 'm' },
+				{ "separator",    1, 0, 's' },
+				{ "no-std-rules", 0, 0, 'q' },
+				{ "dump-rules",   0, 0, 'b' },
+				{ "force",        0, 0, 'f' },
+				{ "dry-run",      0, 0, 'n' },
+				{ "debug",        0, 0, 'd' },
+				{ "verbose",      0, 0, 'v' },
+				{ "version",      0, 0, 'V' },
+				{ "help",         0, 0, 'h' },
+				{ 0,              0, 0, 0   }
 			};
 
 #if USE_CONFIGURATION_FILE
@@ -178,7 +186,7 @@ int main(int argc, char * argv[])
 					break;
 #endif
 				case 'r':
-					rules_files.push_back(optarg);
+					rules_user.push_back(optarg);
 					break;
 				case 't':
 					tmp_dir = FS::Directory(optarg);
@@ -191,7 +199,7 @@ int main(int argc, char * argv[])
 					separator = optarg[0];
 					break;
 				case 'q':
-					rules_files.clear();
+					rules_default.clear();
 					break;
 				case 'm':
 					max_depth = atoi(optarg);
@@ -230,6 +238,13 @@ int main(int argc, char * argv[])
 			}
 		}
 
+                rules_all.insert(rules_all.end(),
+                                 rules_default.begin(),
+                                 rules_default.end());
+                rules_all.insert(rules_all.end(),
+                                 rules_user.begin(),
+                                 rules_user.end());
+
 		TR_DBG("Separator     '%c'\n", separator);
 #if USE_CONFIGURATION_FILE
 		TR_DBG("Configuration '%s'\n", configuration_file.c_str());
@@ -238,18 +253,19 @@ int main(int argc, char * argv[])
 		TR_DBG("Max depth     '%d'\n", max_depth);
 		BUG_ON(max_depth <= 0);
 
-		if (rules_files.size() == 0) {
+		if (rules_all.size() == 0) {
+                        // Hmmmm is this a real error ?
 			hint("No rules available");
 			return 1;
 		}
-		TR_DBG("Rules         '%d'\n", rules_files.size());
-		BUG_ON(rules_files.size() == 0);
+		TR_DBG("Rules         '%d'\n", rules_all.size());
+		BUG_ON(rules_all.size() == 0);
 
 		// Read rules file
 		FCP::Rules * rules;
 
 		try {
-			rules = new FCP::Rules(rules_files);
+			rules = new FCP::Rules(rules_all);
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 			return 1;
