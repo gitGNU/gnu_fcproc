@@ -26,6 +26,12 @@
                 Removed EXEEXT usage (temporarely)
             </comment>
         </note>
+        <note priority="high" time="1239911957" done="1239913520">
+            Replace --no-rules option with a --no-std-rules (-nostdinc like option)
+            <comment>
+                Done
+            </comment>
+        </note>
         <note priority="medium" time="1227560699" done="1239911715">
             Add a script to translate fcp rule files into graphviz format
             <comment>
@@ -38,8 +44,8 @@
                 Done
             </comment>
         </note>
-        <note priority="high" time="1239911957">
-            Replace -q option with a -nostdinc like option
+        <note priority="low" time="1239914126">
+            Add test for --no-std-rules option
         </note>
     </note>
     <note priority="high" time="1233736742">
