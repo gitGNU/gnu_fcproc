@@ -1,10 +1,10 @@
-#@SHELL@
+#! @SHELL@
 
 #
-# rules2dot.sh
+# fcp22dot
 #
-# Copyright (C) 2009 Francesco Salvestrini
-#                    Alessandro Massignan
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#                          Alessandro Massignan
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,13 +21,13 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-
 #
 # Global variables
 #
 
-PROGNAME="rules2dot"
-PROGVERSION="0.0.1"
+PROGRAM_NAME="fcp2dot"
+PROGRAM_VERSION="@PACKAGE_VERSION@"
+
 DEBUG="0"
 VERBOSE="0"
 WARNING="1"
@@ -39,27 +39,27 @@ WARNING="1"
 
 error ()
 {
-    echo "$PROGNAME: $1" >&2
+    echo "$PROGRAM_NAME: $1" >&2
 }
 
 warning ()
 {
     if test $WARNING = 1; then
-	echo "$PROGNAME: $1" >&2
+	echo "$PROGRAM_NAME: $1" >&2
     fi
 }
 
 debug ()
 {
     if test $DEBUG = 1; then
-	echo "$PROGNAME: $1" >&2
+	echo "$PROGRAM_NAME: $1" >&2
     fi
 }
 
 verbose ()
 {
     if test $VERBOSE = 1; then
-	echo "$PROGNAME: $1"
+	echo "$PROGRAM_NAME: $1"
     fi
 }
 
@@ -70,13 +70,20 @@ verbose ()
 
 version ()
 {
-    echo "$PROGNAME (@PACKAGE_NAME@) $PROGVERSION"
+    echo "$PROGRAM_NAME (@PACKAGE_NAME@) $PROGRAM_VERSION"
+    echo ""
+    echo "Copyright (C) 2008, 2009 Francesco Salvestrini"
+    echo "                         Alessandro Massignan"
+    echo ""
+    echo "This is free software.  You may redistribute copies of it under the terms of"
+    echo "the GNU General Public License <http://www.gnu.org/licenses/gpl.html>."
+    echo "There is NO WARRANTY, to the extent permitted by law."
 }
 
 hint ()
 {
-    echo "$PROGNAME: $1"
-    echo "Try \`$PROGNAME -h' for more information."
+    echo "$PROGRAM_NAME: $1"
+    echo "Try \`$PROGRAM_NAME -h' for more information."
 }
 
 
@@ -85,15 +92,15 @@ hint ()
 #
 
 help() {
-    echo "Usage: ${PROGNAME} [OPTION]"
+    echo "Usage: ${PROGRAM_NAME} [OPTION]"
     echo
     echo "Options:"
-    echo "  -r, --rules=FILE       specify dumped rules file"
-    echo "  -o, --output=FILE      specify output file"
-    echo "  -v, --verbose          enable verbose messages"
-    echo "  -d, --debug            enable debugging"
-    echo "  -V, --version          print this help, then exit"
-    echo "  -h, --help             print version number, then exit"
+    echo "  -r, --rules=FILE     specify dumped rules file"
+    echo "  -o, --output=FILE    specify output file"
+    echo "  -v, --verbose        enable verbose messages"
+    echo "  -d, --debug          enable debugging"
+    echo "  -V, --version        print this help, then exit"
+    echo "  -h, --help           print version number, then exit"
     echo
     echo "Report bugs to <@PACKAGE_BUGREPORT@>"
 }

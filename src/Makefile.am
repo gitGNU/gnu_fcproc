@@ -24,10 +24,26 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 SUBDIRS = gnulib
 
+EXTRA_DIST =
+
 ## Programs
 
 bin_PROGRAMS =					\
 	fcp
+
+bin_SCRIPTS =					\
+	fcp2dot
+
+fcp2dot: $(srcdir)/fcp2dot.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/fcp2dot.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += fcp2dot.in
 
 fcp_SOURCES =					\
 	fcp.cxx					\
