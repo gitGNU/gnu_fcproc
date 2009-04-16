@@ -33,30 +33,30 @@ Options:
    "program, the following options allow overriding:")
 
 (ul
- (li (kbd "-r") ", " (kbd "--rules")       ": "
+ (li (kbd "-r") ", " (kbd "--rules") ": "
      "Specify a different rules file. "
      "This option could be specified multiple times.")
 
- (li (kbd "-m") ", " (kbd "--max-depth")   ": "
+ (li (kbd "-m") ", " (kbd "--max-depth") ": "
      "Specify maximum filter chains length")
 
- (li (kbd "-r") ", " (kbd "--temp-dir")    ": "
+ (li (kbd "-r") ", " (kbd "--temp-dir") ": "
      "Specify a temporary directory")
 
- (li (kbd "-s") ", " (kbd "--separator")   ": "
+ (li (kbd "-s") ", " (kbd "--separator") ": "
      "Overrides transformation separator")
 
- (li (kbd "-q") ", " (kbd "--no-rules")   ": "
+ (li (kbd "-q") ", " (kbd "--no-std-rules") ": "
      "Do not load default rules file, starting with an empty rules-base")
 
- (li (kbd "-b") ", " (kbd "--dump-rules")   ": "
+ (li (kbd "-b") ", " (kbd "--dump-rules") ": "
      "Start the program, dump the rules-base then exit. "
      "Useful for debugging your rules-base (and the program itself)")
 
- (li (kbd "-f") ", " (kbd "--force")     ": "
+ (li (kbd "-f") ", " (kbd "--force") ": "
      "Run the program without regenerating updated files")
 
- (li (kbd "-n") ", " (kbd "--dry-run")     ": "
+ (li (kbd "-n") ", " (kbd "--dry-run") ": "
      "Run the program without modifyng any files")
  )
 
