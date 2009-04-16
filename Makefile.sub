@@ -52,7 +52,8 @@ do_subst_MAINTAINER = \
   -e 's,[@]DEVTODO_TO_DNT[@],$(DEVTODO_TO_DNT),g'
 
 do_subst_SPECIFIC = \
-  -e 's,[@]PERL[@],$(PERL),g'
+  -e 's,[@]PERL[@],$(PERL),g' \
+  -e 's,[@]SED[@],$(SED),g'
 
 do_subst = $(SED) \
   $(do_subst_AUTOTOOLS) \
