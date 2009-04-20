@@ -6,6 +6,11 @@
             <comment>
                 Done
             </comment></entry>
+    <entry end="1239911076" priority="veryhigh" start="1239911065">
+            Redirect error and critical traces to stderr
+            <comment>
+                Done
+            </comment></entry>
     <entry end="1233306143" priority="high" start="1226871195">
             Rearrange the site in order to be multi-page
             <comment>
@@ -16,13 +21,23 @@
             <comment>
                 Removed EXEEXT usage (temporarely)
             </comment></entry>
+    <entry end="1239913520" priority="high" start="1239911957">
+            Replace --no-rules option with a --no-std-rules (-nostdinc like option)
+            <comment>
+                Done
+            </comment></entry>
+    <entry end="1239911715" priority="medium" start="1227560699">
+            Add a script to translate fcp rule files into graphviz format
+            <comment>
+                Done
+            </comment></entry>
     <entry end="1238532816" priority="verylow" start="1238244109">
             Update all copyright dates
             <comment>
                 Done
             </comment></entry>
-    <entry priority="medium" start="1227560699">
-            Add a script to translate fcp rule files into graphviz format
+    <entry priority="low" start="1239914126">
+            Add test for --no-std-rules option
         </entry>
     </entry>
     <entry priority="high" start="1233736742">
@@ -32,6 +47,9 @@
         </entry>
     <entry priority="high" start="1226590365">
             Make the rules parser more robust
+        </entry>
+    <entry priority="medium" start="1239781503">
+            Add commands show while dumping rules
         </entry>
     <entry priority="low" start="1227122737">
             Rearrange the build process in order to use EXEEXT (if needed)
