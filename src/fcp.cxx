@@ -339,7 +339,7 @@ int main(int argc, char * argv[])
 
 		// We don't need rules anymore ...
 		delete rules;
-		rules = 0; // Catch the bug as soon as possible :-)
+		rules = 0; // Catch bugs as soon as possible :-)
 
 #if USE_CONFIGURATION_FILE
 		// Read configuration file
