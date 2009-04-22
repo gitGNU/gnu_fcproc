@@ -482,11 +482,40 @@ namespace FCP {
 		// Build filters-chain data based on extensions
 		std::vector<node_t> data;
 		Antiloop            antiloop;
-		if (!chain_nodes(antiloop,
-				 input.extension(),
-				 output.extension(),
-				 depth,
-				 data)) {
+                std::string         in_type;
+                std::string         out_type;
+
+                in_type = input.type();
+                TR_DBG("input type (1) = '%s' (%d)\n",
+                       in_type.c_str(), in_type.size());
+                if (in_type.empty()) {
+                        TR_DBG("Using extension as file type for '%s'\n",
+                               input.name().c_str());
+                        in_type == input.extension();
+                }
+                TR_DBG("input type (2) = '%s' (%d)\n",
+                       in_type.c_str(), in_type.size())
+                if (in_type.empty()) {
+			throw Exception("Cannot detect file type for "
+                                        "'" + input.name() + "'");
+                }
+
+                out_type = output.type();
+                TR_DBG("output type (1) = '%s' (%d)\n",
+                       out_type.c_str(), out_type.size());
+                if (out_type.empty()) {
+                        TR_DBG("Using extension as file type for '%s'\n",
+                               output.name().c_str());
+                        out_type == output.extension();
+                }
+                TR_DBG("output type (2) = '%s' (%d)\n",
+                       out_type.c_str(), out_type.size())
+                if (out_type.empty()) {
+			throw Exception("Cannot detect file type for "
+                                        "'" + output.name() + "'");
+                }
+
+		if (!chain_nodes(antiloop, in_type, out_type, depth, data)) {
 			TR_DBG("No filters-chain found ...\n");
 			data.clear();
 			return ret;
