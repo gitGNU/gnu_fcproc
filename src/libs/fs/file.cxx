@@ -31,17 +31,16 @@
 #include "libs/fs/file.h"
 
 namespace FS {
-	File::File(const std::string & name) :
-		name_(name)
+	File::File(const std::string & name,
+                   const std::string & type) :
+		name_(name),
+                type_(type)
 	{
-		// TR_DBG("File '%s':\n", name_.c_str());
-
 		if (name_ == "") {
 			throw Exception("Missing file name");
 		}
 		// name cannot be empty
 		BUG_ON(name_ == "");
-		// TR_DBG("  name      = '%s'\n", name_.c_str());
 
 		std::string::size_type p;
 
@@ -50,7 +49,6 @@ namespace FS {
 		dirname_ = ((p != std::string::npos) ?
 			    name_.substr(0, p - 1) : "");
 		// dirname_ could be empty
-		// TR_DBG("  dirname   = '%s'\n", dirname_.c_str());
 
 		std::string tmp;
 		tmp = ((p != std::string::npos) ?
@@ -61,7 +59,6 @@ namespace FS {
 		}
 		// basename cannot be empty
 		BUG_ON(tmp == "");
-		// TR_DBG("  basename  = '%s'\n", basename_.c_str());
 
 		std::string::size_type q;
 		q = tmp.rfind(".");
@@ -77,7 +74,19 @@ namespace FS {
 			// We got it
 			basename_.suffix = tmp.substr(q + 1);
 		}
-		// TR_DBG("  extension = '%s'\n", extension_.c_str());
+
+		TR_DBG("File '%s':\n",
+                       name_.c_str());
+		TR_DBG("  name             = '%s'\n",
+                       name_.c_str());
+		TR_DBG("  dirname          = '%s'\n",
+                       dirname_.c_str());
+		TR_DBG("  basename.prefix  = '%s'\n",
+                       basename_.prefix.c_str());
+		TR_DBG("  basename.suffix  = '%s'\n",
+                       basename_.suffix.c_str());
+		TR_DBG("  type             = '%s'\n",
+                       type_.c_str());
 	}
 
 	File::~File(void)
@@ -113,6 +122,14 @@ namespace FS {
 	const std::string & File::extension(void) const
 	{
 		return basename_.suffix;
+	}
+
+	const std::string & File::type(void) const
+	{
+                if (type_.empty()) {
+                        return basename_.suffix;
+                }
+		return type_;
 	}
 
 	time_t File::mtime(void) const

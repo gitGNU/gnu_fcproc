@@ -26,7 +26,8 @@
 namespace FS {
 	class File {
 	public:
-		File(const std::string & name);
+		File(const std::string & name,
+                     const std::string & type = "");
 		~File(void);
 
 		const std::string & name(void)                           const;
@@ -36,6 +37,8 @@ namespace FS {
 		time_t              mtime(void)                          const;
 		bool                exists(void)                         const;
 		void                remove(void)                         const;
+
+		const std::string & type(void)                           const;
 
 	protected:
 		File(void);
@@ -47,6 +50,7 @@ namespace FS {
 			std::string prefix;
 			std::string suffix;
 		} basename_;
+                std::string type_;
 	};
 }
 
