@@ -29,33 +29,33 @@
 #include "chain.h"
 
 namespace FCP {
-	class Transformation {
-	public:
-		Transformation(const std::string &   tag,
-			       char                  separator,
-			       FCP::Rules &          rules,
-			       int                   depth,
-			       const FS::Directory & work);
-		~Transformation(void);
+        class Transformation {
+        public:
+                Transformation(const std::string &   tag,
+                               char                  separator,
+                               FCP::Rules &          rules,
+                               int                   depth,
+                               const FS::Directory & work);
+                ~Transformation(void);
 
-		void                run(bool dry,
-					bool force);
+                void                run(bool dry,
+                                        bool force);
 
-		const std::string & tag(void)    const;
-		const FS::File &    input(void)  const;
-		const FS::File &    output(void) const;
+                const std::string & tag(void)    const;
+                const FS::File &    input(void)  const;
+                const FS::File &    output(void) const;
 
-	protected:
-		// No copy allowed
-		Transformation(const Transformation &);
-		void operator =(const Transformation &);
+        protected:
+                // No copy allowed
+                Transformation(const Transformation &);
+                void operator =(const Transformation &);
 
-	private:
-		std::string  tag_;
-		FS::File *   input_;
-		FS::File *   output_;
-		FCP::Chain * chain_;
-	};
+        private:
+                std::string  tag_;
+                FS::File *   input_;
+                FS::File *   output_;
+                FCP::Chain * chain_;
+        };
 }
 
 #endif // TRANSFORMATION_H
