@@ -36,7 +36,7 @@ EOF
 : >test.out || exit 1
 : >test.exp || exit 1
 
-(HOME="." && $FCP -r ./test/rules -b >test.out) || exit 1
+(HOME="." && $FCP_NOFLAGS -r ./test/rules -b >test.out) || exit 1
 
 cat > test.exp <<EOF
 ext1 -> ext2
