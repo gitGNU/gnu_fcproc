@@ -84,7 +84,8 @@ SUCCESS_TESTS +=				\
 	test-multiline-01			\
 	test-memleaks-01			\
 	test-antiloop-01			\
-	test-include-01
+	test-include-01				\
+	test-hint-01
 
 XFAIL_TESTS  = $(FAIL_TESTS)
 TESTS	     = $(FAIL_TESTS) $(SUCCESS_TESTS)
@@ -304,6 +305,18 @@ test-execution-06: $(srcdir)/test-execution-06.in Makefile
 	}
 EXTRA_DIST += test-execution-06.in
 CLEANFILES += test-execution-06
+
+test-hint-01: $(srcdir)/test-hint-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-hint-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-hint-01.in
+CLEANFILES += test-hint-01
 
 test-multipath-01: $(srcdir)/test-multipath-01.in Makefile
 	( rm -f $@ $@.tmp && \
