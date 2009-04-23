@@ -44,7 +44,7 @@ EOF
 : >test.out || exit 1
 : >test.exp || exit 1
 
-$FCP -d -v -r ./test/rules -b >test.out || exit 1
+$FCP -r ./test/rules -b >test.out || exit 1
 
 cat > test.exp <<EOF
 ext1 -> ext2
