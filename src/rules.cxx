@@ -506,7 +506,7 @@ namespace FCP {
                 if (out_type.empty()) {
                         TR_DBG("Using extension as file type for '%s'\n",
                                output.name().c_str());
-                        out_type == output.extension();
+                        out_type == "." + output.extension();
                 }
                 TR_DBG("output type (2) = '%s' (%d)\n",
                        out_type.c_str(), out_type.size())
