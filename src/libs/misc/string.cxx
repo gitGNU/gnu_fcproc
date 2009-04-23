@@ -89,4 +89,20 @@ namespace String {
 
 		return tmp.str();
 	}
+
+        void slice(const std::string & in,
+                   char                separator,
+                   std::string &       out1,
+                   std::string &       out2)
+        {
+		std::string::size_type p;
+
+		p = in.find(separator);
+		if ((p < 0) || (p > in.size())) {
+                        return;
+                }
+
+                out1 = in.substr(0, p);
+                out2 = in.substr(p + 1);
+        }
 }

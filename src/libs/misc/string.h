@@ -35,6 +35,11 @@ namespace String {
 			    const std::string & from,
 			    const std::string & to);
 	std::string itos(int value);
+
+        void        slice(const std::string & in,
+                          char                separator,
+                          std::string &       out1,
+                          std::string &       out2);
 };
 
 #endif // LIBS_MISC_STRING_H
