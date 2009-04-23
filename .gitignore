@@ -73,6 +73,7 @@ tests/test-execution-03
 tests/test-execution-04
 tests/test-execution-05
 tests/test-execution-06
+tests/test-hint-01
 tests/test-multiline-01
 tests/test-memleaks-01
 tests/test-antiloop-01
