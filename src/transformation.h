@@ -51,6 +51,11 @@ namespace FCP {
                 void operator =(const Transformation &);
 
         private:
+                void slice(char                separator,
+                           const std::string & tag,
+                           std::string &       name,
+                           std::string &       type);
+
                 std::string  tag_;
                 FS::File *   input_;
                 FS::File *   output_;

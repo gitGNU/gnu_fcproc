@@ -22,6 +22,7 @@
 
 #include "libs/misc/debug.h"
 #include "libs/misc/exception.h"
+#include "libs/misc/string.h"
 #include "libs/fs/directory.h"
 #include "transformation.h"
 #include "rules.h"
@@ -45,26 +46,42 @@ namespace FCP {
 					"'" + tag_ + "'");
 		}
 
-		std::string t;
+		std::string tmp;
+                std::string name;
+                std::string type;
 
 		// Get the input part
-		t = tag_.substr(0, p);
-		if (t.size() == 0) {
+		tmp = tag_.substr(0, p);
+		if (tmp.size() == 0) {
 			throw Exception("Missing input file "
 					"in transformation "
 					"'" + tag_ + "'");
 		}
-		input_ = new FS::File(t);
+                // Slice it in (name, type)
+                String::slice(tmp, '%', name, type);
+                if (type.empty()) {
+                        name = tmp;
+                        type = "";
+                }
+                // Build File(name, type)
+		input_ = new FS::File(name, type);
 		BUG_ON(input_ == 0);
 
 		// Get the output part
-		t = tag_.substr(p + 1);
-		if (t.size() == 0) {
+		tmp = tag_.substr(p + 1);
+		if (tmp.size() == 0) {
 			throw Exception("Missing output file "
 					"in transformation "
 					"'" + tag_ + "'");
 		}
-		output_ = new FS::File(t);
+                // Slice it in (name, type)
+                String::slice(tmp, '%', name, type);
+                if (type.empty()) {
+                        name = tmp;
+                        type = "";
+                }
+                // Build File(name, type)
+		output_ = new FS::File(name, type);
 		BUG_ON(output_ == 0);
 
 		// Build the filters-chain for this transformation
