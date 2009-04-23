@@ -18,9 +18,9 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-. $testdir/defs || exit 1
-
 required="diff"
+
+. $testdir/defs || exit 1
 
 cat > ./include-4 <<EOF
 ext5:ext6

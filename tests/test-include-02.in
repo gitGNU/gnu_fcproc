@@ -18,9 +18,9 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-. $testdir/defs || exit 1
-
 required=""
+
+. $testdir/defs || exit 1
 
 mkdir test || exit 1
 mkdir .fcp || exit 1
