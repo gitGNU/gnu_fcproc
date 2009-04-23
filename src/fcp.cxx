@@ -95,7 +95,7 @@ void help(void)
 		<< "                          (the default is `" << max_depth << "')" <<                            std::endl
 		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                    std::endl
 		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/tmp')" <<           std::endl
-		<< "  -s, --separator=CHAR    use CHAR as INPUTFILE/OUTPUTFILE separator" <<                        std::endl
+		<< "  -s, --separator=CHAR    use CHAR as INPUT/OUTPUT separator" <<                                std::endl
 		<< "                          (the default is `" << separator << "')" <<                            std::endl
 		<< "  -q, --no-std-rules      do not load standard rules" <<                                        std::endl
 		<< "  -b, --dump-rules        dump rules base, then exit" <<                                        std::endl
@@ -106,8 +106,12 @@ void help(void)
 		<< "  -h, --help              print this help, then exit" <<                                        std::endl
 		<< "  -V, --version           print version number, then exit" <<                                   std::endl
 		<<                                                                                                  std::endl
-		<< "Specify TRANSFORMATION using the format INPUTFILE<SEPARATOR>OUTPUTFILE." <<                     std::endl
+		<< "Specify TRANSFORMATION using the format:" <<                                                    std::endl
+		<<                                                                                                  std::endl
+		<< "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]" <<                                              std::endl
+		<<                                                                                                  std::endl
 		<< "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." <<     std::endl
+		<< "File TYPE is optional and it will be guessed if not provided." <<                               std::endl
 		<<                                                                                                  std::endl
 		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                                                std::endl;
 }
@@ -238,13 +242,6 @@ int main(int argc, char * argv[])
 			}
 		}
 
-                rules_all.insert(rules_all.end(),
-                                 rules_default.begin(),
-                                 rules_default.end());
-                rules_all.insert(rules_all.end(),
-                                 rules_user.begin(),
-                                 rules_user.end());
-
 		TR_DBG("Separator     '%c'\n", separator);
 #if USE_CONFIGURATION_FILE
 		TR_DBG("Configuration '%s'\n", configuration_file.c_str());
@@ -253,12 +250,22 @@ int main(int argc, char * argv[])
 		TR_DBG("Max depth     '%d'\n", max_depth);
 		BUG_ON(max_depth <= 0);
 
+                // Insert default rules
+                rules_all.insert(rules_all.end(),
+                                 rules_default.begin(),
+                                 rules_default.end());
+                // Insert user rules
+                rules_all.insert(rules_all.end(),
+                                 rules_user.begin(),
+                                 rules_user.end());
+
 		if (rules_all.size() == 0) {
                         // Hmmmm is this a real error ?
 			hint("No rules available");
 			return 1;
 		}
-		TR_DBG("Rules         '%d'\n", rules_all.size());
+
+		TR_DBG("You have %d rules\n", rules_all.size());
 		BUG_ON(rules_all.size() == 0);
 
 		// Read rules file
