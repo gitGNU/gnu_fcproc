@@ -85,7 +85,7 @@ SUCCESS_TESTS +=				\
 	test-memleaks-01			\
 	test-antiloop-01			\
 	test-include-01				\
-	test-include-02				\
+	test-rules-01				\
 	test-hint-01
 
 XFAIL_TESTS  = $(FAIL_TESTS)
@@ -379,17 +379,17 @@ test-include-01: $(srcdir)/test-include-01.in Makefile
 EXTRA_DIST += test-include-01.in
 CLEANFILES += test-include-01
 
-test-include-02: $(srcdir)/test-include-02.in Makefile
+test-rules-01: $(srcdir)/test-rules-01.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-include-02.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-rules-01.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-include-02.in
-CLEANFILES += test-include-02
+EXTRA_DIST += test-rules-01.in
+CLEANFILES += test-rules-01
 
 clean-local:
 	rm -rf testSubDir-*
