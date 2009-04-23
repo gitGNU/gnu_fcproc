@@ -34,6 +34,8 @@ bin_PROGRAMS =					\
 bin_SCRIPTS =					\
 	fcp2dot
 
+CLEANFILES = $(bin_SCRIPTS)
+
 fcp2dot: $(srcdir)/fcp2dot.in Makefile
 	( rm -f $@ $@.tmp && \
 	  $(do_subst) < $(srcdir)/fcp2dot.in > $@.tmp && \
