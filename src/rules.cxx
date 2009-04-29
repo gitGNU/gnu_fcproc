@@ -424,6 +424,8 @@ namespace FCP {
 			return false;
 		}
 
+                TR_DBG("Got '%s' node\n", tag_in.c_str());
+
 		// Antiloop detection check
 		if (!antiloop.insert(tag_in, tag_out)) {
 			TR_DBG("Got a loop while walking '%s' -> '%s'\n",
