@@ -62,10 +62,10 @@ extern const char * trace_prefix;
 #define TR_CONFIG_PFX(PFX)  { trace_prefix = PFX; }
 
 // Shortcuts for traces
-#define TR_DBG(FMT,ARGS...) _TRACE(TR_LVL_DEBUG,    FMT, ##ARGS);
-#define TR_VRB(FMT,ARGS...) _TRACE(TR_LVL_VERBOSE,  FMT, ##ARGS);
-#define TR_WRN(FMT,ARGS...) _TRACE(TR_LVL_WARNING,  FMT, ##ARGS);
-#define TR_ERR(FMT,ARGS...) _TRACE(TR_LVL_ERROR,    FMT, ##ARGS);
-#define TR_CRT(FMT,ARGS...) _TRACE(TR_LVL_CRITICAL, FMT, ##ARGS);
+#define TR_DBG(FMT,ARGS...) _TRACE(TR_LVL_DEBUG,    FMT, ##ARGS)
+#define TR_VRB(FMT,ARGS...) _TRACE(TR_LVL_VERBOSE,  FMT, ##ARGS)
+#define TR_WRN(FMT,ARGS...) _TRACE(TR_LVL_WARNING,  FMT, ##ARGS)
+#define TR_ERR(FMT,ARGS...) _TRACE(TR_LVL_ERROR,    FMT, ##ARGS)
+#define TR_CRT(FMT,ARGS...) _TRACE(TR_LVL_CRITICAL, FMT, ##ARGS)
 
 #endif // LIBS_MISC_TRACES_H
