@@ -25,10 +25,9 @@
 #include <list>
 #include <set>
 
+#include <getopt.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-#include "getopt.h"
 
 #include "libs/misc/debug.h"
 #include "libs/misc/environment.h"
@@ -181,7 +180,7 @@ int main(int argc, char * argv[])
 				break;
 			}
 
-                        TR_DBG("Handling option character '%c'\n", c)
+                        TR_DBG("Handling option character '%c'\n", c);
 
 			switch (c) {
 #if USE_CONFIGURATION_FILE
