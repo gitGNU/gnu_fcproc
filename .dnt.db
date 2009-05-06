@@ -36,6 +36,12 @@
             <comment>
                 Done
             </comment></entry>
+    <entry priority="high" start="1240470789">
+            Add file type hinting
+        </entry>
+    <entry priority="high" start="1240482005">
+            Create temporary directories in /tmp (or similar) instead of /home/francesco ...
+        </entry>
     <entry priority="low" start="1239914126">
             Add test for --no-std-rules option
         </entry>

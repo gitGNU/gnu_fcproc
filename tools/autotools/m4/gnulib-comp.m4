@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2008 Free Software Foundation, Inc.
+# Copyright (C) 2002-2009 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -44,6 +44,8 @@ AC_DEFUN([GNULIB_INIT],
   gl_COMMON
   gl_source_base='./src/gnulib'
   gl_FUNC_ALLOCA
+  gl_FUNC_BTOWC
+  gl_WCHAR_MODULE_INDICATOR([btowc])
   gl_GETOPT
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
@@ -54,6 +56,11 @@ AC_DEFUN([GNULIB_INIT],
   AC_DEFINE([GNULIB_MALLOC_GNU], 1, [Define to indicate the 'malloc' module.])
   gl_FUNC_MALLOC_POSIX
   gl_STDLIB_MODULE_INDICATOR([malloc-posix])
+  gl_FUNC_MBRTOWC
+  gl_WCHAR_MODULE_INDICATOR([mbrtowc])
+  gl_FUNC_MBSINIT
+  gl_WCHAR_MODULE_INDICATOR([mbsinit])
+  AC_REQUIRE([gl_MULTIARCH])
   gl_REGEX
   gt_TYPE_SSIZE_T
   AM_STDBOOL_H
@@ -63,6 +70,8 @@ AC_DEFUN([GNULIB_INIT],
   AC_PROG_MKDIR_P
   gl_UNISTD_H
   gl_WCHAR_H
+  gl_FUNC_WCRTOMB
+  gl_WCHAR_MODULE_INDICATOR([wcrtomb])
   gl_WCTYPE_H
   m4_ifval(GNULIB_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([GNULIB_LIBSOURCES_DIR])[ ||
@@ -199,6 +208,7 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   build-aux/link-warning.h
   lib/alloca.c
   lib/alloca.in.h
+  lib/btowc.c
   lib/config.charset
   lib/getopt.c
   lib/getopt.in.h
@@ -208,6 +218,8 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   lib/localcharset.c
   lib/localcharset.h
   lib/malloc.c
+  lib/mbrtowc.c
+  lib/mbsinit.c
   lib/ref-add.sin
   lib/ref-del.sin
   lib/regcomp.c
@@ -219,11 +231,16 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   lib/stdbool.in.h
   lib/stdint.in.h
   lib/stdlib.in.h
+  lib/streq.h
   lib/sys_stat.in.h
   lib/unistd.in.h
+  lib/verify.h
   lib/wchar.in.h
+  lib/wcrtomb.c
   lib/wctype.in.h
+  m4/00gnulib.m4
   m4/alloca.m4
+  m4/btowc.m4
   m4/codeset.m4
   m4/extensions.m4
   m4/getopt.m4
@@ -231,9 +248,15 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   m4/gnulib-common.m4
   m4/include_next.m4
   m4/localcharset.m4
+  m4/locale-fr.m4
+  m4/locale-ja.m4
+  m4/locale-zh.m4
   m4/longlong.m4
   m4/malloc.m4
+  m4/mbrtowc.m4
+  m4/mbsinit.m4
   m4/mbstate_t.m4
+  m4/multiarch.m4
   m4/regex.m4
   m4/ssize_t.m4
   m4/stdbool.m4
@@ -242,6 +265,7 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   m4/sys_stat_h.m4
   m4/unistd_h.m4
   m4/wchar.m4
+  m4/wcrtomb.m4
   m4/wctype.m4
   m4/wint_t.m4
 ])
