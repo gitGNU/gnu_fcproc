@@ -117,5 +117,16 @@ all_SRCS =					\
 	$(libconf_a_SOURCES)			\
 	$(libfs_a_SOURCES)
 
-maintainer-check-local: Makefile
+maintainer-check-parameters: Makefile $(bin_SCRIPTS) $(bin_PROGRAMS)
+	for i in $(bin_SCRIPTS) $(bin_PROGRAMS) ; do \
+		echo @ECHO_N@ "Checking standard parameters for $$i... " ; \
+		if ( ./$$i -h 2>&1 > /dev/null ) ; then \
+			echo "@ECHO_T@ok" ; \
+		else \
+			echo "@ECHO_T@error" ; \
+			exit 1 ; \
+		fi ; \
+	done
+
+maintainer-check-local: Makefile maintainer-check-parameters
 	$(WHITESPACE_DETECT)  $(all_SRCS)
