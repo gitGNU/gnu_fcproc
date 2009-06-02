@@ -68,8 +68,8 @@
                 Done
             </comment>
         </note>
-        <note priority="veryhigh" time="1240525890">
-            We should wrap all the calls to fcp in order to sandbox the rules into each test directory
+        <note priority="veryhigh" time="1240525890" done="1243953368">
+            We should wrap/rearrange all the calls to the fcp binary in order to sandbox the rules into each test directory
         </note>
         <note priority="high" time="1240482005">
             Create temporary directories in /tmp (or similar) instead of using home directory ...
