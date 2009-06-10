@@ -11,6 +11,14 @@
             <comment>
                 Done
             </comment></entry>
+    <entry end="1240525157" priority="veryhigh" start="1240525134">
+            Rearrange all tests in order to apply requirements before including defs
+            <comment>
+                Done
+            </comment></entry>
+    <entry end="1243953368" priority="veryhigh" start="1240525890">
+            We should wrap/rearrange all the calls to the fcp binary in order to sandbox the rules into each test directory
+        </entry>
     <entry end="1233306143" priority="high" start="1226871195">
             Rearrange the site in order to be multi-page
             <comment>
@@ -26,8 +34,23 @@
             <comment>
                 Done
             </comment></entry>
+    <entry end="1240523577" priority="high" start="1240470789">
+            Add file type hinting
+            <comment>
+                Done
+            </comment><entry end="1240483206" priority="high" start="1240483188">
+                Add test for file type hinting
+                <comment>
+                    Done
+                </comment></entry>
+    </entry>
     <entry end="1239911715" priority="medium" start="1227560699">
             Add a script to translate fcp rule files into graphviz format
+            <comment>
+                Done
+            </comment></entry>
+    <entry end="1240525263" priority="low" start="1239914126">
+            Add test for --no-std-rules option
             <comment>
                 Done
             </comment></entry>
@@ -36,15 +59,12 @@
             <comment>
                 Done
             </comment></entry>
-    <entry priority="high" start="1240470789">
-            Add file type hinting
-        </entry>
     <entry priority="high" start="1240482005">
-            Create temporary directories in /tmp (or similar) instead of /home/francesco ...
-        </entry>
-    <entry priority="low" start="1239914126">
-            Add test for --no-std-rules option
-        </entry>
+            Create temporary directories in /tmp (or similar) instead of using home directory ...
+            <entry priority="medium" start="1243953987">
+                Import mkdtemp module from gnulib
+            </entry>
+    </entry>
     </entry>
     <entry priority="high" start="1233736742">
         Release 0.2.0
@@ -78,5 +98,8 @@
                 Add inter-chain locking mechanisms
             </entry>
     </entry>
+    </entry>
+    <entry priority="low" start="1243950771">
+        Release 0.4.0
     </entry>
     </root>

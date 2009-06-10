@@ -49,9 +49,12 @@ AC_DEFUN([GNULIB_INIT],
   gl_GETOPT
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
+  gl_FUNC_GETTIMEOFDAY
   gl_LOCALCHARSET
   LOCALCHARSET_TESTS_ENVIRONMENT="CHARSETALIASDIR=\"\$(top_builddir)/$gl_source_base\""
   AC_SUBST([LOCALCHARSET_TESTS_ENVIRONMENT])
+  gl_FUNC_LSTAT
+  gl_SYS_STAT_MODULE_INDICATOR([lstat])
   AC_FUNC_MALLOC
   AC_DEFINE([GNULIB_MALLOC_GNU], 1, [Define to indicate the 'malloc' module.])
   gl_FUNC_MALLOC_POSIX
@@ -60,7 +63,9 @@ AC_DEFUN([GNULIB_INIT],
   gl_WCHAR_MODULE_INDICATOR([mbrtowc])
   gl_FUNC_MBSINIT
   gl_WCHAR_MODULE_INDICATOR([mbsinit])
-  AC_REQUIRE([gl_MULTIARCH])
+  gt_FUNC_MKDTEMP
+  gl_STDLIB_MODULE_INDICATOR([mkdtemp])
+  gl_MULTIARCH
   gl_REGEX
   gt_TYPE_SSIZE_T
   AM_STDBOOL_H
@@ -68,6 +73,9 @@ AC_DEFUN([GNULIB_INIT],
   gl_STDLIB_H
   gl_HEADER_SYS_STAT_H
   AC_PROG_MKDIR_P
+  gl_HEADER_SYS_TIME_H
+  AC_PROG_MKDIR_P
+  gl_FUNC_GEN_TEMPNAME
   gl_UNISTD_H
   gl_WCHAR_H
   gl_FUNC_WCRTOMB
@@ -215,11 +223,14 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   lib/getopt1.c
   lib/getopt_int.h
   lib/gettext.h
+  lib/gettimeofday.c
   lib/localcharset.c
   lib/localcharset.h
+  lib/lstat.c
   lib/malloc.c
   lib/mbrtowc.c
   lib/mbsinit.c
+  lib/mkdtemp.c
   lib/ref-add.sin
   lib/ref-del.sin
   lib/regcomp.c
@@ -233,6 +244,9 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   lib/stdlib.in.h
   lib/streq.h
   lib/sys_stat.in.h
+  lib/sys_time.in.h
+  lib/tempname.c
+  lib/tempname.h
   lib/unistd.in.h
   lib/verify.h
   lib/wchar.in.h
@@ -244,6 +258,7 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   m4/codeset.m4
   m4/extensions.m4
   m4/getopt.m4
+  m4/gettimeofday.m4
   m4/glibc21.m4
   m4/gnulib-common.m4
   m4/include_next.m4
@@ -252,10 +267,12 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   m4/locale-ja.m4
   m4/locale-zh.m4
   m4/longlong.m4
+  m4/lstat.m4
   m4/malloc.m4
   m4/mbrtowc.m4
   m4/mbsinit.m4
   m4/mbstate_t.m4
+  m4/mkdtemp.m4
   m4/multiarch.m4
   m4/regex.m4
   m4/ssize_t.m4
@@ -263,6 +280,8 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   m4/stdint.m4
   m4/stdlib_h.m4
   m4/sys_stat_h.m4
+  m4/sys_time_h.m4
+  m4/tempname.m4
   m4/unistd_h.m4
   m4/wchar.m4
   m4/wcrtomb.m4
