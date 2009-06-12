@@ -47,7 +47,7 @@ namespace FS {
 		p = name_.rfind("/");
 
 		dirname_ = ((p != std::string::npos) ?
-			    name_.substr(0, p - 1) : "");
+			    name_.substr(0, p) : "");
 		// dirname_ could be empty
 
 		std::string tmp;
