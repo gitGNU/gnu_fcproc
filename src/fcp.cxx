@@ -43,13 +43,20 @@
 void version(void)
 {
 	std::cout
-		<< PROGRAM_NAME << " (" << PACKAGE_NAME  << ") " << PACKAGE_VERSION <<               std::endl
-		<<                                                                                   std::endl
-		<< "Copyright (C) 2008, 2009 Francesco Salvestrini" <<                               std::endl
-		<<                                                                                   std::endl
-		<< "This is free software.  You may redistribute copies of it under the terms of" << std::endl
-		<< "the GNU General Public License <http://www.gnu.org/licenses/gpl.html>." <<       std::endl
-		<< "There is NO WARRANTY, to the extent permitted by law." <<                        std::endl;
+		<< PROGRAM_NAME << " (" << PACKAGE_NAME  << ") " << PACKAGE_VERSION <<
+                std::endl
+		<<
+                std::endl
+		<< "Copyright (C) 2008, 2009 Francesco Salvestrini" <<
+                std::endl
+		<<
+                std::endl
+		<< "This is free software.  You may redistribute copies of it under the terms of" <<
+                std::endl
+		<< "the GNU General Public License <http://www.gnu.org/licenses/gpl.html>." <<
+                std::endl
+		<< "There is NO WARRANTY, to the extent permitted by law." <<
+                std::endl;
 }
 
 #define USE_CONFIGURATION_FILE 0
@@ -71,48 +78,72 @@ std::string   configuration_file = (Environment::get("HOME") +
 	 std::string("/") +			\
 	 std::string("rules"))
 int           max_depth          = 16;
-FS::Directory tmp_dir            = (Environment::get("HOME") +
-				    std::string("/") +
-				    std::string(".") +
-				    std::string(PACKAGE_TARNAME) +
-				    std::string("/") +
-				    std::string("tmp"));
 
 void help(void)
 {
 	std::cout
-		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..." <<                               std::endl
-		<<                                                                                                  std::endl
-		<< "Options: " <<                                                                                   std::endl
+		<< "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..." <<
+                std::endl
+		<<
+                std::endl
+		<< "Options: " <<
+                std::endl
 #if USE_CONFIGURATION_FILE
-		<< "  -c, --config=FILE       use alternate configuration file" <<                                  std::endl
-		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/configuration')" << std::endl
+		<< "  -c, --config=FILE       use alternate configuration file" <<
+                std::endl
+		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/configuration')" <<
+                std::endl
 #endif
-		<< "  -r, --rules=FILE        use alternate rules file" <<                                          std::endl
-		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/rules')" <<         std::endl
-		<< "  -m, --max-depth=NUM     use NUM as max filter-chains depth" <<                                std::endl
-		<< "                          (the default is `" << max_depth << "')" <<                            std::endl
-		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<                                    std::endl
-		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/tmp')" <<           std::endl
-		<< "  -s, --separator=CHAR    use CHAR as INPUT/OUTPUT separator" <<                                std::endl
-		<< "                          (the default is `" << separator << "')" <<                            std::endl
-		<< "  -q, --no-std-rules      do not load standard rules" <<                                        std::endl
-		<< "  -b, --dump-rules        dump rules base, then exit" <<                                        std::endl
-		<< "  -n, --dry-run           display commands without modifying any files" <<                      std::endl
-		<< "  -f, --force             consider all files out of date" <<                                    std::endl
-		<< "  -d, --debug             enable debugging traces" <<                                           std::endl
-		<< "  -v, --verbose           verbosely report processing" <<                                       std::endl
-		<< "  -h, --help              print this help, then exit" <<                                        std::endl
-		<< "  -V, --version           print version number, then exit" <<                                   std::endl
-		<<                                                                                                  std::endl
-		<< "Specify TRANSFORMATION using the format:" <<                                                    std::endl
-		<<                                                                                                  std::endl
-		<< "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]" <<                                              std::endl
-		<<                                                                                                  std::endl
-		<< "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." <<     std::endl
-		<< "File TYPE is optional and it will be guessed if not provided." <<                               std::endl
-		<<                                                                                                  std::endl
-		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<                                                std::endl;
+		<< "  -r, --rules=FILE        use alternate rules file" <<
+                std::endl
+		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/rules')" <<
+                std::endl
+		<< "  -m, --max-depth=NUM     use NUM as max filter-chains depth" <<
+                std::endl
+		<< "                          (the default is `" << max_depth << "')" <<
+                std::endl
+		<< "  -t, --temp-dir=DIR      use DIR as temporary directory" <<
+                std::endl
+		<< "                          (the default is `$HOME/." << PACKAGE_TARNAME << "/tmp')" <<
+                std::endl
+		<< "  -s, --separator=CHAR    use CHAR as INPUT/OUTPUT separator" <<
+                std::endl
+		<< "                          (the default is `" << separator << "')" <<
+                std::endl
+		<< "  -q, --no-std-rules      do not load standard rules" <<
+                std::endl
+		<< "  -b, --dump-rules        dump rules base, then exit" <<
+                std::endl
+		<< "  -n, --dry-run           display commands without modifying any files" <<
+                std::endl
+		<< "  -f, --force             consider all files out of date" <<
+                std::endl
+		<< "  -d, --debug             enable debugging traces" <<
+                std::endl
+		<< "  -v, --verbose           verbosely report processing" <<
+                std::endl
+		<< "  -h, --help              print this help, then exit" <<
+                std::endl
+		<< "  -V, --version           print version number, then exit" <<
+                std::endl
+		<<
+                std::endl
+		<< "Specify TRANSFORMATION using the format:" <<
+                std::endl
+		<<
+                std::endl
+		<< "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]" <<
+                std::endl
+		<<
+                std::endl
+		<< "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." <<
+                std::endl
+		<< "File TYPE is optional and it will be guessed if not provided." <<
+                std::endl
+		<<
+                std::endl
+		<< "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<
+                std::endl;
 }
 
 void hint(const std::string & message)
@@ -137,6 +168,8 @@ int main(int argc, char * argv[])
 		std::vector<std::string> rules_all;
                 std::vector<std::string> rules_default;
                 std::vector<std::string> rules_user;
+
+                std::string              temp_dir_name;
 
                 // Useless
 		rules_all.clear();
@@ -192,7 +225,7 @@ int main(int argc, char * argv[])
 					rules_user.push_back(optarg);
 					break;
 				case 't':
-					tmp_dir = FS::Directory(optarg);
+					temp_dir_name = std::string(optarg);
 					break;
 				case 's':
 					if (strlen(optarg) > 1) {
@@ -292,18 +325,47 @@ int main(int argc, char * argv[])
 		BUG_ON((argc - optind) < 0);
 
 		// Setup working and temporary directories
-		TR_DBG("Temporary dir '%s'\n", tmp_dir.name().c_str());
-		if (!tmp_dir.exists()) {
-			hint("No such '" + tmp_dir.name() + "' directory");
-			return 1;
-		}
+                bool remove_temp_dir = false;
+		bool remove_work_dir = false;
 
-		FS::Directory work_dir(tmp_dir.name() +
+                if (temp_dir_name.empty()) {
+                        char template_dir[] = "/tmp/" PROGRAM_NAME "-XXXXXX";
+
+                        if (!mkdtemp(template_dir)) {
+				TR_ERR("Cannot create temporary directory\n");
+				return 1;
+                        }
+                        // The directory is created by mkdtemp()
+                        remove_temp_dir = true;
+
+                        temp_dir_name = std::string(template_dir);
+                }
+                BUG_ON(temp_dir_name.empty());
+
+                FS::Directory temp_dir(temp_dir_name);
+                if (!temp_dir.exists()) {
+                        // We created that directory
+                        temp_dir.create();
+                        remove_temp_dir = true;
+                }
+
+		TR_DBG("Temporary dir '%s' (%s)\n",
+                       temp_dir.name().c_str(),
+                       remove_temp_dir ? "to be removed" : "to keep");
+
+		FS::Directory work_dir(temp_dir.name() +
 				       "/" +
 				       std::string(PROGRAM_NAME) +
 				       "-" +
 				       String::itos(getpid()));
-		TR_DBG("Working dir   '%s'\n", work_dir.name().c_str());
+                if (!work_dir.exists()) {
+                        work_dir.create();
+                        remove_work_dir = true;
+                }
+
+		TR_DBG("Working dir   '%s' (%s)\n",
+                       work_dir.name().c_str(),
+                       remove_work_dir ? "to be removed" : "to keep");
 
 		std::vector<FCP::Transformation *>           transformations;
 		std::vector<FCP::Transformation *>::iterator it;
@@ -364,13 +426,7 @@ int main(int argc, char * argv[])
 		TR_VRB("Performing %d transformation(s)\n",
 		       transformations.size());
 
-		bool remove_work_dir = false;
 		try {
-			if (!work_dir.exists()) {
-				work_dir.create();
-				remove_work_dir = true;
-			}
-
 			// Run all transformations
 			for (it  = transformations.begin();
 			     it != transformations.end();
@@ -379,12 +435,6 @@ int main(int argc, char * argv[])
 				       (*it)->tag().c_str());
 				(*it)->run(dry_run, force);
 			}
-
-			if (remove_work_dir) {
-				// Recursively remove all contents in our dir
-				work_dir.remove(true);
-			}
-
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
 			if (remove_work_dir) {
@@ -401,6 +451,15 @@ int main(int argc, char * argv[])
 			     it != transformations.end();
 			     it++) {
 				delete (*it);
+			}
+
+                        // Remove directories
+			if (remove_temp_dir) {
+				temp_dir.remove(true);
+			}
+
+			if (remove_work_dir) {
+				work_dir.remove(true);
 			}
 		} catch (std::exception & e) {
 			TR_ERR("%s\n", e.what());
