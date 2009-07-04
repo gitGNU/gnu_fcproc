@@ -77,7 +77,6 @@ tests/test-execution-05
 tests/test-execution-06
 tests/test-hint-01
 tests/test-multiline-01
-tests/test-memleaks-01
 tests/test-antiloop-01
 tests/test-multipath-01
 tests/test-samefile-01

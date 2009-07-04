@@ -44,6 +44,21 @@
                     Done
                 </comment></entry>
     </entry>
+    <entry end="1244809690" priority="high" start="1240482005">
+            Create temporary directories in /tmp (or similar) instead of using home directory ...
+            <comment>
+                DoneDone
+            </comment><entry end="1244809682" priority="medium" start="1243953987">
+                Import mkdtemp module from gnulib
+                <comment>
+                    Done
+                </comment></entry>
+    <entry end="1244809687" priority="medium" start="1244473943">
+                Use mkdtemp() in order to create temporary directories
+                <comment>
+                    Done
+                </comment></entry>
+    </entry>
     <entry end="1239911715" priority="medium" start="1227560699">
             Add a script to translate fcp rule files into graphviz format
             <comment>
@@ -54,35 +69,20 @@
             <comment>
                 Done
             </comment></entry>
-    <entry end="1238532816" priority="verylow" start="1238244109">
+    <entry end="1244809694" priority="verylow" start="1238244109">
             Update all copyright dates
             <comment>
                 Done
             </comment></entry>
-    <entry priority="high" start="1240482005">
-            Create temporary directories in /tmp (or similar) instead of using home directory ...
-            <entry priority="medium" start="1243953987">
-                Import mkdtemp module from gnulib
-            </entry>
-    </entry>
+    <entry priority="veryhigh" start="1228259379">
+            Add multi-input/single-output handling
+        </entry>
+    <entry priority="high" start="1244809732">
+            Fix includes related code
+        </entry>
     </entry>
     <entry priority="high" start="1233736742">
         Release 0.2.0
-        <entry priority="veryhigh" start="1228259379">
-            Add multi-input/single-output handling
-        </entry>
-    <entry priority="high" start="1226590365">
-            Make the rules parser more robust
-        </entry>
-    <entry priority="medium" start="1239781503">
-            Add commands show while dumping rules
-        </entry>
-    <entry priority="low" start="1227122737">
-            Rearrange the build process in order to use EXEEXT (if needed)
-        </entry>
-    </entry>
-    <entry priority="medium" start="1233738977">
-        Release 0.3.0
         <entry priority="veryhigh" start="1226585740">
             Add Stream class in order to wrap the std::stream, obtaining a multithread logging mechanism
             <entry priority="low" start="1226590640">
@@ -98,8 +98,23 @@
                 Add inter-chain locking mechanisms
             </entry>
     </entry>
+    <entry priority="low" start="1227122737">
+            Rearrange the build process in order to use EXEEXT (if needed)
+        </entry>
+    </entry>
+    <entry priority="medium" start="1233738977">
+        Release 0.3.0
+        <entry priority="high" start="1226590365">
+            Make the rules parser more robust
+        </entry>
+    <entry priority="medium" start="1239781503">
+            Add commands show while dumping rules
+        </entry>
     </entry>
     <entry priority="low" start="1243950771">
         Release 0.4.0
+        <entry priority="medium" start="1244669208">
+            Fix bootstrap in order to exit when a missing program is called
+        </entry>
     </entry>
     </root>
