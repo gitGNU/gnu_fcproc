@@ -30,105 +30,105 @@
 #include "libs/misc/string.h"
 
 namespace Configuration {
-	class File {
-	public:
-		File(std::string delimiter = "=",
-		     std::string comment   = "#",
-		     std::string whites    = " \n\t\v\r\f");
+        class File {
+        public:
+                File(std::string delimiter = "=",
+                     std::string comment   = "#",
+                     std::string whites    = " \n\t\v\r\f");
 
-		// Search for key and read value or optional default value
-		template<class T> bool get(T &                 var,
-					   const std::string & key) const;
-		template<class T> bool get(T &                 var,
-					   const std::string & key,
-					   const T &           value) const;
+                // Search for key and read value or optional default value
+                template<class T> bool get(T &                 var,
+                                           const std::string & key) const;
+                template<class T> bool get(T &                 var,
+                                           const std::string & key,
+                                           const T &           value) const;
 
-		template<class T> void set(std::string key,
-					   const T &   value);
-		void                   remove(const std::string & key);
-		bool                   exists(const std::string & key) const;
+                template<class T> void set(std::string key,
+                                           const T &   value);
+                void                   remove(const std::string & key);
+                bool                   exists(const std::string & key) const;
 
-		friend std::ostream &  operator <<(std::ostream & os,
-						   const File &   cf);
-		friend std::istream &  operator >>(std::istream & is,
-						   File &         cf);
+                friend std::ostream &  operator <<(std::ostream & os,
+                                                   const File &   cf);
+                friend std::istream &  operator >>(std::istream & is,
+                                                   File &         cf);
 
-	protected:
+        protected:
 
-	private:
-		std::string            delimiter_;
-		std::string            comment_;
-		std::string            whites_;
-		std::map<std::string,
-			 std::string>  tuples_;
+        private:
+                std::string            delimiter_;
+                std::string            comment_;
+                std::string            whites_;
+                std::map<std::string,
+                         std::string>  tuples_;
 
-		template<class T>
-		static std::string     as_string(const T & t);
-		template<class T>
-		static T               to_T(const std::string & s);
-	};
+                template<class T>
+                static std::string     as_string(const T & t);
+                template<class T>
+                static T               to_T(const std::string & s);
+        };
 
-	template<class T>
-	std::string File::as_string(const T & t)
-	{
-		std::ostringstream o;
+        template<class T>
+        std::string File::as_string(const T & t)
+        {
+                std::ostringstream o;
 
-		o << t;
+                o << t;
 
-		return o.str();
-	}
+                return o.str();
+        }
 
-	template<class T>
-	T File::to_T(const std::string & s)
-	{
-		T                  t;
-		std::istringstream i(s);
+        template<class T>
+        T File::to_T(const std::string & s)
+        {
+                T                  t;
+                std::istringstream i(s);
 
-		i >> t;
+                i >> t;
 
-		return t;
-	}
+                return t;
+        }
 
-	template<class T>
-	bool File::get(T &                 var,
-		       const std::string & key) const
-	{
-		std::map<std::string, std::string>::const_iterator p;
+        template<class T>
+        bool File::get(T &                 var,
+                       const std::string & key) const
+        {
+                std::map<std::string, std::string>::const_iterator p;
 
-		p = tuples_.find(key);
-		if (p != tuples_.end()) {
-			var = to_T<T>(p->second);
-			return true;
-		}
+                p = tuples_.find(key);
+                if (p != tuples_.end()) {
+                        var = to_T<T>(p->second);
+                        return true;
+                }
 
-		return false;
-	}
+                return false;
+        }
 
-	template<class T>
-	bool File::get(T &                 var,
-		       const std::string & key,
-		       const T &          value) const
-	{
-		std::map<std::string, std::string>::const_iterator p;
+        template<class T>
+        bool File::get(T &                 var,
+                       const std::string & key,
+                       const T &          value) const
+        {
+                std::map<std::string, std::string>::const_iterator p;
 
-		p = tuples_.find(key);
-		if (p != tuples_.end()) {
-			var = to_T<T>(p->second);
-			return true;
-		}
+                p = tuples_.find(key);
+                if (p != tuples_.end()) {
+                        var = to_T<T>(p->second);
+                        return true;
+                }
 
-		var = value;
+                var = value;
 
-		return false;
-	}
+                return false;
+        }
 
-	template<class T>
-	void File::set(std::string key,
-		       const T &   value)
-	{
-		tuples_[String::trim_both(key, whites_)] =
-			String::trim_both(as_string(value), whites_);
-	}
+        template<class T>
+        void File::set(std::string key,
+                       const T &   value)
+        {
+                tuples_[String::trim_both(key, whites_)] =
+                        String::trim_both(as_string(value), whites_);
+        }
 }
 
 #endif // LIBS_CONF_CONFIGURATION_H

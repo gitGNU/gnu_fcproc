@@ -25,16 +25,16 @@
 #include <sstream>
 
 namespace String {
-	std::string trim_left(const std::string & s,
-			      const std::string & t);
-	std::string trim_right(const std::string & s,
-			       const std::string & t);
-	std::string trim_both(const std::string & s,
-			      const std::string & t);
-	std::string replace(std::string &       in,
-			    const std::string & from,
-			    const std::string & to);
-	std::string itos(int value);
+        std::string trim_left(const std::string & s,
+                              const std::string & t);
+        std::string trim_right(const std::string & s,
+                               const std::string & t);
+        std::string trim_both(const std::string & s,
+                              const std::string & t);
+        std::string replace(std::string &       in,
+                            const std::string & from,
+                            const std::string & to);
+        std::string itos(int value);
 
         void        slice(const std::string & in,
                           char                separator,

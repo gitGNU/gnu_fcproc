@@ -33,131 +33,131 @@
 #include "libs/fs/file.h"
 
 namespace FS {
-	Directory::Directory(const std::string & name)
-	{
-		if (name == "") {
-			throw Exception("Missing directory name");
-		}
+        Directory::Directory(const std::string & name)
+        {
+                if (name == "") {
+                        throw Exception("Missing directory name");
+                }
 
-		// Remove trailing '/'
-		std::string::size_type p;
+                // Remove trailing '/'
+                std::string::size_type p;
 
-		p = name.rfind("/");
-		//TR_DBG("name = '%s', p = %d, size = %d\n",
-		//       name.c_str(), p, name.size());
+                p = name.rfind("/");
+                //TR_DBG("name = '%s', p = %d, size = %d\n",
+                //       name.c_str(), p, name.size());
 
-		if (p == (name.size() - 1)) {
-			name_ = name.substr(0, p);
-			return;
-		}
+                if (p == (name.size() - 1)) {
+                        name_ = name.substr(0, p);
+                        return;
+                }
 
-		name_ = name;
-	}
+                name_ = name;
+        }
 
-	Directory::~Directory(void)
-	{
-	}
+        Directory::~Directory(void)
+        {
+        }
 
-	const std::string & Directory::name(void) const
-	{
-		return name_;
-	}
+        const std::string & Directory::name(void) const
+        {
+                return name_;
+        }
 
-	void Directory::create(void) const
-	{
-		// XXX FIXME: Consider using the gnulib replacement
-		if (::mkdir(name_.c_str(), 0700) != 0) {
-			throw Exception("Cannot create "
-					"'" + name_ + "' "
-					"directory "
-					"(" +
-					std::string(strerror(errno)) +
-					")");
-		}
+        void Directory::create(void) const
+        {
+                // XXX FIXME: Consider using the gnulib replacement
+                if (::mkdir(name_.c_str(), 0700) != 0) {
+                        throw Exception("Cannot create "
+                                        "'" + name_ + "' "
+                                        "directory "
+                                        "(" +
+                                        std::string(strerror(errno)) +
+                                        ")");
+                }
 
-		TR_DBG("Directory '%s' created successfully\n", name_.c_str());
-	}
+                TR_DBG("Directory '%s' created successfully\n", name_.c_str());
+        }
 
-	void Directory::remove(bool recursive) const
-	{
-		TR_DBG("Removing directory '%s'\n", name_.c_str());
-		if (recursive) {
-			DIR * dir;
+        void Directory::remove(bool recursive) const
+        {
+                TR_DBG("Removing directory '%s'\n", name_.c_str());
+                if (recursive) {
+                        DIR * dir;
 
-			dir = opendir(name_.c_str());
-			if (!dir) {
-				throw Exception("Cannot open "
-						"'" + name_ + "' "
-						"directory "
-						"(" +
-						std::string(strerror(errno)) +
-						")");
-			}
+                        dir = opendir(name_.c_str());
+                        if (!dir) {
+                                throw Exception("Cannot open "
+                                                "'" + name_ + "' "
+                                                "directory "
+                                                "(" +
+                                                std::string(strerror(errno)) +
+                                                ")");
+                        }
 
-			struct dirent * entry;
-			while ((entry = readdir(dir)) != 0) {
-				std::string t(entry->d_name);
+                        struct dirent * entry;
+                        while ((entry = readdir(dir)) != 0) {
+                                std::string t(entry->d_name);
 
-				switch (entry->d_type) {
-					case DT_REG: {
-						File f(name_ + "/" + t);
-						f.remove();
-						break;
-					}
-					case DT_DIR: {
-						// Skip '.' and '..'
-						if ((t == ".") || (t == "..")) {
-							break;
-						}
+                                switch (entry->d_type) {
+                                        case DT_REG: {
+                                                File f(name_ + "/" + t);
+                                                f.remove();
+                                                break;
+                                        }
+                                        case DT_DIR: {
+                                                // Skip '.' and '..'
+                                                if ((t == ".") || (t == "..")) {
+                                                        break;
+                                                }
 
-						Directory d(name_ + "/" + t);
-						d.remove(recursive);
-						break;
-					}
-					default:
-						BUG();
-						break;
-				}
-			}
+                                                Directory d(name_ + "/" + t);
+                                                d.remove(recursive);
+                                                break;
+                                        }
+                                        default:
+                                                BUG();
+                                                break;
+                                }
+                        }
 
-			closedir(dir);
-		}
+                        closedir(dir);
+                }
 
-		// XXX FIXME: Consider using the gnulib replacement
-		if (::rmdir(name_.c_str()) != 0) {
-			throw Exception("Cannot remove "
-					"'" + name_ + "' "
-					"directory "
-					"(" +
-					std::string(strerror(errno)) +
-					")");
-		}
+                // XXX FIXME: Consider using the gnulib replacement
+                if (::rmdir(name_.c_str()) != 0) {
+                        throw Exception("Cannot remove "
+                                        "'" + name_ + "' "
+                                        "directory "
+                                        "(" +
+                                        std::string(strerror(errno)) +
+                                        ")");
+                }
 
-		TR_DBG("Directory '%s' removed successfully\n", name_.c_str());
-	}
+                TR_DBG("Directory '%s' removed successfully\n", name_.c_str());
+        }
 
-	bool Directory::exists(void) const
-	{
-		// XXX FIXME: Consider using the gnulib replacement
-		DIR * tmp = opendir(name_.c_str());
-		if (tmp == 0) {
-			BUG_ON(errno == EBADF);
+        bool Directory::exists(void) const
+        {
+                // XXX FIXME: Consider using the gnulib replacement
+                DIR * tmp = opendir(name_.c_str());
+                if (tmp == 0) {
+                        BUG_ON(errno == EBADF);
 
-			if (errno == ENOENT) {
-				return false;
-			}
+                        if (errno == ENOENT) {
+                                return false;
+                        }
 
-			throw Exception("Cannot open "
-					"'" + name_ + "' "
-					"directory "
-					"(" +
-					std::string(strerror(errno)) +
-					")");
-		}
+                        throw Exception("Cannot open "
+                                        "'" + name_ + "' "
+                                        "directory "
+                                        "(" +
+                                        std::string(strerror(errno)) +
+                                        ")");
+                }
 
-		// XXX FIXME: Maybe a check on closedir() return value ...
-		closedir(tmp);
+                // XXX FIXME: Maybe a check on closedir() return value ...
+                closedir(tmp);
 
-		return true;
-	}
+                return true;
+        }
 };

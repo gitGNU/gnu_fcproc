@@ -24,34 +24,34 @@
 #include <string>
 
 namespace FS {
-	class File {
-	public:
-		File(const std::string & name,
+        class File {
+        public:
+                File(const std::string & name,
                      const std::string & type = "");
-		~File(void);
+                ~File(void);
 
-		const std::string & name(void)                           const;
-		const std::string & dirname(void)                        const;
-		std::string         basename(bool strip_suffix = false)  const;
-		const std::string & extension(void)                      const;
-		time_t              mtime(void)                          const;
-		bool                exists(void)                         const;
-		void                remove(void)                         const;
+                const std::string & name(void)                           const;
+                const std::string & dirname(void)                        const;
+                std::string         basename(bool strip_suffix = false)  const;
+                const std::string & extension(void)                      const;
+                time_t              mtime(void)                          const;
+                bool                exists(void)                         const;
+                void                remove(void)                         const;
 
-		const std::string & type(void)                           const;
+                const std::string & type(void)                           const;
 
-	protected:
-		File(void);
+        protected:
+                File(void);
 
-	private:
-		std::string name_;
-		std::string dirname_;
-		struct {
-			std::string prefix;
-			std::string suffix;
-		} basename_;
+        private:
+                std::string name_;
+                std::string dirname_;
+                struct {
+                        std::string prefix;
+                        std::string suffix;
+                } basename_;
                 std::string type_;
-	};
+        };
 }
 
 #endif // LIBS_FS_FILE_H

@@ -28,32 +28,32 @@
 
 extern void backtrace_dump(void);
 
-#define ABORT() {						\
-	backtrace_dump();					\
-	TR_CRT("\n");						\
-	TR_CRT("Please report to <%s>\n", PACKAGE_BUGREPORT);	\
-	abort();						\
+#define ABORT() {                                               \
+        backtrace_dump();                                       \
+        TR_CRT("\n");                                           \
+        TR_CRT("Please report to <%s>\n", PACKAGE_BUGREPORT);   \
+        abort();                                                \
 }
 
-#define BUG() {							\
-	TR_CRT("Bug hit in '%s' (%s:%d)\n",			\
-	       __PRETTY_FUNCTION__, __FILE__, __LINE__);	\
-	TR_CRT("\n");						\
-	ABORT();						\
+#define BUG() {                                                 \
+        TR_CRT("Bug hit in '%s' (%s:%d)\n",                     \
+               __PRETTY_FUNCTION__, __FILE__, __LINE__);        \
+        TR_CRT("\n");                                           \
+        ABORT();                                                \
 }
 
-#define BUG_ON(X) {							\
-	if (X) {							\
-		TR_CRT("Unsatisfied condition '%s' in '%s' (%s:%d)\n",	\
-		       #X, __PRETTY_FUNCTION__, __FILE__, __LINE__);	\
-		TR_CRT("\n");						\
-		ABORT();						\
-	}								\
+#define BUG_ON(X) {                                                     \
+        if (X) {                                                        \
+                TR_CRT("Unsatisfied condition '%s' in '%s' (%s:%d)\n",  \
+                       #X, __PRETTY_FUNCTION__, __FILE__, __LINE__);    \
+                TR_CRT("\n");                                           \
+                ABORT();                                                \
+        }                                                               \
 }
 
-#define MISSING_CODE() {					\
-	TR_DBG("Missing code in '%s' (%s:%d)\n",		\
-	       __PRETTY_FUNCTION__, __FILE__, __LINE__);	\
+#define MISSING_CODE() {                                        \
+        TR_DBG("Missing code in '%s' (%s:%d)\n",                \
+               __PRETTY_FUNCTION__, __FILE__, __LINE__);        \
 }
 
 #endif // LIBS_MISC_DEBUG_H

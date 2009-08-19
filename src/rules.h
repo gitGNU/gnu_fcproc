@@ -34,73 +34,73 @@
 #include "filter.h"
 
 namespace FCP {
-	class Rules {
-	public:
-		Rules(const std::vector<std::string> & filenames);
-		~Rules(void);
+        class Rules {
+        public:
+                Rules(const std::vector<std::string> & filenames);
+                ~Rules(void);
 
-		// Builds a filters-chain
-		std::vector<FCP::Filter *> chain(const FS::File &      input,
-						 const FS::File &      output,
-						 int                   mdepth,
-						 const FS::Directory & work);
+                // Builds a filters-chain
+                std::vector<FCP::Filter *> chain(const FS::File &      input,
+                                                 const FS::File &      output,
+                                                 int                   mdepth,
+                                                 const FS::Directory & work);
 
-		void                       dump(std::ostream & stream);
+                void                       dump(std::ostream & stream);
 
-	protected:
-		// No copy allowed
-		Rules(const Rules &);
-		void operator =(const Rules &);
+        protected:
+                // No copy allowed
+                Rules(const Rules &);
+                void operator =(const Rules &);
 
-	private:
-		struct {
-			regmatch_t match_[3];
-			regex_t    empty_;
-			regex_t    comment_;
-			regex_t    include_;
-			regex_t    header_;
-			regex_t    body_;
-		} re_;
+        private:
+                struct {
+                        regmatch_t match_[3];
+                        regex_t    empty_;
+                        regex_t    comment_;
+                        regex_t    include_;
+                        regex_t    header_;
+                        regex_t    body_;
+                } re_;
 
-		// rules = (input-tag, output-tag, commands)
-		std::map<std::string,
-			 std::map<std::string,
-				  std::vector<std::string> > > rules_;
+                // rules = (input-tag, output-tag, commands)
+                std::map<std::string,
+                         std::map<std::string,
+                                  std::vector<std::string> > > rules_;
 
-		std::string readline(std::ifstream & stream);
-		void        parse(const std::string & filename);
+                std::string readline(std::ifstream & stream);
+                void        parse(const std::string & filename);
 
-		typedef std::pair<std::string,
-				  std::vector<std::string> > node_t;
+                typedef std::pair<std::string,
+                                  std::vector<std::string> > node_t;
 
-		class Antiloop {
-		private:
-			std::set<std::pair<std::string, std::string> > set_;
+                class Antiloop {
+                private:
+                        std::set<std::pair<std::string, std::string> > set_;
 
-		public:
-			Antiloop(void)  { };
-			~Antiloop(void) { };
+                public:
+                        Antiloop(void)  { };
+                        ~Antiloop(void) { };
 
-			bool insert(const std::string & in,
-				    const std::string & out) {
-				std::pair<std::string, std::string> t(in,out);
+                        bool insert(const std::string & in,
+                                    const std::string & out) {
+                                std::pair<std::string, std::string> t(in,out);
 
-				if (set_.find(t) != set_.end()) {
-					// The node is already present, we have
-					// got a loop ...
-					return false;
-				}
-				set_.insert(t);
-				return true;
-			}
-		};
+                                if (set_.find(t) != set_.end()) {
+                                        // The node is already present, we have
+                                        // got a loop ...
+                                        return false;
+                                }
+                                set_.insert(t);
+                                return true;
+                        }
+                };
 
-		bool	    chain_nodes(Antiloop &            antiloop,
-					const std::string &   tag_in,
-					const std::string &   tag_out,
-					int                   mdepth,
-					std::vector<node_t> & data);
-	};
+                bool        chain_nodes(Antiloop &            antiloop,
+                                        const std::string &   tag_in,
+                                        const std::string &   tag_out,
+                                        int                   mdepth,
+                                        std::vector<node_t> & data);
+        };
 }
 
 #endif // RULES_H

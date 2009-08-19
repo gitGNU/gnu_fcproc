@@ -25,10 +25,10 @@
 #include <cstdlib>
 
 namespace Environment {
-	std::string get(const char*         key);
-	std::string get(const std::string & key);
-	bool        set(const std::string & key,
-			const std::string & value);
+        std::string get(const char*         key);
+        std::string get(const std::string & key);
+        bool        set(const std::string & key,
+                        const std::string & value);
 };
 
 #endif // LIBS_MISC_ENVIRONMENT_H

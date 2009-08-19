@@ -40,21 +40,21 @@ extern const char * trace_prefix;
 #define TR_LVL_DEFAULT TR_LVL_NOTICE
 
 #define _TRACE(LVL,FMT,ARGS...) {                                       \
-	if ((LVL) >= trace_level) {                                     \
-		FILE * s;	                                        \
+        if ((LVL) >= trace_level) {                                     \
+                FILE * s;                                               \
                                                                         \
-		if (trace_level >= TR_LVL_ERROR) {                      \
-			s = stderr;                                     \
-		} else {                                                \
-			s = stdout;                                     \
-		}                                                       \
+                if (trace_level >= TR_LVL_ERROR) {                      \
+                        s = stderr;                                     \
+                } else {                                                \
+                        s = stdout;                                     \
+                }                                                       \
                                                                         \
-		if (trace_prefix) {                                     \
-			fprintf(s, "%s: " FMT, trace_prefix, ##ARGS);   \
-		} else {                                                \
-			fprintf(s, FMT, ##ARGS);                        \
-		}                                                       \
-	}                                                               \
+                if (trace_prefix) {                                     \
+                        fprintf(s, "%s: " FMT, trace_prefix, ##ARGS);   \
+                } else {                                                \
+                        fprintf(s, FMT, ##ARGS);                        \
+                }                                                       \
+        }                                                               \
 }
 
 // Shortcuts for configuration

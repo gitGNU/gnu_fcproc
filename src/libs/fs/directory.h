@@ -24,22 +24,22 @@
 #include <string>
 
 namespace FS {
-	class Directory {
-	public:
-		Directory(const std::string & name);
-		~Directory(void);
+        class Directory {
+        public:
+                Directory(const std::string & name);
+                ~Directory(void);
 
-		const std::string & name(void)                     const;
-		void                create(void)                   const;
-		void                remove(bool recursive = false) const;
-		bool                exists(void)                   const;
+                const std::string & name(void)                     const;
+                void                create(void)                   const;
+                void                remove(bool recursive = false) const;
+                bool                exists(void)                   const;
 
-	protected:
-		Directory(void);
+        protected:
+                Directory(void);
 
-	private:
-		std::string name_;
-	};
+        private:
+                std::string name_;
+        };
 }
 
 #endif // LIBS_FS_DIRECTORY_H

@@ -38,29 +38,29 @@ static void * buffer[BACKTRACE_SIZE];
 
 void backtrace_dump(void)
 {
-	int     nptrs;
-	char ** strings;
+        int     nptrs;
+        char ** strings;
 
-	nptrs   = backtrace(buffer, BACKTRACE_SIZE);
-	strings = backtrace_symbols(buffer, nptrs);
-	if (!strings) {
-		TR_CRT("No backtrace symbols available\n");
-		return;
-	}
+        nptrs   = backtrace(buffer, BACKTRACE_SIZE);
+        strings = backtrace_symbols(buffer, nptrs);
+        if (!strings) {
+                TR_CRT("No backtrace symbols available\n");
+                return;
+        }
 
-	int j;
+        int j;
 
-	TR_CRT("Backtrace:\n");
-	TR_CRT("\n");
-	for (j = 0; j < nptrs; j++) {
-		TR_ERR("  %s\n", strings[j]);
-	}
+        TR_CRT("Backtrace:\n");
+        TR_CRT("\n");
+        for (j = 0; j < nptrs; j++) {
+                TR_ERR("  %s\n", strings[j]);
+        }
 
-	free(strings);
+        free(strings);
 }
 #else
 void backtrace_dump(void)
 {
-	TR_CRT("No backtrace available\n");
+        TR_CRT("No backtrace available\n");
 }
 #endif

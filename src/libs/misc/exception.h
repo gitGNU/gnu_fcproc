@@ -25,16 +25,16 @@
 
 class Exception : public std::exception {
  public:
-	Exception(const std::string & description);
-	~Exception(void) throw();
+        Exception(const std::string & description);
+        ~Exception(void) throw();
 
-	virtual const char * what(void) const throw();
+        virtual const char * what(void) const throw();
 
  protected:
-	Exception(void);
+        Exception(void);
 
  private:
-	std::string description_;
+        std::string description_;
 };
 
 #endif // LIBS_MISC_EXCEPTION_H

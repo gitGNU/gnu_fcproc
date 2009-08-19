@@ -32,155 +32,155 @@
 #include "libs/misc/string.h"
 
 namespace FCP {
-	Filter::Filter(const FS::File &                 input,
-		       const FS::File &                 output,
-		       const std::vector<std::string> & commands) :
-		input_(input),
-		output_(output),
-		templates_(commands)
-	{
-	}
+        Filter::Filter(const FS::File &                 input,
+                       const FS::File &                 output,
+                       const std::vector<std::string> & commands) :
+                input_(input),
+                output_(output),
+                templates_(commands)
+        {
+        }
 
-	Filter::~Filter(void)
-	{
-	}
+        Filter::~Filter(void)
+        {
+        }
 
-	const FS::File & Filter::input(void)
-	{
-		return input_;
-	}
+        const FS::File & Filter::input(void)
+        {
+                return input_;
+        }
 
-	const FS::File & Filter::output(void)
-	{
-		return output_;
-	}
+        const FS::File & Filter::output(void)
+        {
+                return output_;
+        }
 
-	std::string Filter::mktemp(const std::string & id,
-				   const std::string & dir,
-				   size_t              index)
-	{
-		return dir + std::string("/") + id + std::string("-") +
-			String::itos(index);
-	}
+        std::string Filter::mktemp(const std::string & id,
+                                   const std::string & dir,
+                                   size_t              index)
+        {
+                return dir + std::string("/") + id + std::string("-") +
+                        String::itos(index);
+        }
 
-	// XXX FIXME: Remove id parameter ASAP
-	void Filter::setup(const std::string &   id,
-			   const FS::Directory & work_dir)
-	{
-		TR_DBG("Filter '%s' setup (working directory '%s')\n",
-		       id.c_str(), work_dir.name().c_str());
+        // XXX FIXME: Remove id parameter ASAP
+        void Filter::setup(const std::string &   id,
+                           const FS::Directory & work_dir)
+        {
+                TR_DBG("Filter '%s' setup (working directory '%s')\n",
+                       id.c_str(), work_dir.name().c_str());
 
-		std::vector<std::string>::iterator ic;
+                std::vector<std::string>::iterator ic;
 
-		commands_ = templates_;
+                commands_ = templates_;
 
-		std::map<std::string, std::string> temps;
-		size_t                             count;
+                std::map<std::string, std::string> temps;
+                size_t                             count;
 
-		count = 0;
+                count = 0;
 
-		//TR_DBG("Replacing variables\n")
-		for (ic  = commands_.begin(); ic != commands_.end(); ic++) {
-			std::string command;
+                //TR_DBG("Replacing variables\n")
+                for (ic  = commands_.begin(); ic != commands_.end(); ic++) {
+                        std::string command;
 
-			command = (*ic);
+                        command = (*ic);
 
-			command = String::replace(command,
-						  "$I",
-						  input_.name().c_str());
-			command = String::replace(command,
-						  "$O",
-						  output_.name().c_str());
+                        command = String::replace(command,
+                                                  "$I",
+                                                  input_.name().c_str());
+                        command = String::replace(command,
+                                                  "$O",
+                                                  output_.name().c_str());
 
-			//TR_DBG("  Command '%s'\n", command.c_str());
+                        //TR_DBG("  Command '%s'\n", command.c_str());
 
-			// Ugly
-			for (;;) {
-				//TR_DBG("    Replace in progress\n");
-				std::string::size_type s;
-				std::string::size_type e;
-				std::string            v;
+                        // Ugly
+                        for (;;) {
+                                //TR_DBG("    Replace in progress\n");
+                                std::string::size_type s;
+                                std::string::size_type e;
+                                std::string            v;
 
-				s = 0;
-				e = 0;
+                                s = 0;
+                                e = 0;
 
-				//
-				// XXX FIXME:
-				//     Add environment variable substitution
-				//
+                                //
+                                // XXX FIXME:
+                                //     Add environment variable substitution
+                                //
 
-				s = command.find("$T");
-				//TR_DBG("      s = %d, e = %d\n", s, e);
-				if ((s == 0) || (s == std::string::npos)) {
-					break;
-				}
+                                s = command.find("$T");
+                                //TR_DBG("      s = %d, e = %d\n", s, e);
+                                if ((s == 0) || (s == std::string::npos)) {
+                                        break;
+                                }
 
-				e = command.find_first_not_of("0123456789",
-							      s + 1);
-				//TR_DBG("      s = %d, e = %d\n", s, e);
-				if ((e == 0) || (e == std::string::npos)) {
-					break;
-				}
+                                e = command.find_first_not_of("0123456789",
+                                                              s + 1);
+                                //TR_DBG("      s = %d, e = %d\n", s, e);
+                                if ((e == 0) || (e == std::string::npos)) {
+                                        break;
+                                }
 
-				v = command.substr(s, e - s + 2);
-				BUG_ON(v.size() == 0);
+                                v = command.substr(s, e - s + 2);
+                                BUG_ON(v.size() == 0);
 
-				//TR_DBG("      v = '%s'\n", v.c_str());
+                                //TR_DBG("      v = '%s'\n", v.c_str());
 
-				std::string t;
-				t = temps[v];
-				if (t == "") {
-					t = mktemp(id, work_dir.name(), count);
-					count++;
-					temps[v] = t;
-				}
+                                std::string t;
+                                t = temps[v];
+                                if (t == "") {
+                                        t = mktemp(id, work_dir.name(), count);
+                                        count++;
+                                        temps[v] = t;
+                                }
 
-				command = String::replace(command, v, t);
+                                command = String::replace(command, v, t);
 
-				//TR_DBG("    Replaced '%s' with '%s'\n",
-				//       v.c_str(), t.c_str());
-			}
+                                //TR_DBG("    Replaced '%s' with '%s'\n",
+                                //       v.c_str(), t.c_str());
+                        }
 
-			//TR_DBG("    Command is now '%s'\n", command.c_str());
+                        //TR_DBG("    Command is now '%s'\n", command.c_str());
 
-			(*ic) = command;
-		}
+                        (*ic) = command;
+                }
 
-		BUG_ON(commands_.size() != templates_.size());
-	}
+                BUG_ON(commands_.size() != templates_.size());
+        }
 
-	void Filter::run(bool dry)
-	{
-		// XXX FIXME: Place a more specific trace ...
-		TR_DBG("Running filter commands\n");
+        void Filter::run(bool dry)
+        {
+                // XXX FIXME: Place a more specific trace ...
+                TR_DBG("Running filter commands\n");
 
-		std::vector<std::string>::iterator i;
-		for (i  = commands_.begin(); i != commands_.end(); i++) {
-			if (dry) {
-				TR_VRB("%s\n", (*i).c_str());
-				continue;
-			}
+                std::vector<std::string>::iterator i;
+                for (i  = commands_.begin(); i != commands_.end(); i++) {
+                        if (dry) {
+                                TR_VRB("%s\n", (*i).c_str());
+                                continue;
+                        }
 
-			int ret;
+                        int ret;
 
-			BUG_ON((*i).size() == 0);
+                        BUG_ON((*i).size() == 0);
 
-			TR_DBG("  Calling system(\"%s\")\n", (*i).c_str());
+                        TR_DBG("  Calling system(\"%s\")\n", (*i).c_str());
 
-			// XXX FIXME: Use gnulib system()
-			ret = system((*i).c_str());
-			if (ret == -1) {
-				throw Exception("Got fork() failure");
-			}
-			if (WIFSIGNALED(ret) &&
-			    (WTERMSIG(ret) == SIGINT ||
-			     WTERMSIG(ret) == SIGQUIT)) {
-				throw Exception("Interrupted");
-			}
-			if (WEXITSTATUS(ret) != 0) {
-				throw Exception("Got problems running "
-						"command '" + (*i) + "'");
-			}
-		}
-	}
+                        // XXX FIXME: Use gnulib system()
+                        ret = system((*i).c_str());
+                        if (ret == -1) {
+                                throw Exception("Got fork() failure");
+                        }
+                        if (WIFSIGNALED(ret) &&
+                            (WTERMSIG(ret) == SIGINT ||
+                             WTERMSIG(ret) == SIGQUIT)) {
+                                throw Exception("Interrupted");
+                        }
+                        if (WEXITSTATUS(ret) != 0) {
+                                throw Exception("Got problems running "
+                                                "command '" + (*i) + "'");
+                        }
+                }
+        }
 };

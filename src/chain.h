@@ -30,30 +30,30 @@
 #include "filter.h"
 
 namespace FCP {
-	class Chain {
-	public:
-		Chain(const std::string &          id,
-		      const FS::File &             input,
-		      const FS::File &             output,
-		      std::vector<FCP::Filter *> & filters,
-		      const FS::Directory &        work);
-		~Chain(void);
+        class Chain {
+        public:
+                Chain(const std::string &          id,
+                      const FS::File &             input,
+                      const FS::File &             output,
+                      std::vector<FCP::Filter *> & filters,
+                      const FS::Directory &        work);
+                ~Chain(void);
 
-		const std::string & id(void);
-		void                run(bool dry,
-					bool force);
+                const std::string & id(void);
+                void                run(bool dry,
+                                        bool force);
 
-	protected:
-		// No copy allowed
-		Chain(const Chain &);
-		void operator =(const Chain &);
+        protected:
+                // No copy allowed
+                Chain(const Chain &);
+                void operator =(const Chain &);
 
-	private:
-		std::string                id_;
-		const FS::File &           input_;
-		const FS::File &           output_;
-		std::vector<FCP::Filter *> filters_;
-	};
+        private:
+                std::string                id_;
+                const FS::File &           input_;
+                const FS::File &           output_;
+                std::vector<FCP::Filter *> filters_;
+        };
 }
 
 #endif // CHAIN_H

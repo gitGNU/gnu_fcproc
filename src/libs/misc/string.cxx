@@ -24,81 +24,81 @@
 #include "libs/misc/debug.h"
 
 namespace String {
-	std::string trim_left(const std::string & s,
-			      const std::string & t)
-	{
-		static std::string tmp;
+        std::string trim_left(const std::string & s,
+                              const std::string & t)
+        {
+                static std::string tmp;
 
-		tmp = s;
+                tmp = s;
 
-		return tmp.erase(0, tmp.find_first_not_of(t));
-	}
+                return tmp.erase(0, tmp.find_first_not_of(t));
+        }
 
-	std::string trim_right(const std::string & s,
-			       const std::string & t)
-	{
-		static std::string tmp;
+        std::string trim_right(const std::string & s,
+                               const std::string & t)
+        {
+                static std::string tmp;
 
-		tmp = s;
+                tmp = s;
 
-		return tmp.erase(tmp.find_last_not_of(t) + 1);
-	}
+                return tmp.erase(tmp.find_last_not_of(t) + 1);
+        }
 
-	std::string trim_both(const std::string & s,
-			      const std::string & t)
-	{
-		return trim_left(trim_right(s, t), t);
-	}
+        std::string trim_both(const std::string & s,
+                              const std::string & t)
+        {
+                return trim_left(trim_right(s, t), t);
+        }
 
-	std::string replace(std::string &       in,
-			    const std::string & from,
-			    const std::string & to)
-	{
-		BUG_ON(from.size() == 0);
+        std::string replace(std::string &       in,
+                            const std::string & from,
+                            const std::string & to)
+        {
+                BUG_ON(from.size() == 0);
 
-		//TR_DBG("Replacing in '%s': '%s' -> '%s'\n",
-		//       in.c_str(), from.c_str(), to.c_str());
+                //TR_DBG("Replacing in '%s': '%s' -> '%s'\n",
+                //       in.c_str(), from.c_str(), to.c_str());
 
-		std::string            t;
-		std::string::size_type p;
-		std::string::size_type q;
+                std::string            t;
+                std::string::size_type p;
+                std::string::size_type q;
 
-		t = in;
-		p = 0;
-		q = from.size();
-		for (;;) {
-			p = t.find(from, p);
-			if (p == t.npos) {
-				break;
-			}
+                t = in;
+                p = 0;
+                q = from.size();
+                for (;;) {
+                        p = t.find(from, p);
+                        if (p == t.npos) {
+                                break;
+                        }
 
-			t.replace(p, q, to);
-			p += to.size();
-		}
+                        t.replace(p, q, to);
+                        p += to.size();
+                }
 
-		//TR_DBG("String is now '%s'\n", t.c_str());
+                //TR_DBG("String is now '%s'\n", t.c_str());
 
-		return t;
-	}
+                return t;
+        }
 
-	std::string itos(int value)
-	{
-		std::stringstream tmp;
+        std::string itos(int value)
+        {
+                std::stringstream tmp;
 
-		tmp << value;
+                tmp << value;
 
-		return tmp.str();
-	}
+                return tmp.str();
+        }
 
         void slice(const std::string & in,
                    char                separator,
                    std::string &       out1,
                    std::string &       out2)
         {
-		std::string::size_type p;
+                std::string::size_type p;
 
-		p = in.find(separator);
-		if ((p < 0) || (p > in.size())) {
+                p = in.find(separator);
+                if ((p < 0) || (p > in.size())) {
                         return;
                 }
 
