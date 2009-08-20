@@ -111,12 +111,6 @@ libfs_a_CPPFLAGS =				\
 ##
 update-local: Makefile
 
-all_SRCS =					\
-	$(fcp_SOURCES)				\
-	$(libmisc_a_SOURCES)			\
-	$(libconf_a_SOURCES)			\
-	$(libfs_a_SOURCES)
-
 maintainer-check-parameters: Makefile $(bin_SCRIPTS) $(bin_PROGRAMS)
 	for i in $(bin_SCRIPTS) $(bin_PROGRAMS) ; do \
 		echo @ECHO_N@ "Checking standard parameters for $$i... " ; \
@@ -128,5 +122,13 @@ maintainer-check-parameters: Makefile $(bin_SCRIPTS) $(bin_PROGRAMS)
 		fi ; \
 	done
 
-maintainer-check-local: Makefile maintainer-check-parameters
-	$(WHITESPACE_DETECT)  $(all_SRCS)
+all_SRCS =					\
+	$(fcp_SOURCES)				\
+	$(libmisc_a_SOURCES)			\
+	$(libconf_a_SOURCES)			\
+	$(libfs_a_SOURCES)
+
+maintainer-check-whitespaces: Makefile
+	$(WHITESPACE_DETECT) $(all_SRCS)
+
+maintainer-check-local: Makefile maintainer-check-whitespaces maintainer-check-parameters
