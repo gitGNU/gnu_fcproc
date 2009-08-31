@@ -46,7 +46,9 @@ AC_DEFUN([GNULIB_INIT],
   gl_FUNC_ALLOCA
   gl_FUNC_BTOWC
   gl_WCHAR_MODULE_INDICATOR([btowc])
-  gl_GETOPT
+  gl_FUNC_GETOPT_GNU
+  gl_MODULE_INDICATOR([getopt-gnu])
+  gl_FUNC_GETOPT_POSIX
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
   gl_FUNC_GETTIMEOFDAY
@@ -69,6 +71,7 @@ AC_DEFUN([GNULIB_INIT],
   gl_REGEX
   gt_TYPE_SSIZE_T
   AM_STDBOOL_H
+  gl_STDDEF_H
   gl_STDINT_H
   gl_STDLIB_H
   gl_HEADER_SYS_STAT_H
@@ -240,6 +243,7 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   lib/regex_internal.h
   lib/regexec.c
   lib/stdbool.in.h
+  lib/stddef.in.h
   lib/stdint.in.h
   lib/stdlib.in.h
   lib/streq.h
@@ -277,6 +281,7 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   m4/regex.m4
   m4/ssize_t.m4
   m4/stdbool.m4
+  m4/stddef_h.m4
   m4/stdint.m4
   m4/stdlib_h.m4
   m4/sys_stat_h.m4
@@ -284,6 +289,7 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   m4/tempname.m4
   m4/unistd_h.m4
   m4/wchar.m4
+  m4/wchar_t.m4
   m4/wcrtomb.m4
   m4/wctype.m4
   m4/wint_t.m4
