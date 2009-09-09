@@ -23,13 +23,14 @@ include $(top_srcdir)/Makefile.sub
 ##
 ## Maintainer related targets
 ##
-HOST = "http://git.savannah.gnu.org/cgit/autoconf-archive.git/plain/m4"
+URL_AA = "http://git.savannah.gnu.org/cgit/autoconf-archive.git/plain/m4"
+URL_BU = "http://github.com/salvestrini/build-utils/tree/master/m4"
 
 EXTERNAL =					\
-	ax_split_version.m4			\
-	ax_missing_prog.m4			\
-	ax_path_missing.m4			\
-        ax_cxxcpp_check_flag.m4
+	$(URL_BU)/ax_split_version.m4		\
+	$(URL_AA)/ax_missing_prog.m4		\
+	$(URL_AA)/ax_path_missing.m4		\
+        $(URL_AA)/ax_cxxcpp_check_flag.m4
 
 INTERNAL =					\
 	gnulib-cache.m4
@@ -42,16 +43,13 @@ update-local: Makefile
 	rm -r -f fetch-dir && \
 	mkdir fetch-dir && \
 	for i in $(EXTERNAL) ; do \
-		$(FETCH) $(HOST)/$$i fetch-dir/$$i || { \
-			rm -f fetch-dir/$$i ; \
-			exit 1 ; \
-		} \
-	done && \
-	for i in $(EXTERNAL) ; do \
-		mv fetch-dir/$$i $$i && \
-		touch $$i || { \
-			exit 1 ; \
-		} \
+	        URL="$$i" ; \
+	        NAME=`echo "$$i" | $(SED) -e 's,^.*/,,'` ; \
+	        $(FETCH) $$URL?raw=true fetch-dir/$$NAME && \
+	        mv fetch-dir/$$NAME $$NAME || { \
+	                rm -f fetch-dir/$$NAME ; \
+	                exit 1 ; \
+	        } \
 	done && \
 	rm -r -f fetch-dir
 
