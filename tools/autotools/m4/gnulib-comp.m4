@@ -43,34 +43,15 @@ AC_DEFUN([GNULIB_INIT],
   m4_pushdef([GNULIB_LIBSOURCES_DIR], [])
   gl_COMMON
   gl_source_base='./src/gnulib'
-  gl_FUNC_ALLOCA
-  gl_FUNC_BTOWC
-  gl_WCHAR_MODULE_INDICATOR([btowc])
-  gl_FUNC_GETOPT_GNU
-  gl_MODULE_INDICATOR([getopt-gnu])
   gl_FUNC_GETOPT_POSIX
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
   gl_FUNC_GETTIMEOFDAY
-  gl_LOCALCHARSET
-  LOCALCHARSET_TESTS_ENVIRONMENT="CHARSETALIASDIR=\"\$(top_builddir)/$gl_source_base\""
-  AC_SUBST([LOCALCHARSET_TESTS_ENVIRONMENT])
   gl_FUNC_LSTAT
   gl_SYS_STAT_MODULE_INDICATOR([lstat])
-  AC_FUNC_MALLOC
-  AC_DEFINE([GNULIB_MALLOC_GNU], 1, [Define to indicate the 'malloc' module.])
-  gl_FUNC_MALLOC_POSIX
-  gl_STDLIB_MODULE_INDICATOR([malloc-posix])
-  gl_FUNC_MBRTOWC
-  gl_WCHAR_MODULE_INDICATOR([mbrtowc])
-  gl_FUNC_MBSINIT
-  gl_WCHAR_MODULE_INDICATOR([mbsinit])
   gt_FUNC_MKDTEMP
   gl_STDLIB_MODULE_INDICATOR([mkdtemp])
   gl_MULTIARCH
-  gl_REGEX
-  gt_TYPE_SSIZE_T
-  AM_STDBOOL_H
   gl_STDDEF_H
   gl_STDINT_H
   gl_STDLIB_H
@@ -81,9 +62,6 @@ AC_DEFUN([GNULIB_INIT],
   gl_FUNC_GEN_TEMPNAME
   gl_UNISTD_H
   gl_WCHAR_H
-  gl_FUNC_WCRTOMB
-  gl_WCHAR_MODULE_INDICATOR([wcrtomb])
-  gl_WCTYPE_H
   m4_ifval(GNULIB_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([GNULIB_LIBSOURCES_DIR])[ ||
       for gl_file in ]GNULIB_LIBSOURCES_LIST[ ; do
@@ -217,70 +195,34 @@ AC_DEFUN([GNULIBtests_LIBSOURCES], [
 # gnulib-tool and may be removed by future gnulib-tool invocations.
 AC_DEFUN([GNULIB_FILE_LIST], [
   build-aux/link-warning.h
-  lib/alloca.c
-  lib/alloca.in.h
-  lib/btowc.c
-  lib/config.charset
+  lib/dummy.c
   lib/getopt.c
   lib/getopt.in.h
   lib/getopt1.c
   lib/getopt_int.h
   lib/gettext.h
   lib/gettimeofday.c
-  lib/localcharset.c
-  lib/localcharset.h
   lib/lstat.c
-  lib/malloc.c
-  lib/mbrtowc.c
-  lib/mbsinit.c
   lib/mkdtemp.c
-  lib/ref-add.sin
-  lib/ref-del.sin
-  lib/regcomp.c
-  lib/regex.c
-  lib/regex.h
-  lib/regex_internal.c
-  lib/regex_internal.h
-  lib/regexec.c
-  lib/stdbool.in.h
   lib/stddef.in.h
   lib/stdint.in.h
   lib/stdlib.in.h
-  lib/streq.h
   lib/sys_stat.in.h
   lib/sys_time.in.h
   lib/tempname.c
   lib/tempname.h
   lib/unistd.in.h
-  lib/verify.h
   lib/wchar.in.h
-  lib/wcrtomb.c
-  lib/wctype.in.h
   m4/00gnulib.m4
-  m4/alloca.m4
-  m4/btowc.m4
-  m4/codeset.m4
   m4/extensions.m4
   m4/getopt.m4
   m4/gettimeofday.m4
-  m4/glibc21.m4
   m4/gnulib-common.m4
   m4/include_next.m4
-  m4/localcharset.m4
-  m4/locale-fr.m4
-  m4/locale-ja.m4
-  m4/locale-zh.m4
   m4/longlong.m4
   m4/lstat.m4
-  m4/malloc.m4
-  m4/mbrtowc.m4
-  m4/mbsinit.m4
-  m4/mbstate_t.m4
   m4/mkdtemp.m4
   m4/multiarch.m4
-  m4/regex.m4
-  m4/ssize_t.m4
-  m4/stdbool.m4
   m4/stddef_h.m4
   m4/stdint.m4
   m4/stdlib_h.m4
@@ -290,7 +232,5 @@ AC_DEFUN([GNULIB_FILE_LIST], [
   m4/unistd_h.m4
   m4/wchar.m4
   m4/wchar_t.m4
-  m4/wcrtomb.m4
-  m4/wctype.m4
   m4/wint_t.m4
 ])
