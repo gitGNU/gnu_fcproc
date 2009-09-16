@@ -1,123 +1,139 @@
-<?xml version="1.0"?>
-<root><entry priority="veryhigh" start="1233736716">
-        Release 0.1.0
-        <entry end="1235682607" priority="veryhigh" start="1235495476">
-            Fix the NEWS and TODOs site pages generation in site/in directory
-            <comment>
-                Done
-            </comment></entry>
-    <entry end="1239911076" priority="veryhigh" start="1239911065">
-            Redirect error and critical traces to stderr
-            <comment>
-                Done
-            </comment></entry>
-    <entry end="1240525157" priority="veryhigh" start="1240525134">
-            Rearrange all tests in order to apply requirements before including defs
-            <comment>
-                Done
-            </comment></entry>
-    <entry end="1243953368" priority="veryhigh" start="1240525890">
-            We should wrap/rearrange all the calls to the fcp binary in order to sandbox the rules into each test directory
-        </entry>
-    <entry end="1233306143" priority="high" start="1226871195">
-            Rearrange the site in order to be multi-page
-            <comment>
-                Done
-            </comment></entry>
-    <entry end="1227122687" priority="high" start="1227122445">
-            Fix the EXEEXT usage in src and docs/man Makefile.am
-            <comment>
-                Removed EXEEXT usage (temporarely)
-            </comment></entry>
-    <entry end="1239913520" priority="high" start="1239911957">
-            Replace --no-rules option with a --no-std-rules (-nostdinc like option)
-            <comment>
-                Done
-            </comment></entry>
-    <entry end="1240523577" priority="high" start="1240470789">
-            Add file type hinting
-            <comment>
-                Done
-            </comment><entry end="1240483206" priority="high" start="1240483188">
-                Add test for file type hinting
-                <comment>
-                    Done
-                </comment></entry>
-    </entry>
-    <entry end="1244809690" priority="high" start="1240482005">
-            Create temporary directories in /tmp (or similar) instead of using home directory ...
-            <comment>
-                DoneDone
-            </comment><entry end="1244809682" priority="medium" start="1243953987">
-                Import mkdtemp module from gnulib
-                <comment>
-                    Done
-                </comment></entry>
-    <entry end="1244809687" priority="medium" start="1244473943">
-                Use mkdtemp() in order to create temporary directories
-                <comment>
-                    Done
-                </comment></entry>
-    </entry>
-    <entry end="1239911715" priority="medium" start="1227560699">
-            Add a script to translate fcp rule files into graphviz format
-            <comment>
-                Done
-            </comment></entry>
-    <entry end="1240525263" priority="low" start="1239914126">
-            Add test for --no-std-rules option
-            <comment>
-                Done
-            </comment></entry>
-    <entry end="1244809694" priority="verylow" start="1238244109">
-            Update all copyright dates
-            <comment>
-                Done
-            </comment></entry>
-    <entry priority="veryhigh" start="1228259379">
-            Add multi-input/single-output handling
-        </entry>
-    <entry priority="veryhigh" start="1252443493">
-            Rearrange the build-related code (macros, makefiles, bootstrap, gnulib-use)
-        </entry>
-    <entry priority="high" start="1244809732">
-            Fix includes related code
-        </entry>
-    </entry>
-    <entry priority="high" start="1233736742">
-        Release 0.2.0
-        <entry priority="veryhigh" start="1226585740">
-            Add Stream class in order to wrap the std::stream, obtaining a multithread logging mechanism
-            <entry priority="low" start="1226590640">
-                Replace all those ugly TR_XXX macros
-            </entry>
-    </entry>
-    <entry priority="high" start="1226585252">
-            Add parallel transformations
-            <entry priority="high" start="1226585122">
-                Add Thread class
-            </entry>
-    <entry priority="low" start="1226590197">
-                Add inter-chain locking mechanisms
-            </entry>
-    </entry>
-    <entry priority="low" start="1227122737">
-            Rearrange the build process in order to use EXEEXT (if needed)
-        </entry>
-    </entry>
-    <entry priority="medium" start="1233738977">
-        Release 0.3.0
-        <entry priority="high" start="1226590365">
-            Make the rules parser more robust
-        </entry>
-    <entry priority="medium" start="1239781503">
-            Add commands show while dumping rules
-        </entry>
-    </entry>
-    <entry priority="low" start="1243950771">
-        Release 0.4.0
-        <entry priority="medium" start="1244669208">
-            Fix bootstrap in order to exit when a missing program is called
-        </entry>
-    </entry>
-    </root>
+<?xml version="1.0" ?>
+<root>
+	Default DB name
+	<entry priority="veryhigh" start="1233736716">
+		Release 0.1.0
+		<entry end="1235682607" priority="veryhigh" start="1235495476">
+			Fix the NEWS and TODOs site pages generation in site/in directory
+			<comment>
+				Done
+			</comment>
+		</entry>
+		<entry end="1239911076" priority="veryhigh" start="1239911065">
+			Redirect error and critical traces to stderr
+			<comment>
+				Done
+			</comment>
+		</entry>
+		<entry end="1240525157" priority="veryhigh" start="1240525134">
+			Rearrange all tests in order to apply requirements before including defs
+			<comment>
+				Done
+			</comment>
+		</entry>
+		<entry end="1243953368" priority="veryhigh" start="1240525890">
+			We should wrap/rearrange all the calls to the fcp binary in order to sandbox the rules into each test directory
+		</entry>
+		<entry end="1233306143" priority="high" start="1226871195">
+			Rearrange the site in order to be multi-page
+			<comment>
+				Done
+			</comment>
+		</entry>
+		<entry end="1227122687" priority="high" start="1227122445">
+			Fix the EXEEXT usage in src and docs/man Makefile.am
+			<comment>
+				Removed EXEEXT usage (temporarely)
+			</comment>
+		</entry>
+		<entry end="1239913520" priority="high" start="1239911957">
+			Replace --no-rules option with a --no-std-rules (-nostdinc like option)
+			<comment>
+				Done
+			</comment>
+		</entry>
+		<entry end="1240523577" priority="high" start="1240470789">
+			Add file type hinting
+			<comment>
+				Done
+			</comment>
+			<entry end="1240483206" priority="high" start="1240483188">
+				Add test for file type hinting
+				<comment>
+					Done
+				</comment>
+			</entry>
+		</entry>
+		<entry end="1244809690" priority="high" start="1240482005">
+			Create temporary directories in /tmp (or similar) instead of using home directory ...
+			<comment>
+				DoneDone
+			</comment>
+			<entry end="1244809682" priority="medium" start="1243953987">
+				Import mkdtemp module from gnulib
+				<comment>
+					Done
+				</comment>
+			</entry>
+			<entry end="1244809687" priority="medium" start="1244473943">
+				Use mkdtemp() in order to create temporary directories
+				<comment>
+					Done
+				</comment>
+			</entry>
+		</entry>
+		<entry end="1239911715" priority="medium" start="1227560699">
+			Add a script to translate fcp rule files into graphviz format
+			<comment>
+				Done
+			</comment>
+		</entry>
+		<entry end="1240525263" priority="low" start="1239914126">
+			Add test for --no-std-rules option
+			<comment>
+				Done
+			</comment>
+		</entry>
+		<entry end="1244809694" priority="verylow" start="1238244109">
+			Update all copyright dates
+			<comment>
+				Done
+			</comment>
+		</entry>
+		<entry priority="veryhigh" start="1228259379">
+			Add multi-input/single-output handling
+		</entry>
+		<entry priority="veryhigh" start="1252443493">
+			Rearrange the build-related code (macros, makefiles, bootstrap, gnulib-use)
+		</entry>
+		<entry priority="high" start="1244809732">
+			Fix includes related code
+		</entry>
+	</entry>
+	<entry priority="high" start="1233736742">
+		Release 0.2.0
+		<entry priority="veryhigh" start="1226585740">
+			Add Stream class in order to wrap the std::stream, obtaining a multithread logging mechanism
+			<entry priority="low" start="1226590640">
+				Replace all those ugly TR_XXX macros
+			</entry>
+		</entry>
+		<entry priority="high" start="1226585252">
+			Add parallel transformations
+			<entry priority="high" start="1226585122">
+				Add Thread class
+			</entry>
+			<entry priority="low" start="1226590197">
+				Add inter-chain locking mechanisms
+			</entry>
+		</entry>
+		<entry priority="low" start="1227122737">
+			Rearrange the build process in order to use EXEEXT (if needed)
+		</entry>
+	</entry>
+	<entry priority="medium" start="1233738977">
+		Release 0.3.0
+		<entry priority="high" start="1226590365">
+			Make the rules parser more robust
+		</entry>
+		<entry priority="medium" start="1239781503">
+			Add commands show while dumping rules
+		</entry>
+	</entry>
+	<entry priority="low" start="1243950771">
+		Release 0.4.0
+		<entry priority="medium" start="1244669208">
+			Fix bootstrap in order to exit when a missing program is called
+		</entry>
+	</entry>
+</root>
