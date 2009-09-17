@@ -31,6 +31,9 @@ Makefile
 
 #/src/gnulib/*
 #!/src/gnulib/Makefile.am
+/src/gnulib/stdlib.h
+/src/gnulib/sys/stat.h
+/src/gnulib/unistd.h
 
 /tools/autotools/link-warning.h
 
