@@ -22,7 +22,7 @@
 
 AC_INIT([Filter Chains Processor],
         m4_esyscmd([tools/maint/git-version-gen .tarball-version]),
-        [salvestrini@gmail.com],
+        [fcproc-generic@nongnu.org],
         [fcp],
         [http://savannah.nongnu.org/projects/fcproc])
 
