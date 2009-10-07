@@ -12,7 +12,7 @@
 (p "The following notes do not override your system's package management "
    "software, please follow your system's guidelines to install the software.")
 
-(p ,as_site_variable_PROGRAMNAME " uses the "
+(p "The package uses the "
    (a (@ (href "http://en.wikipedia.org/wiki/Autotools")) autotools)
    " facilities, the simplest way to install the package in your system is:")
 
