@@ -7,7 +7,7 @@ common = {
 vars = {
         sitename          = "Filter Chains Processor";
         package_url       = "http://savannah.nongnu.org/projects/fcproc";
-        package_bugreport = "salvestrini@gmail.com";
+        package_bugreport = "fcproc-generic@nongnu.org";
         ohloh_badge_url   = "http://www.ohloh.net/p/26032/widgets/project_partner_badge.js";
 };
 
