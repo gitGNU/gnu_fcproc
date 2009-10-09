@@ -44,7 +44,7 @@
    ,as_page_content_HEADER)
   (div (@ (id "main_wrapper"))
        (div (@ (id "main_menu"))
-            ,as_page_content_MAP)
+	    ,as_page_content_MAP)
        (div (@ (id "main_body"))
             ,as_page_content_BODY)
        (div (@ (class "clear_both"))))
