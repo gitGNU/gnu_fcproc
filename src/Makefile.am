@@ -131,4 +131,7 @@ all_SRCS =					\
 maintainer-check-whitespaces: Makefile $(all_SRCS)
 	$(WHITESPACE_DETECT) $(all_SRCS)
 
-maintainer-check-local: Makefile maintainer-check-whitespaces maintainer-check-parameters
+maintainer-check-guards:  Makefile $(all_SRCS)
+	$(GUARDS_CHECK) $(all_SRCS)
+
+maintainer-check-local: Makefile maintainer-check-guards maintainer-check-whitespaces maintainer-check-parameters

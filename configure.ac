@@ -130,6 +130,7 @@ AC_CONFIG_FILES([tools/maint/fetch],               [chmod +x tools/maint/fetch])
 AC_CONFIG_FILES([tools/maint/whitespace-detect],   [chmod +x tools/maint/whitespace-detect])
 AC_CONFIG_FILES([tools/maint/gitlog-to-committers],[chmod +x tools/maint/gitlog-to-committers])
 AC_CONFIG_FILES([tools/maint/gittag-to-date],      [chmod +x tools/maint/gittag-to-date])
+AC_CONFIG_FILES([tools/maint/guards-check],        [chmod +x tools/maint/guards-check])
 
 ## Look for programs and inject their rules
 #FCP_RULE_SETUP([./rules])
