@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -41,16 +43,12 @@ namespace FCP {
         {
         }
 
-        Filter::~Filter(void)
-        {
-        }
-
-        const FS::File & Filter::input(void)
+        const FS::File & Filter::input()
         {
                 return input_;
         }
 
-        const FS::File & Filter::output(void)
+        const FS::File & Filter::output()
         {
                 return output_;
         }

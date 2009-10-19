@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -35,10 +37,9 @@ namespace FCP {
                 Filter(const FS::File &                 input,
                        const FS::File &                 output,
                        const std::vector<std::string> & commands);
-                ~Filter(void);
 
-                const FS::File & input(void);
-                const FS::File & output(void);
+                const FS::File & input();
+                const FS::File & output();
                 void             setup(const std::string &   id,
                                        const FS::Directory & tmp);
                 void             run(bool dry);
@@ -46,7 +47,7 @@ namespace FCP {
         protected:
                 // No copy allowed
                 Filter(const Filter &);
-                void operator =(const Filter &);
+                Filter & operator=(const Filter &);
 
         private:
                 FS::File                 input_;
