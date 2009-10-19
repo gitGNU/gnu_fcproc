@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -40,7 +42,7 @@
 
 #define PROGRAM_NAME "fcp"
 
-void version(void)
+void version()
 {
         std::cout
                 << PROGRAM_NAME << " (" << PACKAGE_NAME  << ") " << PACKAGE_VERSION <<
@@ -79,7 +81,7 @@ std::string   configuration_file = (Environment::get("HOME") +
          std::string("rules"))
 int           max_depth          = 16;
 
-void help(void)
+void help()
 {
         std::cout
                 << "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..." <<
@@ -313,7 +315,7 @@ int main(int argc, char * argv[])
 
                 if (dump_rules) {
                         TR_VRB("Rules:\n");
-                        rules->dump(std::cout);
+                        std::cout << (*rules);
                         return 0;
                 }
 
