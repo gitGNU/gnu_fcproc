@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -34,23 +36,29 @@
 #include "filter.h"
 
 namespace FCP {
+        class Rules;
+}
+
+std::ostream & operator<<(std::ostream & stream, const FCP::Rules & rules);
+
+namespace FCP {
         class Rules {
         public:
+                friend std::ostream & ::operator<<(std::ostream & stream,
+                                                   const Rules &  rules);
+
                 Rules(const std::vector<std::string> & filenames);
-                ~Rules(void);
 
                 // Builds a filters-chain
                 std::vector<FCP::Filter *> chain(const FS::File &      input,
                                                  const FS::File &      output,
                                                  int                   mdepth,
-                                                 const FS::Directory & work);
-
-                void                       dump(std::ostream & stream);
+                                                 const FS::Directory & work) const;
 
         protected:
                 // No copy allowed
                 Rules(const Rules &);
-                void operator =(const Rules &);
+                Rules & operator=(const Rules &);
 
         private:
                 struct {
@@ -64,8 +72,8 @@ namespace FCP {
 
                 // rules = (input-tag, output-tag, commands)
                 std::map<std::string,
-                         std::map<std::string,
-                                  std::vector<std::string> > > rules_;
+                        std::map<std::string,
+                        std::vector<std::string> > > rules_;
 
                 std::string readline(std::ifstream & stream);
                 void        parse(const std::string & filename);
@@ -78,9 +86,6 @@ namespace FCP {
                         std::set<std::pair<std::string, std::string> > set_;
 
                 public:
-                        Antiloop(void)  { };
-                        ~Antiloop(void) { };
-
                         bool insert(const std::string & in,
                                     const std::string & out) {
                                 std::pair<std::string, std::string> t(in,out);
@@ -95,11 +100,11 @@ namespace FCP {
                         }
                 };
 
-                bool        chain_nodes(Antiloop &            antiloop,
-                                        const std::string &   tag_in,
-                                        const std::string &   tag_out,
-                                        int                   mdepth,
-                                        std::vector<node_t> & data);
+                bool chain_nodes(Antiloop &            antiloop,
+                                 const std::string &   tag_in,
+                                 const std::string &   tag_out,
+                                 int                   mdepth,
+                                 std::vector<node_t> & data) const;
         };
 }
 
