@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -33,22 +35,27 @@ namespace FCP {
         public:
                 Transformation(const std::string &   tag,
                                char                  separator,
-                               FCP::Rules &          rules,
+                               const FCP::Rules &    rules,
                                int                   depth,
                                const FS::Directory & work);
-                ~Transformation(void);
+                ~Transformation();
 
                 void                run(bool dry,
                                         bool force);
 
-                const std::string & tag(void)    const;
-                const FS::File &    input(void)  const;
-                const FS::File &    output(void) const;
+                const std::string & tag() const
+                { return tag_; }
+
+                const FS::File &    input() const
+                { return *input_; }
+
+                const FS::File &    output() const
+                { return *output_; }
 
         protected:
                 // No copy allowed
                 Transformation(const Transformation &);
-                void operator =(const Transformation &);
+                Transformation & operator=(const Transformation &);
 
         private:
                 void slice(char                separator,

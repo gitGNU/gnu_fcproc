@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -31,7 +33,7 @@
 namespace FCP {
         Transformation::Transformation(const std::string &   tag,
                                        char                  separator,
-                                       FCP::Rules &          rules,
+                                       const FCP::Rules &    rules,
                                        int                   depth,
                                        const FS::Directory & work) :
                 tag_(tag)
@@ -107,7 +109,7 @@ namespace FCP {
                 BUG_ON(chain_ == 0);
         }
 
-        Transformation::~Transformation(void)
+        Transformation::~Transformation()
         {
                 delete input_;
                 delete output_;
@@ -122,20 +124,5 @@ namespace FCP {
                        output_->name().c_str());
 
                 chain_->run(dry, force);
-        }
-
-        const std::string & Transformation::tag(void) const
-        {
-                return tag_;
-        }
-
-        const FS::File & Transformation::input(void) const
-        {
-                return *input_;
-        }
-
-        const FS::File & Transformation::output(void) const
-        {
-                return *output_;
         }
 };
