@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -37,16 +39,18 @@ namespace FCP {
                       const FS::File &             output,
                       std::vector<FCP::Filter *> & filters,
                       const FS::Directory &        work);
-                ~Chain(void);
 
-                const std::string & id(void);
+                const std::string & id()
+                { return id_; }
+
+
                 void                run(bool dry,
                                         bool force);
 
         protected:
                 // No copy allowed
                 Chain(const Chain &);
-                void operator =(const Chain &);
+                Chain & operator=(const Chain &);
 
         private:
                 std::string                id_;

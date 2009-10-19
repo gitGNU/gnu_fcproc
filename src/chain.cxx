@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -51,15 +53,6 @@ namespace FCP {
                         BUG_ON((*i) == 0);
                         (*i)->setup(id_, work);
                 }
-        }
-
-        Chain::~Chain(void)
-        {
-        }
-
-        const std::string & Chain::id(void)
-        {
-                return id_;
         }
 
         void Chain::run(bool dry,
