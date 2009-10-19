@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -24,16 +26,16 @@
 #include <string>
 
 class Exception : public std::exception {
- public:
+public:
         Exception(const std::string & description);
         ~Exception(void) throw();
 
         virtual const char * what(void) const throw();
 
- protected:
+protected:
         Exception(void);
 
- private:
+private:
         std::string description_;
 };
 

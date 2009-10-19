@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 //
 // Copyright (C) 2008, 2009 Francesco Salvestrini
 //
@@ -16,8 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef LIBS_MISC_TRACES_H
-#define LIBS_MISC_TRACES_H
+#ifndef LIBS_MISC_TRACE_H
+#define LIBS_MISC_TRACE_H
 
 #include <cstdio>
 
