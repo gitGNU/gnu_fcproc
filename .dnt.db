@@ -93,7 +93,7 @@
 		<entry priority="veryhigh" start="1228259379">
 			Add multi-input/single-output handling
 		</entry>
-		<entry priority="veryhigh" start="1252443493">
+		<entry end="1256059410" priority="veryhigh" start="1252443493">
 			Rearrange the build-related code (macros, makefiles, bootstrap, gnulib-use)
 		</entry>
 		<entry priority="high" start="1244809732">
