@@ -214,9 +214,12 @@ namespace FCP {
 
                                         std::string include;
                                         include =
-                                                line.substr(re_.match_[1].rm_so,
-                                                            re_.match_[1].rm_eo -
-                                                            re_.match_[1].rm_so);
+                                                line.substr(re_.match_[1].
+                                                            rm_so,
+                                                            re_.match_[1].
+                                                            rm_eo -
+                                                            re_.match_[1].
+                                                            rm_so);
 
                                         P_DBG("  Got include is '%s'\n",
                                               include.c_str());

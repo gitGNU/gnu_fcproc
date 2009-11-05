@@ -23,7 +23,9 @@
 #include <cstdlib>
 
 // XXX FIXME: Ugly, move (and redefine) to a proper place
-#if defined(HAVE_EXECINFO_H) && defined(HAVE_BACKTRACE) && defined(HAVE_BACKTRACE_SYMBOLS)
+#if defined(HAVE_EXECINFO_H) && \
+        defined(HAVE_BACKTRACE) && \
+        defined(HAVE_BACKTRACE_SYMBOLS)
 #define BACKTRACE_ENABLED
 #endif
 

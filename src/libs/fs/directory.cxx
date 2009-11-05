@@ -108,7 +108,8 @@ namespace FS {
                                         }
                                         case DT_DIR: {
                                                 // Skip '.' and '..'
-                                                if ((t == ".") || (t == "..")) {
+                                                if ((t == ".") ||
+                                                    (t == "..")) {
                                                         break;
                                                 }
 

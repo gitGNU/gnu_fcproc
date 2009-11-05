@@ -55,13 +55,16 @@ namespace FCP {
                 std::vector<std::string> templates_;
                 std::vector<std::string> commands_;
 
-                std::string              mktemp(const std::string & id,
-                                                const std::string & tmp_dir,
-                                                size_t              index);
-                std::vector<std::string> commands(const std::string & id,
-                                                  const FS::File &    input,
-                                                  const FS::File &    output,
-                                                  const std::string & work_dir);
+                std::string
+                mktemp(const std::string & id,
+                       const std::string & tmp_dir,
+                       size_t              index);
+                
+                std::vector<std::string>
+                commands(const std::string & id,
+                         const FS::File &    input,
+                         const FS::File &    output,
+                         const std::string & work_dir);
         };
 }
 

@@ -153,8 +153,11 @@ void hint(const std::string & message)
         BUG_ON(message.size() == 0);
 
         std::cout
-                << message <<                                                 std::endl
-                << "Try `" << PROGRAM_NAME << " -h' for more information." << std::endl;
+                << message
+                << std::endl
+                << "Try `" << PROGRAM_NAME << " -h' "
+                <<"for more information."
+                << std::endl;
 }
 
 int main(int argc, char * argv[])

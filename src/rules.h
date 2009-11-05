@@ -50,10 +50,11 @@ namespace FCP {
                 Rules(const std::vector<std::string> & filenames);
 
                 // Builds a filters-chain
-                std::vector<FCP::Filter *> chain(const FS::File &      input,
-                                                 const FS::File &      output,
-                                                 int                   mdepth,
-                                                 const FS::Directory & work) const;
+                std::vector<FCP::Filter *>
+                chain(const FS::File &      input,
+                      const FS::File &      output,
+                      int                   mdepth,
+                      const FS::Directory & work) const;
 
         protected:
                 // No copy allowed
