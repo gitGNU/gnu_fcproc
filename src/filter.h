@@ -59,7 +59,7 @@ namespace FCP {
                 mktemp(const std::string & id,
                        const std::string & tmp_dir,
                        size_t              index);
-                
+
                 std::vector<std::string>
                 commands(const std::string & id,
                          const FS::File &    input,
