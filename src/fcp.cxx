@@ -302,7 +302,7 @@ int main(int argc, char * argv[])
                         return 1;
                 }
 
-                TR_DBG("You have %d rules\n", rules_all.size());
+                TR_DBG("You have %d rule(s)\n", rules_all.size());
                 BUG_ON(rules_all.size() == 0);
 
                 // Read rules file
@@ -340,7 +340,6 @@ int main(int argc, char * argv[])
                                 TR_ERR("Cannot create temporary directory\n");
                                 return 1;
                         }
-                        // The directory is created by mkdtemp()
                         remove_temp_dir = true;
 
                         temp_dir_name = std::string(template_dir);
@@ -459,13 +458,13 @@ int main(int argc, char * argv[])
                         }
 
                         // Remove directories
+                        if (remove_work_dir) {
+                                work_dir.remove(true);
+                        }
                         if (remove_temp_dir) {
                                 temp_dir.remove(true);
                         }
 
-                        if (remove_work_dir) {
-                                work_dir.remove(true);
-                        }
                 } catch (std::exception & e) {
                         TR_ERR("%s\n", e.what());
                         return 1;

@@ -82,9 +82,11 @@ namespace FS {
 
         void Directory::remove(bool recursive) const
         {
-                TR_DBG("Removing directory '%s'\n", name_.c_str());
                 if (recursive) {
                         DIR * dir;
+
+                        TR_DBG("Recursively removing directory '%s' contents \n",
+                               name_.c_str());
 
                         dir = opendir(name_.c_str());
                         if (!dir) {
@@ -125,6 +127,8 @@ namespace FS {
 
                         closedir(dir);
                 }
+
+                TR_DBG("Removing directory '%s'\n", name_.c_str());
 
                 // XXX FIXME: Consider using the gnulib replacement
                 if (::rmdir(name_.c_str()) != 0) {
