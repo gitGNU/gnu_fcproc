@@ -47,6 +47,9 @@ fcp2dot: $(srcdir)/fcp2dot.in Makefile
 	}
 EXTRA_DIST += fcp2dot.in
 
+COMMON_CPPFLAGS =				\
+	$(BOOST_CPPFLAGS)
+
 fcp_SOURCES =					\
 	fcp.cxx					\
 	transformation.h			\
@@ -58,12 +61,16 @@ fcp_SOURCES =					\
 	filter.h				\
 	filter.cxx
 fcp_CPPFLAGS =					\
-	$(EXTRA_CPPFLAGS)
+	$(COMMON_CPPFLAGS)
 fcp_LDADD =					\
 	libmisc.a				\
 	libconf.a				\
 	libfs.a					\
-	gnulib/libgnu.a
+	gnulib/libgnu.a				\
+        $(BOOST_LDFLAGS)			\
+        $(BOOST_SYSTEM_LIB)			\
+        $(BOOST_THREAD_LIB)			\
+        $(BOOST_FILESYSTEM_LIB)
 
 ## Libraries
 
@@ -90,13 +97,13 @@ libmisc_a_SOURCES =				\
 	libs/misc/thread.h			\
 	libs/misc/thread.cxx
 libmisc_a_CPPFLAGS =				\
-	$(EXTRA_CPPFLAGS)
+	$(COMMON_CPPFLAGS)
 
 libconf_a_SOURCES =				\
 	libs/conf/configuration.h		\
 	libs/conf/configuration.cxx
 libconf_a_CPPFLAGS =				\
-	$(EXTRA_CPPFLAGS)
+	$(COMMON_CPPFLAGS)
 
 libfs_a_SOURCES =				\
 	libs/fs/file.h				\
@@ -104,7 +111,7 @@ libfs_a_SOURCES =				\
 	libs/fs/directory.h			\
 	libs/fs/directory.cxx
 libfs_a_CPPFLAGS =				\
-	$(EXTRA_CPPFLAGS)
+	$(COMMON_CPPFLAGS)
 
 ##
 ## Maintainer related targets

@@ -65,6 +65,15 @@ AC_PROG_RANLIB
 GNULIB_EARLY
 GNULIB_INIT
 
+#
+# BOOST related checks
+#
+AX_BOOST_BASE([1.35.0],[],[
+  AC_MSG_ERROR([Missing Boost library >= 1.35.0])
+])
+AX_BOOST_SYSTEM
+AX_BOOST_THREAD
+AX_BOOST_FILESYSTEM
 
 # Checks for preprocessor flags
 TEMP_FLAGS=""
