@@ -56,6 +56,8 @@ fcp_SOURCES =					\
 	transformation.cxx			\
 	chain.h					\
 	chain.cxx				\
+	configuration.h				\
+	configuration.cxx			\
 	rules.h					\
 	rules.cxx				\
 	filter.h				\
@@ -64,7 +66,6 @@ fcp_CPPFLAGS =					\
 	$(COMMON_CPPFLAGS)
 fcp_LDADD =					\
 	libmisc.a				\
-	libconf.a				\
 	libfs.a					\
 	gnulib/libgnu.a				\
         $(BOOST_LDFLAGS)			\
@@ -76,7 +77,6 @@ fcp_LDADD =					\
 
 noinst_LIBRARIES =				\
 	libmisc.a				\
-	libconf.a				\
 	libfs.a
 
 libmisc_a_SOURCES =				\
@@ -97,12 +97,6 @@ libmisc_a_SOURCES =				\
 	libs/misc/thread.h			\
 	libs/misc/thread.cxx
 libmisc_a_CPPFLAGS =				\
-	$(COMMON_CPPFLAGS)
-
-libconf_a_SOURCES =				\
-	libs/conf/configuration.h		\
-	libs/conf/configuration.cxx
-libconf_a_CPPFLAGS =				\
 	$(COMMON_CPPFLAGS)
 
 libfs_a_SOURCES =				\
@@ -132,7 +126,6 @@ maintainer-check-parameters: Makefile $(bin_SCRIPTS) $(bin_PROGRAMS)
 all_SRCS =					\
 	$(fcp_SOURCES)				\
 	$(libmisc_a_SOURCES)			\
-	$(libconf_a_SOURCES)			\
 	$(libfs_a_SOURCES)
 
 maintainer-check-whitespaces: Makefile $(all_SRCS)
