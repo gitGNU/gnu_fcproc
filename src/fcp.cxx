@@ -33,10 +33,10 @@
 
 #include "libs/misc/debug.h"
 #include "libs/misc/environment.h"
-#include "libs/conf/configuration.h"
 #include "libs/misc/exception.h"
 #include "libs/fs/file.h"
 #include "libs/fs/directory.h"
+#include "configuration.h"
 #include "rules.h"
 #include "transformation.h"
 

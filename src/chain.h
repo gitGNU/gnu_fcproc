@@ -60,4 +60,4 @@ namespace FCP {
         };
 }
 
-#endif // CHAIN_H
+#endif

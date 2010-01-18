@@ -68,4 +68,4 @@ namespace FCP {
         };
 }
 
-#endif // FILTER_H
+#endif
