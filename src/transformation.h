@@ -24,33 +24,27 @@
 #include "config.h"
 
 #include <string>
+#include <boost/filesystem.hpp>
 
-#include "libs/fs/file.h"
-#include "libs/fs/directory.h"
+#include "tag.h"
 #include "rules.h"
 #include "chain.h"
+#include "file.h"
 
 namespace FCP {
         class Transformation {
         public:
-                Transformation(const std::string &   tag,
-                               char                  separator,
-                               const FCP::Rules &    rules,
-                               int                   depth,
-                               const FS::Directory & work);
+                Transformation(const std::string &             tag,
+                               char                            separator,
+                               const FCP::Rules &              rules,
+                               int                             depth,
+                               const boost::filesystem::path & work);
                 ~Transformation();
 
-                void                run(bool dry,
-                                        bool force);
+                void             run(bool dry,
+                                     bool force);
 
-                const std::string & tag() const
-                { return tag_; }
-
-                const FS::File &    input() const
-                { return *input_; }
-
-                const FS::File &    output() const
-                { return *output_; }
+                const fcp::tag & tag() const;
 
         protected:
                 // No copy allowed
@@ -63,9 +57,7 @@ namespace FCP {
                            std::string &       name,
                            std::string &       type);
 
-                std::string  tag_;
-                FS::File *   input_;
-                FS::File *   output_;
+                fcp::tag     tag_;
                 FCP::Chain * chain_;
         };
 }

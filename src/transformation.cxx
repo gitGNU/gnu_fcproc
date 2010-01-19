@@ -21,108 +21,70 @@
 #include "config.h"
 
 #include <string>
+#include <boost/filesystem.hpp>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/exception.h"
 #include "libs/misc/string.h"
-#include "libs/fs/directory.h"
 #include "transformation.h"
 #include "rules.h"
 #include "chain.h"
+#include "tag.h"
 
 namespace FCP {
-        Transformation::Transformation(const std::string &   tag,
-                                       char                  separator,
-                                       const FCP::Rules &    rules,
-                                       int                   depth,
-                                       const FS::Directory & work) :
-                tag_(tag)
+        Transformation::Transformation(const std::string &             tag,
+                                       char                            sep, 
+                                       const FCP::Rules &              rules,
+                                       int                             depth,
+                                       const boost::filesystem::path & work) :
+                tag_(tag, sep)
         {
-                std::string::size_type p;
+                fcp::file input(tag_.lhs());
+                fcp::file output(tag_.rhs());
 
-                // Split the tag into input and output part
-                p = tag_.find(separator);
-                if ((p < 0) || (p > tag_.size())) {
-                        throw Exception("Missing separator "
-                                        "in transformation "
-                                        "'" + tag_ + "'");
+                if (boost::filesystem::exists(input.path())   &&
+                    boost::filesystem::exists(output.path())  &&
+                    boost::filesystem::equivalent(input.path(),
+                                                  output.path())) {
+                        throw Exception("Transformation "
+                                        "'" + tag_.id() + "' "
+                                        "must have different "
+                                        "input and output "
+                                        "file");
                 }
-
-                std::string tmp;
-                std::string name;
-                std::string type;
-
-                // Get the input part
-                tmp = tag_.substr(0, p);
-                if (tmp.size() == 0) {
-                        throw Exception("Missing input file "
-                                        "in transformation "
-                                        "'" + tag_ + "'");
-                }
-                // Slice it in (name, type)
-                String::slice(tmp, '%', name, type);
-                if (type.empty()) {
-                        name = tmp;
-                        type = "";
-                }
-                // Build File(name, type)
-                input_ = new FS::File(name, type);
-                BUG_ON(input_ == 0);
-
-                // Get the output part
-                tmp = tag_.substr(p + 1);
-                if (tmp.size() == 0) {
-                        throw Exception("Missing output file "
-                                        "in transformation "
-                                        "'" + tag_ + "'");
-                }
-                // Slice it in (name, type)
-                String::slice(tmp, '%', name, type);
-                if (type.empty()) {
-                        name = tmp;
-                        type = "";
-                }
-                // Build File(name, type)
-                output_ = new FS::File(name, type);
-                BUG_ON(output_ == 0);
 
                 // Build the filters-chain for this transformation
                 std::vector<FCP::Filter *> chain;
-                chain = rules.chain(*input_, *output_, depth, work);
+                chain = rules.chain(input, output, depth, work);
                 if (chain.size() == 0) {
                         throw Exception("No filters-chain available for "
-                                        "'" + tag_ + "' "
+                                        "'" + tag_.id() + "' "
                                         "transformation");
                 }
 
-                TR_DBG("Filters-chain for transformation '%s':\n",
-                       tag_.c_str());
-                std::vector<FCP::Filter *>::iterator iter;
-                for (iter = chain.begin(); iter != chain.end(); iter++) {
-                        TR_DBG("  '%s' -> '%s'\n",
-                               (*iter)->input().name().c_str(),
-                               (*iter)->output().name().c_str());
-                }
-
                 // Finally create the filters-chain from the filters sequence
-                chain_ = new FCP::Chain(tag_, input(), output(), chain, work);
-                BUG_ON(chain_ == 0);
+                chain_ = new FCP::Chain(tag_.id(),
+                                        input,
+                                        output,
+                                        chain,
+                                        work);
+                assert(chain_ == 0);
         }
 
         Transformation::~Transformation()
-        {
-                delete input_;
-                delete output_;
-                delete chain_;
-        }
+        { }
 
         void Transformation::run(bool dry,
                                  bool force)
         {
-                TR_DBG("Transforming '%s' -> '%s'\n",
-                       input_->name().c_str(),
-                       output_->name().c_str());
+                TR_DBG("Running chain '%s' (%s, %s)\n",
+                       tag_.id().c_str(),
+                       dry   ? "dry"    : "not dry",
+                       force ? "forced" : "not forced");
 
                 chain_->run(dry, force);
         }
+
+        const fcp::tag & Transformation::tag() const
+        { return tag_; }
 };
