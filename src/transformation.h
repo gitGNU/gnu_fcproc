@@ -58,7 +58,7 @@ namespace fcp {
                            std::string &       type);
 
                 fcp::tag     tag_;
-                fcp::Chain * chain_;
+                fcp::chain * chain_;
         };
 }
 

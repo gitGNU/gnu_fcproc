@@ -31,9 +31,9 @@
 #include "file.h"
 
 namespace fcp {
-        class Chain {
+        class chain {
         public:
-                Chain(const std::string &             id,
+                chain(const std::string &             id,
                       const fcp::file &               input,
                       const fcp::file &               output,
                       std::vector<fcp::Filter *> &    filters,
@@ -47,8 +47,8 @@ namespace fcp {
 
         protected:
                 // No copy allowed
-                Chain(const Chain &);
-                Chain & operator=(const Chain &);
+                chain(const chain &);
+                chain & operator=(const chain &);
 
         private:
                 std::string                id_;

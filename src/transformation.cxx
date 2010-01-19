@@ -63,12 +63,12 @@ namespace fcp {
                 }
 
                 // Finally create the filters-chain from the filters sequence
-                chain_ = new fcp::Chain(tag_.id(),
+                chain_ = new fcp::chain(tag_.id(),
                                         input,
                                         output,
                                         chain,
                                         work);
-                assert(chain_ == 0);
+                assert(chain_ != 0);
         }
 
         Transformation::~Transformation()

@@ -34,7 +34,7 @@
 #include "file.h"
 
 namespace fcp {
-        Chain::Chain(const std::string &             id,
+        chain::chain(const std::string &             id,
                      const fcp::file &               input,
                      const fcp::file &               output,
                      std::vector<fcp::Filter *> &    filters,
@@ -66,7 +66,7 @@ namespace fcp {
 #endif
         }
 
-        void Chain::run(bool dry,
+        void chain::run(bool dry,
                         bool force)
         {
                 TR_DBG("Running filters-chain '%s'\n", id_.c_str());
