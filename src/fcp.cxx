@@ -307,10 +307,10 @@ int main(int argc, char * argv[])
                 BUG_ON(rules_all.size() == 0);
 
                 // Read rules file
-                FCP::Rules * rules;
+                fcp::Rules * rules;
 
                 try {
-                        rules = new FCP::Rules(rules_all);
+                        rules = new fcp::Rules(rules_all);
                 } catch (std::exception & e) {
                         TR_ERR("%s\n", e.what());
                         return 1;
@@ -373,8 +373,8 @@ int main(int argc, char * argv[])
                        work_dir.string().c_str(),
                        remove_work_dir ? "remove" : "keep");
 
-                std::vector<FCP::Transformation *>           transformations;
-                std::vector<FCP::Transformation *>::iterator it;
+                std::vector<fcp::Transformation *>           transformations;
+                std::vector<fcp::Transformation *>::iterator it;
 
                 transformations.resize(argc - optind);
 
@@ -384,9 +384,9 @@ int main(int argc, char * argv[])
 
                         j = i - optind;
                         try {
-                                FCP::Transformation * t;
+                                fcp::Transformation * t;
 
-                                t = new FCP::Transformation(argv[i],
+                                t = new fcp::Transformation(argv[i],
                                                             separator,
                                                             *rules,
                                                             max_depth,

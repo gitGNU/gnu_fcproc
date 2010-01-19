@@ -35,7 +35,7 @@
 #include "rules.h"
 #include "file.h"
 
-namespace FCP {
+namespace fcp {
         Rules::Rules(const std::vector<std::string> & filenames)
         {
                 if (regcomp(&re_.empty_,
@@ -445,7 +445,7 @@ namespace FCP {
                 return false;
         }
 
-        std::vector<FCP::Filter *>
+        std::vector<fcp::Filter *>
         Rules::chain(const fcp::file &               input,
                      const fcp::file &               output,
                      int                             depth,
@@ -460,7 +460,7 @@ namespace FCP {
                        depth);
 
                 std::set<std::pair<std::string, std::string> > loop;
-                std::vector<FCP::Filter *>                     ret;
+                std::vector<fcp::Filter *>                     ret;
 
                 // Build filters-chain data based on extensions
                 std::vector<node_t> data;
@@ -522,7 +522,7 @@ namespace FCP {
                         }
 
                         boost::filesystem::path dst(tmp);
-                        FCP::Filter * f = new FCP::Filter(src, dst,
+                        fcp::Filter * f = new fcp::Filter(src, dst,
                                                           data[i].second);
                         ret.push_back(f);
 
@@ -534,7 +534,7 @@ namespace FCP {
 }
 
 std::ostream & operator<<(std::ostream &     stream,
-                          const FCP::Rules & rules)
+                          const fcp::Rules & rules)
 {
         std::map<std::string,
                 std::map<std::string,

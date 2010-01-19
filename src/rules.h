@@ -18,8 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef RULES_H
-#define RULES_H
+#ifndef FCP_RULES_H
+#define FCP_RULES_H
 
 #include "config.h"
 
@@ -35,13 +35,13 @@
 #include "filter.h"
 #include "file.h"
 
-namespace FCP {
+namespace fcp {
         class Rules;
 }
 
-std::ostream & operator<<(std::ostream & stream, const FCP::Rules & rules);
+std::ostream & operator<<(std::ostream & stream, const fcp::Rules & rules);
 
-namespace FCP {
+namespace fcp {
         class Rules {
         public:
                 friend std::ostream & ::operator<<(std::ostream & stream,
@@ -50,7 +50,7 @@ namespace FCP {
                 Rules(const std::vector<std::string> & filenames);
 
                 // Builds a filters-chain
-                std::vector<FCP::Filter *>
+                std::vector<fcp::Filter *>
                 chain(const fcp::file &               input,
                       const fcp::file &               output,
                       int                             mdepth,

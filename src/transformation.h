@@ -18,8 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef TRANSFORMATION_H
-#define TRANSFORMATION_H
+#ifndef FCP_TRANSFORMATION_H
+#define FCP_TRANSFORMATION_H
 
 #include "config.h"
 
@@ -31,12 +31,12 @@
 #include "chain.h"
 #include "file.h"
 
-namespace FCP {
+namespace fcp {
         class Transformation {
         public:
                 Transformation(const std::string &             tag,
                                char                            separator,
-                               const FCP::Rules &              rules,
+                               const fcp::Rules &              rules,
                                int                             depth,
                                const boost::filesystem::path & work);
                 ~Transformation();
@@ -58,7 +58,7 @@ namespace FCP {
                            std::string &       type);
 
                 fcp::tag     tag_;
-                FCP::Chain * chain_;
+                fcp::Chain * chain_;
         };
 }
 

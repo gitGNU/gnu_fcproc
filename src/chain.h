@@ -30,13 +30,13 @@
 #include "filter.h"
 #include "file.h"
 
-namespace FCP {
+namespace fcp {
         class Chain {
         public:
                 Chain(const std::string &             id,
                       const fcp::file &               input,
                       const fcp::file &               output,
-                      std::vector<FCP::Filter *> &    filters,
+                      std::vector<fcp::Filter *> &    filters,
                       const boost::filesystem::path & work);
 
                 const std::string & id()
@@ -54,7 +54,7 @@ namespace FCP {
                 std::string                id_;
                 const fcp::file &          input_;
                 const fcp::file &          output_;
-                std::vector<FCP::Filter *> filters_;
+                std::vector<fcp::Filter *> filters_;
         };
 }
 

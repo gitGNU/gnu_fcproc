@@ -31,10 +31,10 @@
 #include "chain.h"
 #include "tag.h"
 
-namespace FCP {
+namespace fcp {
         Transformation::Transformation(const std::string &             tag,
                                        char                            sep, 
-                                       const FCP::Rules &              rules,
+                                       const fcp::Rules &              rules,
                                        int                             depth,
                                        const boost::filesystem::path & work) :
                 tag_(tag, sep)
@@ -54,7 +54,7 @@ namespace FCP {
                 }
 
                 // Build the filters-chain for this transformation
-                std::vector<FCP::Filter *> chain;
+                std::vector<fcp::Filter *> chain;
                 chain = rules.chain(input, output, depth, work);
                 if (chain.size() == 0) {
                         throw Exception("No filters-chain available for "
@@ -63,7 +63,7 @@ namespace FCP {
                 }
 
                 // Finally create the filters-chain from the filters sequence
-                chain_ = new FCP::Chain(tag_.id(),
+                chain_ = new fcp::Chain(tag_.id(),
                                         input,
                                         output,
                                         chain,

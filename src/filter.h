@@ -18,8 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef FILTER_H
-#define FILTER_H
+#ifndef FCP_FILTER_H
+#define FCP_FILTER_H
 
 #include "config.h"
 
@@ -29,7 +29,7 @@
 #include <map>
 #include <boost/filesystem.hpp>
 
-namespace FCP {
+namespace fcp {
         class Filter {
         public:
                 Filter(const boost::filesystem::path &  input,

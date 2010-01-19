@@ -32,7 +32,7 @@
 
 #include "libs/misc/string.h"
 
-namespace FCP {
+namespace fcp {
         Filter::Filter(const boost::filesystem::path &  input,
                        const boost::filesystem::path &  output,
                        const std::vector<std::string> & commands) :
