@@ -52,6 +52,8 @@ COMMON_CPPFLAGS =				\
 
 fcp_SOURCES =					\
 	fcp.cxx					\
+	tag.h					\
+	tag.cxx					\
 	transformation.h			\
 	transformation.cxx			\
 	chain.h					\
@@ -61,12 +63,13 @@ fcp_SOURCES =					\
 	rules.h					\
 	rules.cxx				\
 	filter.h				\
-	filter.cxx
+	filter.cxx				\
+	file.h					\
+	file.cxx
 fcp_CPPFLAGS =					\
 	$(COMMON_CPPFLAGS)
 fcp_LDADD =					\
 	libmisc.a				\
-	libfs.a					\
 	gnulib/libgnu.a				\
         $(BOOST_LDFLAGS)			\
         $(BOOST_SYSTEM_LIB)			\
@@ -76,8 +79,7 @@ fcp_LDADD =					\
 ## Libraries
 
 noinst_LIBRARIES =				\
-	libmisc.a				\
-	libfs.a
+	libmisc.a
 
 libmisc_a_SOURCES =				\
 	libs/misc/stream.h			\
@@ -99,14 +101,6 @@ libmisc_a_SOURCES =				\
 libmisc_a_CPPFLAGS =				\
 	$(COMMON_CPPFLAGS)
 
-libfs_a_SOURCES =				\
-	libs/fs/file.h				\
-	libs/fs/file.cxx			\
-	libs/fs/directory.h			\
-	libs/fs/directory.cxx
-libfs_a_CPPFLAGS =				\
-	$(COMMON_CPPFLAGS)
-
 ##
 ## Maintainer related targets
 ##
@@ -125,8 +119,7 @@ maintainer-check-parameters: Makefile $(bin_SCRIPTS) $(bin_PROGRAMS)
 
 all_SRCS =					\
 	$(fcp_SOURCES)				\
-	$(libmisc_a_SOURCES)			\
-	$(libfs_a_SOURCES)
+	$(libmisc_a_SOURCES)
 
 maintainer-check-whitespaces: Makefile $(all_SRCS)
 	$(WHITESPACE_DETECT) $(all_SRCS)
