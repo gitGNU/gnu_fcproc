@@ -33,7 +33,7 @@ namespace fcp {
 
         file & file::operator=(const file & rhs)
         {
-                if (this != &rhs) {
+                if (this == &rhs) {
                         return *this;
                 }
 
