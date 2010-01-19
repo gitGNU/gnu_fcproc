@@ -41,12 +41,11 @@ namespace fcp {
                      const boost::filesystem::path & work) :
                 id_(id),
                 input_(input),
-                output_(output)
+                output_(output),
+                filters_(filters)
         {
                 TR_DBG("Creating chain '%s' (working directory '%s')\n",
                        id.c_str(), work.string().c_str());
-
-                filters_ = filters;
 
                 std::vector<fcp::filter *>::iterator i;
                 for (i = filters_.begin(); i != filters_.end(); i++) {
@@ -98,12 +97,17 @@ namespace fcp {
         void chain::run(bool dry,
                         bool force)
         {
-                TR_DBG("Running filters-chain '%s'\n", id_.c_str());
+                TR_DBG("Running chain '%s'\n", id_.c_str());
+
+                TR_DBG("Checking input file '%s' existance\n",
+                       input_.path().string().c_str());
 
                 if (!boost::filesystem::exists(input_.path())) {
                         throw Exception("Missing input file "
                                         "'" + input_.path().string() + "'");
                 }
+
+                TR_DBG("Checking dry/run/spurious\n");
 
                 if (!dry && !force) {
                         if (is_spurious()) {
