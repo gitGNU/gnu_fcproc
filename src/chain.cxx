@@ -76,14 +76,21 @@ namespace fcp {
 
                 assert(boost::filesystem::exists(input_.path()));
 
-                if (boost::filesystem::exists(output_.path())) {
-                        if (boost::filesystem::last_write_time(input_.path()) >=
-                            boost::filesystem::last_write_time(output_.path())) {
-                                TR_DBG("Output file '%s' is up-to-date\n",
-                                       output_.path().string().c_str());
-                                return true;
-                        }
+                if (!boost::filesystem::exists(output_.path())) {
+                        TR_DBG("Output file does not exists\n");
+                        return false;
                 }
+
+                TR_DBG("Output file exists\n");
+
+                if (boost::filesystem::last_write_time(input_.path()) <=
+                    boost::filesystem::last_write_time(output_.path())) {
+                        TR_DBG("Output file '%s' is up-to-date\n",
+                               output_.path().string().c_str());
+                        return true;
+                }
+
+                TR_DBG("Output file exists\n");
 
                 return false;
         }
