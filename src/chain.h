@@ -18,8 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef CHAIN_H
-#define CHAIN_H
+#ifndef FCP_CHAIN_H
+#define FCP_CHAIN_H
 
 #include "config.h"
 
@@ -27,22 +27,20 @@
 #include <string>
 #include <map>
 
-#include "libs/fs/file.h"
-#include "libs/fs/directory.h"
 #include "filter.h"
+#include "file.h"
 
 namespace FCP {
         class Chain {
         public:
-                Chain(const std::string &          id,
-                      const FS::File &             input,
-                      const FS::File &             output,
-                      std::vector<FCP::Filter *> & filters,
-                      const FS::Directory &        work);
+                Chain(const std::string &             id,
+                      const fcp::file &               input,
+                      const fcp::file &               output,
+                      std::vector<FCP::Filter *> &    filters,
+                      const boost::filesystem::path & work);
 
                 const std::string & id()
                 { return id_; }
-
 
                 void                run(bool dry,
                                         bool force);
@@ -54,8 +52,8 @@ namespace FCP {
 
         private:
                 std::string                id_;
-                const FS::File &           input_;
-                const FS::File &           output_;
+                const fcp::file &          input_;
+                const fcp::file &          output_;
                 std::vector<FCP::Filter *> filters_;
         };
 }

@@ -24,27 +24,27 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <boost/filesystem.hpp>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/exception.h"
-#include "libs/fs/file.h"
-#include "libs/fs/directory.h"
 #include "chain.h"
 #include "filter.h"
+#include "file.h"
 
 namespace FCP {
-        Chain::Chain(const std::string &          id,
-                     const FS::File &             input,
-                     const FS::File &             output,
-                     std::vector<FCP::Filter *> & filters,
-                     const FS::Directory &        work) :
+        Chain::Chain(const std::string &             id,
+                     const fcp::file &               input,
+                     const fcp::file &               output,
+                     std::vector<FCP::Filter *> &    filters,
+                     const boost::filesystem::path & work) :
                 id_(id),
                 input_(input),
                 output_(output)
         {
                 TR_DBG("Creating chain '%s' (working directory '%s')\n",
-                       id.c_str(), work.name().c_str());
+                       id.c_str(), work.string().c_str());
 
                 filters_ = filters;
 
@@ -53,6 +53,17 @@ namespace FCP {
                         BUG_ON((*i) == 0);
                         (*i)->setup(id_, work);
                 }
+
+#if 0
+                TR_DBG("Filters-chain for transformation '%s':\n",
+                       tag_.id().c_str());
+                std::vector<FCP::Filter *>::iterator iter;
+                for (iter = chain.begin(); iter != chain.end(); iter++) {
+                        TR_DBG("  '%s' -> '%s'\n",
+                               (*iter)->input().path().string().c_str(),
+                               (*iter)->output().path().string().c_str());
+                }
+#endif
         }
 
         void Chain::run(bool dry,
@@ -65,15 +76,16 @@ namespace FCP {
                         // modification time in order to avoid a rebuild
                         // if it is up-to-date
 
-                        if (!input_.exists()) {
+                        if (!boost::filesystem::exists(input_.path())) {
                                 throw Exception("Missing input file "
-                                                "'" + input_.name() + "'");
+                                                "'" + input_.path().string() + "'");
                         }
 
-                        if (output_.exists() &&
-                            (input_.mtime() >= output_.mtime())) {
+                        if (boost::filesystem::exists(output_.path()) &&
+                            (boost::filesystem::last_write_time(input_.path()) >=
+                             boost::filesystem::last_write_time(output_.path()))) {
                                 TR_DBG("Output file '%s' is up-to-date\n",
-                                       output_.name().c_str());
+                                       output_.path().string().c_str());
                                 return;
                         }
                 }
