@@ -33,8 +33,14 @@ namespace fcp {
 
         file & file::operator=(const file & rhs)
         {
+                if (this != &rhs) {
+                        return *this;
+                }
+
                 path_ = rhs.path_;
                 type_ = rhs.type_;
+
+                return *this;
         }
 
         file::file(const boost::filesystem::path & path,
