@@ -27,21 +27,20 @@
 #include <vector>
 #include <set>
 #include <map>
-
-#include "libs/fs/file.h"
-#include "libs/fs/directory.h"
+#include <boost/filesystem.hpp>
 
 namespace FCP {
         class Filter {
         public:
-                Filter(const FS::File &                 input,
-                       const FS::File &                 output,
+                Filter(const boost::filesystem::path &  input,
+                       const boost::filesystem::path &  output,
                        const std::vector<std::string> & commands);
 
-                const FS::File & input();
-                const FS::File & output();
-                void             setup(const std::string &   id,
-                                       const FS::Directory & tmp);
+                const boost::filesystem::path & input();
+                const boost::filesystem::path & output();
+
+                void             setup(const std::string &             id,
+                                       const boost::filesystem::path & tmp);
                 void             run(bool dry);
 
         protected:
@@ -50,8 +49,8 @@ namespace FCP {
                 Filter & operator=(const Filter &);
 
         private:
-                FS::File                 input_;
-                FS::File                 output_;
+                boost::filesystem::path  input_;
+                boost::filesystem::path  output_;
                 std::vector<std::string> templates_;
                 std::vector<std::string> commands_;
 
@@ -61,10 +60,10 @@ namespace FCP {
                        size_t              index);
 
                 std::vector<std::string>
-                commands(const std::string & id,
-                         const FS::File &    input,
-                         const FS::File &    output,
-                         const std::string & work_dir);
+                commands(const std::string &             id,
+                         const boost::filesystem::path & input,
+                         const boost::filesystem::path & output,
+                         const std::string &             work_dir);
         };
 }
 

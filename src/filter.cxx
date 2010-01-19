@@ -23,19 +23,18 @@
 #include <string>
 #include <vector>
 #include <csignal>
+#include <boost/filesystem.hpp>
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/exception.h"
-#include "libs/fs/file.h"
-#include "libs/fs/directory.h"
 #include "filter.h"
 
 #include "libs/misc/string.h"
 
 namespace FCP {
-        Filter::Filter(const FS::File &                 input,
-                       const FS::File &                 output,
+        Filter::Filter(const boost::filesystem::path &  input,
+                       const boost::filesystem::path &  output,
                        const std::vector<std::string> & commands) :
                 input_(input),
                 output_(output),
@@ -43,15 +42,11 @@ namespace FCP {
         {
         }
 
-        const FS::File & Filter::input()
-        {
-                return input_;
-        }
+        const boost::filesystem::path & Filter::input()
+        { return input_; }
 
-        const FS::File & Filter::output()
-        {
-                return output_;
-        }
+        const boost::filesystem::path & Filter::output()
+        { return output_; }
 
         std::string Filter::mktemp(const std::string & id,
                                    const std::string & dir,
@@ -62,11 +57,16 @@ namespace FCP {
         }
 
         // XXX FIXME: Remove id parameter ASAP
-        void Filter::setup(const std::string &   id,
-                           const FS::Directory & work_dir)
+        void Filter::setup(const std::string &             id,
+                           const boost::filesystem::path & work_dir)
         {
-                TR_DBG("Filter '%s' setup (working directory '%s')\n",
-                       id.c_str(), work_dir.name().c_str());
+                TR_DBG("Filter '%s -> %s' setup:\n",
+                       input_.string().c_str(),
+                       output_.string().c_str());
+                TR_DBG("  id          '%s'\n",
+                       id.c_str());
+                TR_DBG("  working dir '%s'\n",
+                       work_dir.string().c_str());
 
                 std::vector<std::string>::iterator ic;
 
@@ -85,10 +85,10 @@ namespace FCP {
 
                         command = String::replace(command,
                                                   "$I",
-                                                  input_.name().c_str());
+                                                  input_.string().c_str());
                         command = String::replace(command,
                                                   "$O",
-                                                  output_.name().c_str());
+                                                  output_.string().c_str());
 
                         //TR_DBG("  Command '%s'\n", command.c_str());
 
@@ -128,7 +128,9 @@ namespace FCP {
                                 std::string t;
                                 t = temps[v];
                                 if (t == "") {
-                                        t = mktemp(id, work_dir.name(), count);
+                                        t = mktemp(id,
+                                                   work_dir.string().c_str(),
+                                                   count);
                                         count++;
                                         temps[v] = t;
                                 }
