@@ -31,9 +31,9 @@
 #include <boost/noncopyable.hpp>
 
 namespace fcp {
-        class Filter : public boost::noncopyable {
+        class filter : public boost::noncopyable {
         public:
-                Filter(const boost::filesystem::path &  input,
+                filter(const boost::filesystem::path &  input,
                        const boost::filesystem::path &  output,
                        const std::vector<std::string> & commands);
 

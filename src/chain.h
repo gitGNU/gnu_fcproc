@@ -37,7 +37,7 @@ namespace fcp {
                 chain(const std::string &             id,
                       const fcp::file &               input,
                       const fcp::file &               output,
-                      std::vector<fcp::Filter *> &    filters,
+                      std::vector<fcp::filter *> &    filters,
                       const boost::filesystem::path & work);
 
                 const std::string & id()
@@ -52,7 +52,7 @@ namespace fcp {
                 std::string                id_;
                 const fcp::file &          input_;
                 const fcp::file &          output_;
-                std::vector<fcp::Filter *> filters_;
+                std::vector<fcp::filter *> filters_;
 
                 bool is_spurious();
         };

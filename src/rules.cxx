@@ -445,7 +445,7 @@ namespace fcp {
                 return false;
         }
 
-        std::vector<fcp::Filter *>
+        std::vector<fcp::filter *>
         rules::chain(const fcp::file &               input,
                      const fcp::file &               output,
                      int                             depth,
@@ -460,7 +460,7 @@ namespace fcp {
                        depth);
 
                 std::set<std::pair<std::string, std::string> > loop;
-                std::vector<fcp::Filter *>                     ret;
+                std::vector<fcp::filter *>                     ret;
 
                 // Build filters-chain data based on extensions
                 std::vector<node_t> data;
@@ -522,7 +522,7 @@ namespace fcp {
                         }
 
                         boost::filesystem::path dst(tmp);
-                        fcp::Filter * f = new fcp::Filter(src, dst,
+                        fcp::filter * f = new fcp::filter(src, dst,
                                                           data[i].second);
                         ret.push_back(f);
 

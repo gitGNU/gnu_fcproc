@@ -33,7 +33,7 @@
 #include "libs/misc/string.h"
 
 namespace fcp {
-        Filter::Filter(const boost::filesystem::path &  input,
+        filter::filter(const boost::filesystem::path &  input,
                        const boost::filesystem::path &  output,
                        const std::vector<std::string> & commands) :
                 input_(input),
@@ -42,13 +42,13 @@ namespace fcp {
         {
         }
 
-        const boost::filesystem::path & Filter::input()
+        const boost::filesystem::path & filter::input()
         { return input_; }
 
-        const boost::filesystem::path & Filter::output()
+        const boost::filesystem::path & filter::output()
         { return output_; }
 
-        std::string Filter::mktemp(const std::string & id,
+        std::string filter::mktemp(const std::string & id,
                                    const std::string & dir,
                                    size_t              index)
         {
@@ -57,7 +57,7 @@ namespace fcp {
         }
 
         // XXX FIXME: Remove id parameter ASAP
-        void Filter::setup(const std::string &             id,
+        void filter::setup(const std::string &             id,
                            const boost::filesystem::path & work_dir)
         {
                 TR_DBG("Filter '%s -> %s' setup:\n",
@@ -149,7 +149,7 @@ namespace fcp {
                 BUG_ON(commands_.size() != templates_.size());
         }
 
-        void Filter::run(bool dry)
+        void filter::run(bool dry)
         {
                 // XXX FIXME: Place a more specific trace ...
                 TR_DBG("Running filter commands\n");

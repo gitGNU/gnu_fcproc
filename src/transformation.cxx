@@ -54,7 +54,7 @@ namespace fcp {
                 }
 
                 // Build the filters-chain for this transformation
-                std::vector<fcp::Filter *> chain;
+                std::vector<fcp::filter *> chain;
                 chain = rules.chain(input, output, depth, work);
                 if (chain.size() == 0) {
                         throw Exception("No filters-chain available for "

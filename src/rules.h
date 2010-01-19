@@ -51,7 +51,7 @@ namespace fcp {
                 rules(const std::vector<std::string> & filenames);
 
                 // Builds a filters-chain
-                std::vector<fcp::Filter *>
+                std::vector<fcp::filter *>
                 chain(const fcp::file &               input,
                       const fcp::file &               output,
                       int                             mdepth,

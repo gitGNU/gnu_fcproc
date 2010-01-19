@@ -37,7 +37,7 @@ namespace fcp {
         chain::chain(const std::string &             id,
                      const fcp::file &               input,
                      const fcp::file &               output,
-                     std::vector<fcp::Filter *> &    filters,
+                     std::vector<fcp::filter *> &    filters,
                      const boost::filesystem::path & work) :
                 id_(id),
                 input_(input),
@@ -48,7 +48,7 @@ namespace fcp {
 
                 filters_ = filters;
 
-                std::vector<fcp::Filter *>::iterator i;
+                std::vector<fcp::filter *>::iterator i;
                 for (i = filters_.begin(); i != filters_.end(); i++) {
                         BUG_ON((*i) == 0);
                         (*i)->setup(id_, work);
@@ -57,7 +57,7 @@ namespace fcp {
 #if 0
                 TR_DBG("Filters-chain for transformation '%s':\n",
                        tag_.id().c_str());
-                std::vector<fcp::Filter *>::iterator iter;
+                std::vector<fcp::filter *>::iterator iter;
                 for (iter = chain.begin(); iter != chain.end(); iter++) {
                         TR_DBG("  '%s' -> '%s'\n",
                                (*iter)->input().path().string().c_str(),
@@ -114,7 +114,7 @@ namespace fcp {
 
                 TR_DBG("Working on filters\n");
 
-                std::vector<fcp::Filter *>::iterator i;
+                std::vector<fcp::filter *>::iterator i;
                 for (i = filters_.begin(); i != filters_.end(); i++) {
                         BUG_ON((*i) == 0);
                         (*i)->run(dry);
