@@ -39,8 +39,7 @@ namespace fcp {
                 input_(input),
                 output_(output),
                 templates_(commands)
-        {
-        }
+        { }
 
         const boost::filesystem::path & filter::input()
         { return input_; }
@@ -60,11 +59,12 @@ namespace fcp {
         void filter::setup(const std::string &             id,
                            const boost::filesystem::path & work_dir)
         {
-                TR_DBG("Filter '%s -> %s' setup:\n",
-                       input_.string().c_str(),
-                       output_.string().c_str());
-                TR_DBG("  id          '%s'\n",
+                TR_DBG("Filter '%s' setup:\n",
                        id.c_str());
+                TR_DBG("  Input       '%s\n",
+                       input_.string().c_str());
+                TR_DBG("  Output      '%s'\n",
+                       output_.string().c_str());
                 TR_DBG("  working dir '%s'\n",
                        work_dir.string().c_str());
 

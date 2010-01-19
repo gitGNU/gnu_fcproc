@@ -47,22 +47,25 @@ namespace fcp {
                 TR_DBG("Creating chain '%s' (working directory '%s')\n",
                        id.c_str(), work.string().c_str());
 
+                TR_DBG("  Chain input file  '%s'\n",
+                       input_.path().string().c_str());
+                TR_DBG("  Chain output file '%s'\n",
+                       output_.path().string().c_str());
+
                 std::vector<fcp::filter *>::iterator i;
                 for (i = filters_.begin(); i != filters_.end(); i++) {
                         BUG_ON((*i) == 0);
                         (*i)->setup(id_, work);
                 }
 
-#if 0
                 TR_DBG("Filters-chain for transformation '%s':\n",
-                       tag_.id().c_str());
-                std::vector<fcp::filter *>::iterator iter;
-                for (iter = chain.begin(); iter != chain.end(); iter++) {
+                       id_.c_str());
+
+                for (i = filters_.begin(); i != filters_.end(); i++) {
                         TR_DBG("  '%s' -> '%s'\n",
-                               (*iter)->input().path().string().c_str(),
-                               (*iter)->output().path().string().c_str());
+                               (*i)->input().string().c_str(),
+                               (*i)->output().string().c_str());
                 }
-#endif
         }
 
         bool chain::is_spurious()
