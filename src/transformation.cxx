@@ -68,19 +68,24 @@ namespace fcp {
                                         output,
                                         chain,
                                         work);
-                assert(chain_ != 0);
         }
 
         transformation::~transformation()
-        { }
+        {
+                assert(chain_ != 0);
+
+                delete chain_;
+        }
 
         void transformation::run(bool dry,
                                  bool force)
         {
-                TR_DBG("Running chain '%s' (%s, %s)\n",
+                TR_DBG("Running transformation '%s' (%s, %s)\n",
                        tag_.id().c_str(),
                        dry   ? "dry"    : "not dry",
                        force ? "forced" : "not forced");
+
+                assert(chain_ != 0);
 
                 chain_->run(dry, force);
         }
