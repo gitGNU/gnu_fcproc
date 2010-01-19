@@ -32,7 +32,7 @@
 #include "tag.h"
 
 namespace fcp {
-        Transformation::Transformation(const std::string &             tag,
+        transformation::transformation(const std::string &             tag,
                                        char                            sep, 
                                        const fcp::rules &              rules,
                                        int                             depth,
@@ -71,10 +71,10 @@ namespace fcp {
                 assert(chain_ != 0);
         }
 
-        Transformation::~Transformation()
+        transformation::~transformation()
         { }
 
-        void Transformation::run(bool dry,
+        void transformation::run(bool dry,
                                  bool force)
         {
                 TR_DBG("Running chain '%s' (%s, %s)\n",
@@ -85,6 +85,6 @@ namespace fcp {
                 chain_->run(dry, force);
         }
 
-        const fcp::tag & Transformation::tag() const
+        const fcp::tag & transformation::tag() const
         { return tag_; }
 };

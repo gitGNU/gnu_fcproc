@@ -373,8 +373,8 @@ int main(int argc, char * argv[])
                        work_dir.string().c_str(),
                        remove_work_dir ? "remove" : "keep");
 
-                std::vector<fcp::Transformation *>           transformations;
-                std::vector<fcp::Transformation *>::iterator it;
+                std::vector<fcp::transformation *>           transformations;
+                std::vector<fcp::transformation *>::iterator it;
 
                 transformations.resize(argc - optind);
 
@@ -384,9 +384,9 @@ int main(int argc, char * argv[])
 
                         j = i - optind;
                         try {
-                                fcp::Transformation * t;
+                                fcp::transformation * t;
 
-                                t = new fcp::Transformation(argv[i],
+                                t = new fcp::transformation(argv[i],
                                                             separator,
                                                             *rules,
                                                             max_depth,

@@ -33,14 +33,14 @@
 #include "file.h"
 
 namespace fcp {
-        class Transformation : public boost::noncopyable {
+        class transformation : public boost::noncopyable {
         public:
-                Transformation(const std::string &             tag,
+                transformation(const std::string &             tag,
                                char                            separator,
                                const fcp::rules &              rules,
                                int                             depth,
                                const boost::filesystem::path & work);
-                ~Transformation();
+                ~transformation();
 
                 void             run(bool dry,
                                      bool force);
