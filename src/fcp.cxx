@@ -27,6 +27,8 @@
 #include <list>
 #include <set>
 
+#include <boost/filesystem.hpp>
+
 #include <getopt.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -34,8 +36,6 @@
 #include "libs/misc/debug.h"
 #include "libs/misc/environment.h"
 #include "libs/misc/exception.h"
-#include "libs/fs/file.h"
-#include "libs/fs/directory.h"
 #include "configuration.h"
 #include "rules.h"
 #include "transformation.h"
@@ -62,6 +62,7 @@ void version()
 }
 
 #define USE_CONFIGURATION_FILE 0
+#define HARM_MY_FILESYSTEM     0
 
 char          separator          = ':';
 #if USE_CONFIGURATION_FILE
@@ -346,37 +347,37 @@ int main(int argc, char * argv[])
                 }
                 BUG_ON(temp_dir_name.empty());
 
-                FS::Directory temp_dir(temp_dir_name);
-                if (!temp_dir.exists()) {
-                        // We created that directory
-                        temp_dir.create();
+                boost::filesystem::path temp_dir(temp_dir_name);
+                if (!boost::filesystem::exists(temp_dir)) {
+                        boost::filesystem::create_directory(temp_dir);
                         remove_temp_dir = true;
                 }
+                assert(boost::filesystem::exists(temp_dir));
 
                 TR_DBG("Temporary dir '%s' (%s)\n",
-                       temp_dir.name().c_str(),
-                       remove_temp_dir ? "to be removed" : "to keep");
+                       temp_dir.string().c_str(),
+                       remove_temp_dir ? "remove" : "keep");
 
-                FS::Directory work_dir(temp_dir.name() +
-                                       "/" +
-                                       std::string(PROGRAM_NAME) +
-                                       "-" +
-                                       String::itos(getpid()));
-                if (!work_dir.exists()) {
-                        work_dir.create();
+                boost::filesystem::path work_dir(temp_dir
+                                                 /
+                                                 (std::string(PROGRAM_NAME) +
+                                                  "-" +
+                                                  String::itos(getpid())));
+                if (!boost::filesystem::exists(work_dir)) {
+                        boost::filesystem::create_directory(work_dir);
                         remove_work_dir = true;
                 }
+                assert(boost::filesystem::exists(work_dir));
 
                 TR_DBG("Working dir   '%s' (%s)\n",
-                       work_dir.name().c_str(),
-                       remove_work_dir ? "to be removed" : "to keep");
+                       work_dir.string().c_str(),
+                       remove_work_dir ? "remove" : "keep");
 
                 std::vector<FCP::Transformation *>           transformations;
                 std::vector<FCP::Transformation *>::iterator it;
 
                 transformations.resize(argc - optind);
 
-                TR_DBG("Transformations:\n");
                 int i;
                 for (i = optind; i < argc; i++) {
                         int j;
@@ -391,14 +392,6 @@ int main(int argc, char * argv[])
                                                             max_depth,
                                                             work_dir);
                                 BUG_ON(t == 0);
-
-                                // XXX FIXME: Use an exception
-                                if (t->input().name() == t->output().name()) {
-                                        throw Exception("Transformation "
-                                                        "'" + t->tag() + "' "
-                                                        "input and output "
-                                                        "must be different");
-                                }
 
                                 transformations[j] = t;
 
@@ -436,13 +429,15 @@ int main(int argc, char * argv[])
                              it != transformations.end();
                              it++) {
                                 TR_VRB("Running transformation '%s'\n",
-                                       (*it)->tag().c_str());
+                                       (*it)->tag().id().c_str());
                                 (*it)->run(dry_run, force);
                         }
                 } catch (std::exception & e) {
                         TR_ERR("%s\n", e.what());
                         if (remove_work_dir) {
-                                work_dir.remove();
+#if HARM_MY_FILESYSTEM
+                                boost::filesystem::remove_all(work_dir);
+#endif
                         }
                         return 1;
                 }
@@ -459,10 +454,14 @@ int main(int argc, char * argv[])
 
                         // Remove directories
                         if (remove_work_dir) {
-                                work_dir.remove(true);
+#if HARM_MY_FILESYSTEM
+                                boost::filesystem::remove_all(work_dir);
+#endif
                         }
                         if (remove_temp_dir) {
-                                temp_dir.remove(true);
+#if HARM_MY_FILESYSTEM
+                                boost::filesystem::remove_all(temp_dir);
+#endif
                         }
 
                 } catch (std::exception & e) {
