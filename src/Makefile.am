@@ -95,7 +95,6 @@ libmisc_a_SOURCES =				\
 	libs/misc/environment.h			\
 	libs/misc/environment.cxx		\
 	libs/misc/constant.h			\
-	libs/misc/utility.h			\
 	libs/misc/thread.h			\
 	libs/misc/thread.cxx
 libmisc_a_CPPFLAGS =				\
