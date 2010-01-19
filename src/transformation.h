@@ -25,6 +25,7 @@
 
 #include <string>
 #include <boost/filesystem.hpp>
+#include <boost/noncopyable.hpp>
 
 #include "tag.h"
 #include "rules.h"
@@ -32,7 +33,7 @@
 #include "file.h"
 
 namespace fcp {
-        class Transformation {
+        class Transformation : public boost::noncopyable {
         public:
                 Transformation(const std::string &             tag,
                                char                            separator,
@@ -47,9 +48,6 @@ namespace fcp {
                 const fcp::tag & tag() const;
 
         protected:
-                // No copy allowed
-                Transformation(const Transformation &);
-                Transformation & operator=(const Transformation &);
 
         private:
                 void slice(char                separator,

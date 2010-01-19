@@ -28,9 +28,10 @@
 #include <set>
 #include <map>
 #include <boost/filesystem.hpp>
+#include <boost/noncopyable.hpp>
 
 namespace fcp {
-        class Filter {
+        class Filter : public boost::noncopyable {
         public:
                 Filter(const boost::filesystem::path &  input,
                        const boost::filesystem::path &  output,
@@ -44,9 +45,6 @@ namespace fcp {
                 void             run(bool dry);
 
         protected:
-                // No copy allowed
-                Filter(const Filter &);
-                Filter & operator=(const Filter &);
 
         private:
                 boost::filesystem::path  input_;

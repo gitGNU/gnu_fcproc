@@ -26,12 +26,13 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <boost/noncopyable.hpp>
 
 #include "filter.h"
 #include "file.h"
 
 namespace fcp {
-        class chain {
+        class chain : public boost::noncopyable {
         public:
                 chain(const std::string &             id,
                       const fcp::file &               input,
@@ -46,9 +47,6 @@ namespace fcp {
                                         bool force);
 
         protected:
-                // No copy allowed
-                chain(const chain &);
-                chain & operator=(const chain &);
 
         private:
                 std::string                id_;

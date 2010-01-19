@@ -29,6 +29,7 @@
 #include <vector>
 #include <set>
 #include <boost/filesystem.hpp>
+#include <boost/noncopyable.hpp>
 
 #include "regex.h"
 
@@ -42,7 +43,7 @@ namespace fcp {
 std::ostream & operator<<(std::ostream & stream, const fcp::Rules & rules);
 
 namespace fcp {
-        class Rules {
+        class Rules : public boost::noncopyable {
         public:
                 friend std::ostream & ::operator<<(std::ostream & stream,
                                                    const Rules &  rules);
@@ -57,9 +58,6 @@ namespace fcp {
                       const boost::filesystem::path & work) const;
 
         protected:
-                // No copy allowed
-                Rules(const Rules &);
-                Rules & operator=(const Rules &);
 
         private:
                 struct {
