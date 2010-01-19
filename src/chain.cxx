@@ -66,29 +66,46 @@ namespace fcp {
 #endif
         }
 
+        bool chain::is_spurious()
+        {
+                TR_DBG("Checking for spurious rebuild\n");
+
+                // Check the output file presence and its last
+                // modification time in order to avoid a rebuild
+                // if it is up-to-date
+
+                assert(boost::filesystem::exists(input_.path()));
+
+                if (boost::filesystem::exists(output_.path())) {
+                        if (boost::filesystem::last_write_time(input_.path()) >=
+                            boost::filesystem::last_write_time(output_.path())) {
+                                TR_DBG("Output file '%s' is up-to-date\n",
+                                       output_.path().string().c_str());
+                                return true;
+                        }
+                }
+
+                return false;
+        }
+
         void chain::run(bool dry,
                         bool force)
         {
                 TR_DBG("Running filters-chain '%s'\n", id_.c_str());
 
+                if (!boost::filesystem::exists(input_.path())) {
+                        throw Exception("Missing input file "
+                                        "'" + input_.path().string() + "'");
+                }
+
                 if (!dry && !force) {
-                        // Check the output file presence and its last
-                        // modification time in order to avoid a rebuild
-                        // if it is up-to-date
-
-                        if (!boost::filesystem::exists(input_.path())) {
-                                throw Exception("Missing input file "
-                                                "'" + input_.path().string() + "'");
-                        }
-
-                        if (boost::filesystem::exists(output_.path()) &&
-                            (boost::filesystem::last_write_time(input_.path()) >=
-                             boost::filesystem::last_write_time(output_.path()))) {
-                                TR_DBG("Output file '%s' is up-to-date\n",
-                                       output_.path().string().c_str());
+                        if (is_spurious()) {
+                                TR_DBG("Avoiding a spurious rebuild\n");
                                 return;
                         }
                 }
+
+                TR_DBG("Working on filters\n");
 
                 std::vector<fcp::Filter *>::iterator i;
                 for (i = filters_.begin(); i != filters_.end(); i++) {

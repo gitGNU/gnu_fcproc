@@ -55,6 +55,8 @@ namespace fcp {
                 const fcp::file &          input_;
                 const fcp::file &          output_;
                 std::vector<fcp::Filter *> filters_;
+
+                bool is_spurious();
         };
 }
 
