@@ -37,7 +37,7 @@ namespace fcp {
         public:
                 Transformation(const std::string &             tag,
                                char                            separator,
-                               const fcp::Rules &              rules,
+                               const fcp::rules &              rules,
                                int                             depth,
                                const boost::filesystem::path & work);
                 ~Transformation();

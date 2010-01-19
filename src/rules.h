@@ -37,18 +37,18 @@
 #include "file.h"
 
 namespace fcp {
-        class Rules;
+        class rules;
 }
 
-std::ostream & operator<<(std::ostream & stream, const fcp::Rules & rules);
+std::ostream & operator<<(std::ostream & stream, const fcp::rules & rules);
 
 namespace fcp {
-        class Rules : public boost::noncopyable {
+        class rules : public boost::noncopyable {
         public:
                 friend std::ostream & ::operator<<(std::ostream & stream,
-                                                   const Rules &  rules);
+                                                   const rules &  rules);
 
-                Rules(const std::vector<std::string> & filenames);
+                rules(const std::vector<std::string> & filenames);
 
                 // Builds a filters-chain
                 std::vector<fcp::Filter *>

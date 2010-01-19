@@ -34,7 +34,7 @@
 namespace fcp {
         Transformation::Transformation(const std::string &             tag,
                                        char                            sep, 
-                                       const fcp::Rules &              rules,
+                                       const fcp::rules &              rules,
                                        int                             depth,
                                        const boost::filesystem::path & work) :
                 tag_(tag, sep)

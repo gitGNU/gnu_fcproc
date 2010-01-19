@@ -36,7 +36,7 @@
 #include "file.h"
 
 namespace fcp {
-        Rules::Rules(const std::vector<std::string> & filenames)
+        rules::rules(const std::vector<std::string> & filenames)
         {
                 if (regcomp(&re_.empty_,
                             "^[ \t]*$",
@@ -127,7 +127,7 @@ namespace fcp {
 #define DUMP_REGMATCHES(X)
 #endif
 
-        std::string Rules::readline(std::ifstream & stream)
+        std::string rules::readline(std::ifstream & stream)
         {
                 std::string ret;
                 bool        stop;
@@ -148,7 +148,7 @@ namespace fcp {
                 return ret;
         }
 
-        void Rules::parse(const std::string & filename)
+        void rules::parse(const std::string & filename)
         {
                 // Always dump the file under examination
                 TR_DBG("Parsing rules from file '%s'\n", filename.c_str());
@@ -375,7 +375,7 @@ namespace fcp {
 
         typedef std::pair<std::string, std::vector<std::string> > fcdata_t;
 
-        bool Rules::chain_nodes(Antiloop &            antiloop,
+        bool rules::chain_nodes(Antiloop &            antiloop,
                                 const std::string &   tag_in,
                                 const std::string &   tag_out,
                                 int                   depth,
@@ -446,7 +446,7 @@ namespace fcp {
         }
 
         std::vector<fcp::Filter *>
-        Rules::chain(const fcp::file &               input,
+        rules::chain(const fcp::file &               input,
                      const fcp::file &               output,
                      int                             depth,
                      const boost::filesystem::path & work) const
@@ -534,7 +534,7 @@ namespace fcp {
 }
 
 std::ostream & operator<<(std::ostream &     stream,
-                          const fcp::Rules & rules)
+                          const fcp::rules & rules)
 {
         std::map<std::string,
                 std::map<std::string,

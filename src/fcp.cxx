@@ -307,10 +307,10 @@ int main(int argc, char * argv[])
                 BUG_ON(rules_all.size() == 0);
 
                 // Read rules file
-                fcp::Rules * rules;
+                fcp::rules * rules;
 
                 try {
-                        rules = new fcp::Rules(rules_all);
+                        rules = new fcp::rules(rules_all);
                 } catch (std::exception & e) {
                         TR_ERR("%s\n", e.what());
                         return 1;
