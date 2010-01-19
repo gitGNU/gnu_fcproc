@@ -101,6 +101,8 @@ namespace String {
 
                 p = in.find(separator);
                 if ((p < 0) || (p > in.size())) {
+                        out1 = in;
+                        out2 = "";
                         return;
                 }
 
