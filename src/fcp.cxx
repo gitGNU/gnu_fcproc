@@ -161,7 +161,7 @@ void hint(const std::string & message)
                 << std::endl;
 }
 
-int main(int argc, char * argv[])
+int program(int argc, char * argv[])
 {
         TR_CONFIG_LVL(TR_LVL_DEFAULT);
         TR_CONFIG_PFX(PROGRAM_NAME);
@@ -428,8 +428,6 @@ int main(int argc, char * argv[])
                         for (it  = transformations.begin();
                              it != transformations.end();
                              it++) {
-                                TR_VRB("Running transformation '%s'\n",
-                                       (*it)->tag().id().c_str());
                                 (*it)->run(dry_run, force);
                         }
                 } catch (std::exception & e) {
@@ -478,4 +476,15 @@ int main(int argc, char * argv[])
         };
 
         return 0;
+}
+
+int main(int argc, char * argv[])
+{
+        try {
+                return program(argc, argv);
+        } catch (...) {
+                BUG();
+        }
+
+        return 1;
 }
