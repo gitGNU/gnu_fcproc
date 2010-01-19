@@ -28,12 +28,12 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <boost/filesystem.hpp>
 
 #include "regex.h"
 
-#include "libs/fs/file.h"
-#include "libs/fs/directory.h"
 #include "filter.h"
+#include "file.h"
 
 namespace FCP {
         class Rules;
@@ -51,10 +51,10 @@ namespace FCP {
 
                 // Builds a filters-chain
                 std::vector<FCP::Filter *>
-                chain(const FS::File &      input,
-                      const FS::File &      output,
-                      int                   mdepth,
-                      const FS::Directory & work) const;
+                chain(const fcp::file &               input,
+                      const fcp::file &               output,
+                      int                             mdepth,
+                      const boost::filesystem::path & work) const;
 
         protected:
                 // No copy allowed

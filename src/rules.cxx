@@ -25,15 +25,15 @@
 #include <map>
 #include <fstream>
 #include <algorithm>
+#include <boost/filesystem.hpp>
 
 #include "regex.h"
 
 #include "libs/misc/debug.h"
 #include "libs/misc/string.h"
 #include "libs/misc/exception.h"
-#include "libs/fs/file.h"
-#include "libs/fs/directory.h"
 #include "rules.h"
+#include "file.h"
 
 namespace FCP {
         Rules::Rules(const std::vector<std::string> & filenames)
@@ -119,10 +119,10 @@ namespace FCP {
 
 #if 0
 #define DUMP_REGMATCHES(X) {                    \
-        DUMP_REGMATCH((X)[0]);                  \
-        DUMP_REGMATCH((X)[1]);                  \
-        DUMP_REGMATCH((X)[2]);                  \
-}
+                DUMP_REGMATCH((X)[0]);          \
+                DUMP_REGMATCH((X)[1]);          \
+                DUMP_REGMATCH((X)[2]);          \
+        }
 #else
 #define DUMP_REGMATCHES(X)
 #endif
@@ -445,16 +445,19 @@ namespace FCP {
                 return false;
         }
 
-        std::vector<FCP::Filter *> Rules::chain(const FS::File &      input,
-                                                const FS::File &      output,
-                                                int                   depth,
-                                                const FS::Directory & work) const
+        std::vector<FCP::Filter *>
+        Rules::chain(const fcp::file &               input,
+                     const fcp::file &               output,
+                     int                             depth,
+                     const boost::filesystem::path & work) const
         {
                 BUG_ON(depth <= 0);
 
                 TR_DBG("Looking for filters-chain '%s' -> '%s' "
                        "(max depth %d)\n",
-                       input.name().c_str(), output.name().c_str(), depth);
+                       input.path().string().c_str(),
+                       output.path().string().c_str(),
+                       depth);
 
                 std::set<std::pair<std::string, std::string> > loop;
                 std::vector<FCP::Filter *>                     ret;
@@ -466,34 +469,19 @@ namespace FCP {
                 std::string         out_type;
 
                 in_type = input.type();
-                TR_DBG("input type (1) = '%s' (%d)\n",
-                       in_type.c_str(), in_type.size());
-                if (in_type.empty()) {
-                        TR_DBG("Using extension as file type for '%s'\n",
-                               input.name().c_str());
-                        in_type == input.extension();
-                }
-                TR_DBG("input type (2) = '%s' (%d)\n",
-                       in_type.c_str(), in_type.size())
                 if (in_type.empty()) {
                         throw Exception("Cannot detect file type for "
-                                        "'" + input.name() + "'");
+                                        "'" + input.path().string() + "'");
                 }
 
                 out_type = output.type();
-                TR_DBG("output type (1) = '%s' (%d)\n",
-                       out_type.c_str(), out_type.size());
-                if (out_type.empty()) {
-                        TR_DBG("Using extension as file type for '%s'\n",
-                               output.name().c_str());
-                        out_type == "." + output.extension();
-                }
-                TR_DBG("output type (2) = '%s' (%d)\n",
-                       out_type.c_str(), out_type.size())
                 if (out_type.empty()) {
                         throw Exception("Cannot detect file type for "
-                                        "'" + output.name() + "'");
+                                        "'" + output.path().string() + "'");
                 }
+
+                TR_DBG("Input type  = '%s'\n", in_type.c_str());
+                TR_DBG("Output type = '%s'\n", out_type.c_str());
 
                 if (!chain_nodes(antiloop, in_type, out_type, depth, data)) {
                         TR_DBG("No filters-chain found ...\n");
@@ -516,25 +504,24 @@ namespace FCP {
                 // on the 'work' path on all remaining nodes
 
                 // The starting point lives on the input path
-                FS::File src(input);
+                boost::filesystem::path src(input.path());
 
                 std::vector<node_t>::size_type i;
                 for (i = 0; i < data.size(); i++) {
-                        std::string tmp;
+                        boost::filesystem::path tmp;
 
                         if (i == (data.size() - 1)) {
                                 // The ending point lives on the output path
-                                tmp = output.name();
+                                tmp = output.path();
                         } else {
                                 // All the others must live in the work path
-                                tmp = work.name() +
-                                        "/" +
-                                        src.basename(true) +
-                                        "." +
-                                        data[i].first;
+                                tmp = work /
+                                        (boost::filesystem::basename(src) +
+                                         "." +
+                                         data[i].first);
                         }
 
-                        FS::File      dst(tmp);
+                        boost::filesystem::path dst(tmp);
                         FCP::Filter * f = new FCP::Filter(src, dst,
                                                           data[i].second);
                         ret.push_back(f);
