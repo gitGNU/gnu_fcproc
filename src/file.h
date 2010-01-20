@@ -30,11 +30,14 @@ namespace fcp {
         class file {
         public:
                 file(const boost::filesystem::path & path,
-                     const std::string &             type = "");
+                     const std::string &             type);
                 ~file();
 
                 const boost::filesystem::path & path()   const;
+                const std::string &             name()   const;
                 const std::string &             type()   const;
+
+                bool                            exists() const;
 
                 file();
                 file & operator=(const file & rhs);

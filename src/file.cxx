@@ -23,7 +23,7 @@
 #include <string>
 #include <boost/filesystem.hpp>
 
-#include "libs/misc/debug.h"
+#include "debug.h"
 #include "file.h"
 
 namespace fcp {
@@ -37,8 +37,8 @@ namespace fcp {
                         return *this;
                 }
 
-                path_ = rhs.path_;
-                type_ = rhs.type_;
+                this->path_ = rhs.path_;
+                this->type_ = rhs.type_;
 
                 return *this;
         }
@@ -64,7 +64,13 @@ namespace fcp {
         const boost::filesystem::path & file::path() const
         { return path_; }
 
+        const std::string & file::name() const
+        { return path_.string(); }
+
         const std::string & file::type() const
         { return type_; }
+
+        bool file::exists() const
+        { return boost::filesystem::exists(path_); }
 
 };
