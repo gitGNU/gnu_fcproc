@@ -171,16 +171,16 @@ namespace fcp {
                         // XXX FIXME: Use gnulib system()
                         ret = system((*i).c_str());
                         if (ret == -1) {
-                                throw Exception("Got fork() failure");
+                                throw fcp::exception("Got fork() failure");
                         }
                         if (WIFSIGNALED(ret) &&
                             (WTERMSIG(ret) == SIGINT ||
                              WTERMSIG(ret) == SIGQUIT)) {
-                                throw Exception("Interrupted");
+                                throw fcp::exception("Interrupted");
                         }
                         if (WEXITSTATUS(ret) != 0) {
-                                throw Exception("Got problems running "
-                                                "command '" + (*i) + "'");
+                                throw fcp::exception("Got problems running "
+                                                     "command '" + (*i) + "'");
                         }
                 }
         }

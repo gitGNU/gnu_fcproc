@@ -24,12 +24,16 @@
 
 #include "exception.h"
 
-Exception::Exception(const std::string & description) :
-        description_(description)
-{ }
+namespace fcp {
 
-Exception::~Exception(void) throw()
-{ }
+        exception::exception(const std::string & description) :
+                description_(description)
+        { }
 
-const char * Exception::what(void) const throw()
-{ return description_.c_str(); }
+        exception::~exception(void) throw()
+        { }
+
+        const char * exception::what(void) const throw()
+        { return description_.c_str(); }
+
+}

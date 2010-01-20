@@ -25,18 +25,22 @@
 
 #include <string>
 
-class Exception : public std::exception {
-public:
-        Exception(const std::string & description);
-        ~Exception(void) throw();
+namespace fcp {
 
-        virtual const char * what(void) const throw();
+        class exception : public std::exception {
+        public:
+                exception(const std::string & description);
+                ~exception(void) throw();
 
-protected:
-        Exception(void);
+                virtual const char * what(void) const throw();
 
-private:
-        std::string description_;
-};
+        protected:
+                exception(void);
+
+        private:
+                std::string description_;
+        };
+
+}
 
 #endif

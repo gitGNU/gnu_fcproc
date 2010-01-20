@@ -34,9 +34,9 @@ namespace fcp {
                 const std::string::size_type p = id_.find(separator);
 
                 if ((p < 0) || (p > id_.size())) {
-                        throw Exception("Missing separator "
-                                        "in tag "
-                                        "'" + id_ + "'");
+                        throw fcp::exception("Missing separator "
+                                             "in tag "
+                                             "'" + id_ + "'");
                 }
 
                 // Work on the input part
@@ -44,9 +44,9 @@ namespace fcp {
                         // Grab the input part
                         std::string tmp = id_.substr(0, p);
                         if (tmp.size() == 0) {
-                                throw Exception("Missing input file "
-                                                "in transformation "
-                                                "'" + id_ + "'");
+                                throw fcp::exception("Missing input file "
+                                                     "in transformation "
+                                                     "'" + id_ + "'");
                         }
                         TR_DBG("Tag subpart '%s' (input)\n", tmp.c_str());
 
@@ -66,9 +66,9 @@ namespace fcp {
                         // Grab the output part
                         std::string tmp = id_.substr(p + 1);
                         if (tmp.size() == 0) {
-                                throw Exception("Missing output file "
-                                                "in transformation "
-                                                "'" + id_ + "'");
+                                throw fcp::exception("Missing output file "
+                                                     "in transformation "
+                                                     "'" + id_ + "'");
                         }
                         TR_DBG("Tag subpart '%s' (output)\n", tmp.c_str());
 

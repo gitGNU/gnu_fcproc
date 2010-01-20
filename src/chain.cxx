@@ -110,9 +110,9 @@ namespace fcp {
                                input_.name().c_str());
 
                         if (!boost::filesystem::exists(input_.path())) {
-                                throw Exception("Missing input file "
-                                                "for chain "
-                                                "'" + input_.name() + "'");
+                                throw fcp::exception("Missing input file "
+                                                     "for chain "
+                                                     "'" + input_.name() + "'");
                         }
 
                         if (is_spurious()) {

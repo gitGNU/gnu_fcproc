@@ -48,20 +48,20 @@ namespace fcp {
                     boost::filesystem::exists(output.path())      &&
                     boost::filesystem::equivalent(input.path(),
                                                   output.path())) {
-                        throw Exception("Transformation "
-                                        "'" + tag_.id() + "' "
-                                        "must have different "
-                                        "input and output "
-                                        "file");
+                        throw fcp::exception("Transformation "
+                                             "'" + tag_.id() + "' "
+                                             "must have different "
+                                             "input and output "
+                                             "file");
                 }
 
                 // Build the chain for this transformation
                 std::vector<fcp::filter *> temp;
                 temp = rules.chain(input, output, depth, work);
                 if (temp.size() == 0) {
-                        throw Exception("No chain available for "
-                                        "'" + tag_.id() + "' "
-                                        "transformation");
+                        throw fcp::exception("No chain available for "
+                                             "'" + tag_.id() + "' "
+                                             "transformation");
                 }
 
                 // Finally create the chain from the filters sequence
