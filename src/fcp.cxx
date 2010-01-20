@@ -61,7 +61,7 @@ void version()
 }
 
 #define USE_CONFIGURATION_FILE 1
-#define HARM_MY_FILESYSTEM     0
+#define HARM_MY_FILESYSTEM     1
 
 char          separator          = ':';
 #if USE_CONFIGURATION_FILE
