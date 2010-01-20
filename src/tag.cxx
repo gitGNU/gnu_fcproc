@@ -20,12 +20,13 @@
 
 #include "config.h"
 
-#include "libs/misc/debug.h"
-#include "libs/misc/exception.h"
-#include "libs/misc/string.h"
+#include "debug.h"
+#include "exception.h"
+#include "utility.h"
 #include "tag.h"
 
 namespace fcp {
+
         tag::tag(const std::string & id,
                  char                separator) :
                 id_(id)
@@ -52,7 +53,7 @@ namespace fcp {
                         // Slice it in (name, type)
                         std::string name;
                         std::string type;
-                        String::slice(tmp, '%', name, type);
+                        fcp::slice(tmp, '%', name, type);
                         TR_DBG("  Subpart name '%s'\n", name.c_str());
                         TR_DBG("  Subpart type '%s'\n", type.c_str());
 
@@ -74,7 +75,7 @@ namespace fcp {
                         // Slice it in (name, type)
                         std::string name;
                         std::string type;
-                        String::slice(tmp, '%', name, type);
+                        fcp::slice(tmp, '%', name, type);
                         TR_DBG("  Subpart name '%s'\n", name.c_str());
                         TR_DBG("  Subpart type '%s'\n", type.c_str());
 
@@ -95,4 +96,4 @@ namespace fcp {
         const fcp::file & tag::lhs()
         { return lhs_; }
 
-};
+}
