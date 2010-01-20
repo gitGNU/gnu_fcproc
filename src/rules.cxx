@@ -29,13 +29,14 @@
 
 #include "regex.h"
 
-#include "libs/misc/debug.h"
-#include "libs/misc/string.h"
-#include "libs/misc/exception.h"
+#include "debug.h"
+#include "utility.h"
+#include "exception.h"
 #include "rules.h"
 #include "file.h"
 
 namespace fcp {
+
         rules::rules(const std::vector<std::string> & filenames)
         {
                 if (regcomp(&re_.empty_,
@@ -81,7 +82,7 @@ namespace fcp {
                 regfree(&re_.comment_);
                 regfree(&re_.empty_);
 
-#if 0
+#if 1
                 std::map<std::string,
                         std::map<std::string,
                         std::vector<std::string> > >::const_iterator in;
@@ -137,7 +138,7 @@ namespace fcp {
                         std::string tmp;
 
                         std::getline(stream, tmp);
-                        tmp = String::trim_right(tmp, " \t");
+                        tmp = fcp::trim_right(tmp, " \t");
                         if (tmp.find_last_of("\\") != tmp.size()) {
                                 stop = true;
                         }
@@ -244,7 +245,7 @@ namespace fcp {
                                                         "'" + filename + "'"
                                                         " at line "
                                                         "'" +
-                                                        String::itos(number) +
+                                                        fcp::itos(number) +
                                                         "'");
                                 }
 
@@ -261,7 +262,7 @@ namespace fcp {
                                                         "'" + filename + "'"
                                                         " at line "
                                                         "'" +
-                                                        String::itos(number) +
+                                                        fcp::itos(number) +
                                                         "'");
                                 }
 
@@ -274,7 +275,7 @@ namespace fcp {
                                                         "'" + filename + "'"
                                                         " at line "
                                                         "'" +
-                                                        String::itos(number) +
+                                                        fcp::itos(number) +
                                                         "'");
                                 }
 
@@ -306,7 +307,7 @@ namespace fcp {
                                                                 "'" + filename + "'"
                                                                 " at line "
                                                                 "'" +
-                                                                String::itos(number) +
+                                                                fcp::itos(number) +
                                                                 "'");
                                         }
 
@@ -322,7 +323,7 @@ namespace fcp {
                                                         "'" + filename + "'"
                                                         " at line "
                                                         "'" +
-                                                        String::itos(number) +
+                                                        fcp::itos(number) +
                                                         "'");
                                 }
 
@@ -388,7 +389,7 @@ namespace fcp {
 
                 depth--;
                 if (depth < 0) {
-                        TR_DBG("Max filters-chain size exceeded\n");
+                        TR_DBG("Max chain size exceeded\n");
                         return false;
                 }
 
@@ -453,7 +454,7 @@ namespace fcp {
         {
                 BUG_ON(depth <= 0);
 
-                TR_DBG("Looking for filters-chain '%s' -> '%s' "
+                TR_DBG("Looking for chain '%s' -> '%s' "
                        "(max depth %d)\n",
                        input.path().string().c_str(),
                        output.path().string().c_str(),
@@ -462,7 +463,7 @@ namespace fcp {
                 std::set<std::pair<std::string, std::string> > loop;
                 std::vector<fcp::filter *>                     ret;
 
-                // Build filters-chain data based on extensions
+                // Build chain data based on extensions
                 std::vector<node_t> data;
                 Antiloop            antiloop;
                 std::string         in_type;
@@ -484,7 +485,7 @@ namespace fcp {
                 TR_DBG("Output type = '%s'\n", out_type.c_str());
 
                 if (!chain_nodes(antiloop, in_type, out_type, depth, data)) {
-                        TR_DBG("No filters-chain found ...\n");
+                        TR_DBG("No chain found ...\n");
                         data.clear();
                         return ret;
                 }
@@ -495,10 +496,10 @@ namespace fcp {
                 BUG_ON(data.size() < 1);
 
                 std::reverse(data.begin(), data.end());
-                TR_DBG("Filters-chain found!\n");
+                TR_DBG("Chain found!\n");
 
                 // We must transform the node_t sequence into a proper
-                // filters-chain. During such transformation we must tweak the
+                // chain. During such transformation we must tweak the
                 // paths along the chain. The starting point is the input
                 // path, the ending point is the output path while we must work
                 // on the 'work' path on all remaining nodes
@@ -531,6 +532,7 @@ namespace fcp {
 
                 return ret;
         }
+
 }
 
 std::ostream & operator<<(std::ostream &     stream,
