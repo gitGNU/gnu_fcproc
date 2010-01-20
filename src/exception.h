@@ -18,8 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef LIBS_MISC_EXCEPTION_H
-#define LIBS_MISC_EXCEPTION_H
+#ifndef FCP_EXCEPTION_H
+#define FCP_EXCEPTION_H
 
 #include "config.h"
 
@@ -39,4 +39,4 @@ private:
         std::string description_;
 };
 
-#endif // LIBS_MISC_EXCEPTION_H
+#endif

@@ -22,18 +22,14 @@
 
 #include <string>
 
-#include "libs/misc/exception.h"
+#include "exception.h"
 
 Exception::Exception(const std::string & description) :
         description_(description)
-{
-}
+{ }
 
 Exception::~Exception(void) throw()
-{
-}
+{ }
 
 const char * Exception::what(void) const throw()
-{
-        return description_.c_str();
-}
+{ return description_.c_str(); }
