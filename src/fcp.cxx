@@ -33,9 +33,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "libs/misc/debug.h"
-#include "libs/misc/environment.h"
-#include "libs/misc/exception.h"
+#include "debug.h"
+#include "exception.h"
 #include "configuration.h"
 #include "rules.h"
 #include "transformation.h"
@@ -61,12 +60,12 @@ void version()
                 std::endl;
 }
 
-#define USE_CONFIGURATION_FILE 0
+#define USE_CONFIGURATION_FILE 1
 #define HARM_MY_FILESYSTEM     0
 
 char          separator          = ':';
 #if USE_CONFIGURATION_FILE
-std::string   configuration_file = (Environment::get("HOME") +
+std::string   configuration_file = (fcp::getenv("HOME") +
                                     std::string("/") +
                                     std::string(".") +
                                     std::string(PACKAGE_TARNAME) +
@@ -74,7 +73,7 @@ std::string   configuration_file = (Environment::get("HOME") +
                                     std::string("configuration"));
 #endif
 #define       DFLT_RULES                        \
-        (Environment::get("HOME") +             \
+        (fcp::getenv("HOME") +                  \
          std::string("/") +                     \
          std::string(".") +                     \
          std::string(PACKAGE_TARNAME) +         \
@@ -303,7 +302,9 @@ int program(int argc, char * argv[])
                         return 1;
                 }
 
-                TR_DBG("You have %d rule(s)\n", rules_all.size());
+                TR_DBG("You have %d rule%c\n",
+                       rules_all.size(),
+                       (rules_all.size() > 1 ? 's' : ' '));
                 BUG_ON(rules_all.size() == 0);
 
                 // Read rules file
@@ -362,7 +363,7 @@ int program(int argc, char * argv[])
                                                  /
                                                  (std::string(PROGRAM_NAME) +
                                                   "-" +
-                                                  String::itos(getpid())));
+                                                  fcp::itos(getpid())));
                 if (!boost::filesystem::exists(work_dir)) {
                         boost::filesystem::create_directory(work_dir);
                         remove_work_dir = true;
@@ -409,8 +410,8 @@ int program(int argc, char * argv[])
 #if USE_CONFIGURATION_FILE
                 // Read configuration file
                 try {
-                        Configuration::File config;
-                        std::ifstream       stream(configuration_file.c_str());
+                        fcp::configuration config;
+                        std::ifstream      stream(configuration_file.c_str());
 
                         stream >> config;
 
@@ -420,8 +421,9 @@ int program(int argc, char * argv[])
                 }
 #endif
 
-                TR_VRB("Performing %d transformation(s)\n",
-                       transformations.size());
+                TR_VRB("Performing %d transformation%c\n",
+                       transformations.size(),
+                       (transformations.size() > 1) ? 's' : ' ');
 
                 try {
                         // Run all transformations
