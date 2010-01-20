@@ -25,21 +25,23 @@
 #include <csignal>
 #include <boost/filesystem.hpp>
 
-#include "libs/misc/debug.h"
-#include "libs/misc/string.h"
-#include "libs/misc/exception.h"
+#include "debug.h"
+#include "string.h"
+#include "exception.h"
 #include "filter.h"
-
-#include "libs/misc/string.h"
+#include "utility.h"
 
 namespace fcp {
+
         filter::filter(const boost::filesystem::path &  input,
                        const boost::filesystem::path &  output,
                        const std::vector<std::string> & commands) :
                 input_(input),
                 output_(output),
                 templates_(commands)
-        { }
+        {
+                commands_.clear(); // useless
+        }
 
         const boost::filesystem::path & filter::input()
         { return input_; }
@@ -52,7 +54,7 @@ namespace fcp {
                                    size_t              index)
         {
                 return dir + std::string("/") + id + std::string("-") +
-                        String::itos(index);
+                        fcp::itos(index);
         }
 
         // XXX FIXME: Remove id parameter ASAP
@@ -68,8 +70,6 @@ namespace fcp {
                 TR_DBG("  working dir '%s'\n",
                        work_dir.string().c_str());
 
-                std::vector<std::string>::iterator ic;
-
                 commands_ = templates_;
 
                 std::map<std::string, std::string> temps;
@@ -78,17 +78,18 @@ namespace fcp {
                 count = 0;
 
                 //TR_DBG("Replacing variables\n")
+                std::vector<std::string>::iterator ic;
                 for (ic  = commands_.begin(); ic != commands_.end(); ic++) {
                         std::string command;
 
                         command = (*ic);
 
-                        command = String::replace(command,
-                                                  "$I",
-                                                  input_.string().c_str());
-                        command = String::replace(command,
-                                                  "$O",
-                                                  output_.string().c_str());
+                        command = fcp::replace(command,
+                                               "$I",
+                                               input_.string().c_str());
+                        command = fcp::replace(command,
+                                               "$O",
+                                               output_.string().c_str());
 
                         //TR_DBG("  Command '%s'\n", command.c_str());
 
@@ -135,7 +136,7 @@ namespace fcp {
                                         temps[v] = t;
                                 }
 
-                                command = String::replace(command, v, t);
+                                command = fcp::replace(command, v, t);
 
                                 //TR_DBG("    Replaced '%s' with '%s'\n",
                                 //       v.c_str(), t.c_str());
@@ -183,4 +184,5 @@ namespace fcp {
                         }
                 }
         }
-};
+
+}
