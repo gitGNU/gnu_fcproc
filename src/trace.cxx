@@ -20,7 +20,7 @@
 
 #include "config.h"
 
-#include "libs/misc/trace.h"
+#include "trace.h"
 
 int          trace_level  = TR_LVL_DEFAULT;
 const char * trace_prefix = PACKAGE_TARNAME;
