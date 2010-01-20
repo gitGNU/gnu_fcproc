@@ -23,27 +23,29 @@
 #include <string>
 #include <boost/filesystem.hpp>
 
-#include "libs/misc/debug.h"
-#include "libs/misc/exception.h"
-#include "libs/misc/string.h"
+#include "debug.h"
+#include "exception.h"
+#include "string.h"
 #include "transformation.h"
 #include "rules.h"
 #include "chain.h"
 #include "tag.h"
 
 namespace fcp {
+
         transformation::transformation(const std::string &             tag,
                                        char                            sep, 
                                        const fcp::rules &              rules,
                                        int                             depth,
                                        const boost::filesystem::path & work) :
-                tag_(tag, sep)
+                tag_(tag, sep),
+                chain_(0)
         {
                 fcp::file input(tag_.lhs());
                 fcp::file output(tag_.rhs());
 
-                if (boost::filesystem::exists(input.path())   &&
-                    boost::filesystem::exists(output.path())  &&
+                if (boost::filesystem::exists(input.path())       &&
+                    boost::filesystem::exists(output.path())      &&
                     boost::filesystem::equivalent(input.path(),
                                                   output.path())) {
                         throw Exception("Transformation "
@@ -53,20 +55,20 @@ namespace fcp {
                                         "file");
                 }
 
-                // Build the filters-chain for this transformation
-                std::vector<fcp::filter *> chain;
-                chain = rules.chain(input, output, depth, work);
-                if (chain.size() == 0) {
-                        throw Exception("No filters-chain available for "
+                // Build the chain for this transformation
+                std::vector<fcp::filter *> temp;
+                temp = rules.chain(input, output, depth, work);
+                if (temp.size() == 0) {
+                        throw Exception("No chain available for "
                                         "'" + tag_.id() + "' "
                                         "transformation");
                 }
 
-                // Finally create the filters-chain from the filters sequence
+                // Finally create the chain from the filters sequence
                 chain_ = new fcp::chain(tag_.id(),
                                         input,
                                         output,
-                                        chain,
+                                        temp,
                                         work);
         }
 
@@ -92,4 +94,5 @@ namespace fcp {
 
         const fcp::tag & transformation::tag() const
         { return tag_; }
-};
+
+}
