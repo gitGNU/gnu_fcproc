@@ -26,14 +26,15 @@
 #include <iostream>
 #include <boost/filesystem.hpp>
 
-#include "libs/misc/debug.h"
-#include "libs/misc/string.h"
-#include "libs/misc/exception.h"
+#include "debug.h"
+#include "string.h"
+#include "exception.h"
 #include "chain.h"
 #include "filter.h"
 #include "file.h"
 
 namespace fcp {
+
         chain::chain(const std::string &             id,
                      const fcp::file &               input,
                      const fcp::file &               output,
@@ -44,13 +45,14 @@ namespace fcp {
                 output_(output),
                 filters_(filters)
         {
-                TR_DBG("Creating chain '%s' (working directory '%s')\n",
-                       id.c_str(), work.string().c_str());
-
+                TR_DBG("Creating chain '%s'\n",
+                       id.c_str());
+                TR_DBG("  Working directory '%s'\n",
+                       work.string().c_str());
                 TR_DBG("  Chain input file  '%s'\n",
-                       input_.path().string().c_str());
+                       input_.name().c_str());
                 TR_DBG("  Chain output file '%s'\n",
-                       output_.path().string().c_str());
+                       output_.name().c_str());
 
                 std::vector<fcp::filter *>::iterator i;
                 for (i = filters_.begin(); i != filters_.end(); i++) {
@@ -58,9 +60,8 @@ namespace fcp {
                         (*i)->setup(id_, work);
                 }
 
-                TR_DBG("Filters-chain for transformation '%s':\n",
+                TR_DBG("Chain for transformation '%s':\n",
                        id_.c_str());
-
                 for (i = filters_.begin(); i != filters_.end(); i++) {
                         TR_DBG("  '%s' -> '%s'\n",
                                (*i)->input().string().c_str(),
@@ -88,11 +89,11 @@ namespace fcp {
                 if (boost::filesystem::last_write_time(input_.path()) <=
                     boost::filesystem::last_write_time(output_.path())) {
                         TR_DBG("Output file '%s' is up-to-date\n",
-                               output_.path().string().c_str());
+                               output_.name().c_str());
                         return true;
                 }
 
-                TR_DBG("Output file exists\n");
+                TR_DBG("Output file is outdated\n");
 
                 return false;
         }
@@ -102,17 +103,18 @@ namespace fcp {
         {
                 TR_DBG("Running chain '%s'\n", id_.c_str());
 
-                TR_DBG("Checking input file '%s' existance\n",
-                       input_.path().string().c_str());
-
-                if (!boost::filesystem::exists(input_.path())) {
-                        throw Exception("Missing input file "
-                                        "'" + input_.path().string() + "'");
-                }
-
                 TR_DBG("Checking dry/run/spurious\n");
 
                 if (!dry && !force) {
+                        TR_DBG("Checking input file '%s' existance\n",
+                               input_.name().c_str());
+
+                        if (!boost::filesystem::exists(input_.path())) {
+                                throw Exception("Missing input file "
+                                                "for chain "
+                                                "'" + input_.name() + "'");
+                        }
+
                         if (is_spurious()) {
                                 TR_DBG("Avoiding a spurious rebuild\n");
                                 return;
@@ -127,4 +129,5 @@ namespace fcp {
                         (*i)->run(dry);
                 }
         }
-};
+
+}

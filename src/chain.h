@@ -50,8 +50,8 @@ namespace fcp {
 
         private:
                 std::string                id_;
-                const fcp::file &          input_;
-                const fcp::file &          output_;
+                fcp::file                  input_;
+                fcp::file                  output_;
                 std::vector<fcp::filter *> filters_;
 
                 bool is_spurious();
