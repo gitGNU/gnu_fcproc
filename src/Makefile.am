@@ -66,6 +66,8 @@ fcp_SOURCES =					\
 	filter.cxx				\
 	file.h					\
 	file.cxx				\
+	ruler.h					\
+	ruler.cxx				\
 	exception.h				\
 	exception.cxx				\
 	debug.h					\
