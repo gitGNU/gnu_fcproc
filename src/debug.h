@@ -18,15 +18,15 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef LIBS_MISC_DEBUG_H
-#define LIBS_MISC_DEBUG_H
+#ifndef FCP_DEBUG_H
+#define FCP_DEBUG_H
 
 #include "config.h"
 
 #include <cassert>
 #include <cstdlib>
 
-#include "libs/misc/trace.h"
+#include "trace.h"
 
 extern void backtrace_dump(void);
 
@@ -58,4 +58,4 @@ extern void backtrace_dump(void);
                __PRETTY_FUNCTION__, __FILE__, __LINE__);        \
 }
 
-#endif // LIBS_MISC_DEBUG_H
+#endif
