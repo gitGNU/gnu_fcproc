@@ -20,25 +20,26 @@
 
 #include "configuration.h"
 
-#include "libs/misc/string.h"
+#include "string.h"
 #include "configuration.h"
 
-namespace Configuration {
-        File::File(std::string delimiter,
-                   std::string comment,
-                   std::string whites) :
+namespace fcp {
+
+        configuration::configuration(std::string delimiter,
+                                     std::string comment,
+                                     std::string whites) :
                 delimiter_(delimiter),
                 comment_(comment),
                 whites_(whites)
         { }
 
-        void File::remove(const std::string & key)
+        void configuration::remove(const std::string & key)
         { tuples_.erase(tuples_.find(key)); }
 
-        bool File::exists(const std::string & key) const
+        bool configuration::exists(const std::string & key) const
         { return (tuples_.find(key) != tuples_.end()); }
 
-        std::ostream & operator <<(std::ostream & os, const File & cf)
+        std::ostream & operator <<(std::ostream & os, const configuration & cf)
         {
                 std::map<std::string, std::string>::const_iterator p;
 
@@ -52,7 +53,7 @@ namespace Configuration {
                 return os;
         }
 
-        std::istream & operator >>(std::istream & is, File & cf)
+        std::istream & operator >>(std::istream & is, configuration & cf)
         {
                 std::string::size_type skip = cf.delimiter_.length();
 
@@ -63,7 +64,7 @@ namespace Configuration {
 
                         // Remove comments
                         line = line.substr(0, line.find(cf.comment_));
-                        line = String::trim_both(line, cf.whites_);
+                        line = fcp::trim_both(line, cf.whites_);
                         if (line == "") {
                                 // Empty line
                                 continue;
@@ -86,13 +87,13 @@ namespace Configuration {
                         std::string value;
                         value = line;
 
-                        key   = String::trim_right(key, cf.whites_);
+                        key   = fcp::trim_right(key, cf.whites_);
                         if (key == "") {
                                 // XXX FIXME: Error, empty key
                                 continue;
                         }
 
-                        value = String::trim_left(value, cf.whites_);
+                        value = fcp::trim_left(value, cf.whites_);
                         if (value == "") {
                                 // XXX FIXME: Error, empty value
                                 continue;
@@ -103,4 +104,5 @@ namespace Configuration {
 
                 return is;
         }
+
 }
