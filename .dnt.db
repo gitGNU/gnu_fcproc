@@ -120,6 +120,15 @@
 		<entry end="1255090997" priority="medium" start="1255090990">
 			Grouped as external some site files and added a target to fetch them
 		</entry>
+		<entry priority="high" start="1263987145">
+			Substitute old code with boost
+			<entry end="1263987273" priority="high" start="1263987166">
+				Add configure related checks
+			</entry>
+			<entry priority="high" start="1263987184">
+				Reimplement old code using boost
+			</entry>
+		</entry>
 	</entry>
 	<entry priority="high" start="1233736742">
 		Release 0.2.0
