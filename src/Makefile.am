@@ -65,40 +65,23 @@ fcp_SOURCES =					\
 	filter.h				\
 	filter.cxx				\
 	file.h					\
-	file.cxx
+	file.cxx				\
+	exception.h				\
+	exception.cxx				\
+	debug.h					\
+	debug.cxx				\
+	trace.h					\
+	trace.cxx				\
+	utility.h				\
+	utility.cxx
 fcp_CPPFLAGS =					\
 	$(COMMON_CPPFLAGS)
 fcp_LDADD =					\
-	libmisc.a				\
 	gnulib/libgnu.a				\
         $(BOOST_LDFLAGS)			\
         $(BOOST_SYSTEM_LIB)			\
         $(BOOST_THREAD_LIB)			\
         $(BOOST_FILESYSTEM_LIB)
-
-## Libraries
-
-noinst_LIBRARIES =				\
-	libmisc.a
-
-libmisc_a_SOURCES =				\
-	libs/misc/stream.h			\
-	libs/misc/stream.cxx			\
-	libs/misc/exception.h			\
-	libs/misc/exception.cxx			\
-	libs/misc/debug.h			\
-	libs/misc/debug.cxx			\
-	libs/misc/trace.h			\
-	libs/misc/trace.cxx			\
-	libs/misc/string.h			\
-	libs/misc/string.cxx			\
-	libs/misc/environment.h			\
-	libs/misc/environment.cxx		\
-	libs/misc/constant.h			\
-	libs/misc/thread.h			\
-	libs/misc/thread.cxx
-libmisc_a_CPPFLAGS =				\
-	$(COMMON_CPPFLAGS)
 
 ##
 ## Maintainer related targets
@@ -117,8 +100,7 @@ maintainer-check-parameters: Makefile $(bin_SCRIPTS) $(bin_PROGRAMS)
 	done
 
 all_SRCS =					\
-	$(fcp_SOURCES)				\
-	$(libmisc_a_SOURCES)
+	$(fcp_SOURCES)
 
 maintainer-check-whitespaces: Makefile $(all_SRCS)
 	$(WHITESPACE_DETECT) $(all_SRCS)
