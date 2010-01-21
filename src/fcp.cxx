@@ -122,7 +122,7 @@ void hint(const std::string & message)
 class cant_run : public fcp::exception {
 public:
         cant_run(const char * message) :
-                fcp::exception(std::string(message)) { }
+                fcp::exception(message) { }
 };
 
 void run(const std::vector<std::string> & tags,
@@ -196,7 +196,7 @@ void run(const std::vector<std::string> & tags,
 class wrong_opt : public fcp::exception {
 public:
         wrong_opt(const char * message) :
-                fcp::exception(std::string(message)) { }
+                fcp::exception(message) { }
 };
 
 int program(int argc, char * argv[])
@@ -275,9 +275,8 @@ int program(int argc, char * argv[])
                 try {
                         boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all_options).positional(positional_options).run(),
                                                       vm);
-                } catch (std::exception & e) {
-                        std::string s(e.what());
-                        throw wrong_opt(s.c_str());
+                } catch (boost::program_options::error & e) {
+                        throw wrong_opt(e.what());
                 }
                 boost::program_options::notify(vm);
 

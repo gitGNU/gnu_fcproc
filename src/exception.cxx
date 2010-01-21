@@ -26,7 +26,7 @@
 
 namespace fcp {
 
-        exception::exception(const std::string & description) :
+        exception::exception(const char * description) :
                 description_(description)
         { }
 
@@ -34,6 +34,6 @@ namespace fcp {
         { }
 
         const char * exception::what(void) const throw()
-        { return description_.c_str(); }
+        { return description_; }
 
 }

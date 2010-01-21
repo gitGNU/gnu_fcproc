@@ -29,7 +29,7 @@ namespace fcp {
 
         class exception : public std::exception {
         public:
-                exception(const std::string & description);
+                exception(const char * description);
                 ~exception(void) throw();
 
                 virtual const char * what(void) const throw();
@@ -38,7 +38,7 @@ namespace fcp {
                 exception(void);
 
         private:
-                std::string description_;
+                const char * description_;
         };
 
 }

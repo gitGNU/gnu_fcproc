@@ -179,8 +179,9 @@ namespace fcp {
                                 throw fcp::exception("Interrupted");
                         }
                         if (WEXITSTATUS(ret) != 0) {
-                                throw fcp::exception("Got problems running "
-                                                     "command '" + (*i) + "'");
+                                std::string e("Got problems running "
+                                              "command '" + (*i) + "'");
+                                throw fcp::exception(e.c_str());
                         }
                 }
         }

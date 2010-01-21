@@ -157,9 +157,10 @@ namespace fcp {
 
                 stream.open(filename.c_str());
                 if (!stream) {
-                        throw fcp::exception("Cannot open file "
-                                             "'" + filename + "' "
-                                             "for reading");
+                        std::string e("Cannot open file "
+                                      "'" + filename + "' "
+                                      "for reading");
+                        throw fcp::exception(e.c_str());
                 }
 
                 std::string line   = "";
@@ -239,13 +240,14 @@ namespace fcp {
                                 if (regexec(&re_.header_,
                                             line.c_str(),
                                             3, re_.match_, 0) != 0) {
-                                        throw fcp::exception("Missing header "
-                                                             "in file "
-                                                             "'" + filename + "'"
-                                                             " at line "
-                                                             "'" +
-                                                             fcp::itos(number) +
-                                                             "'");
+                                        std::string e("Missing header "
+                                                      "in file "
+                                                      "'" + filename + "'"
+                                                      " at line "
+                                                      "'" +
+                                                      fcp::itos(number) +
+                                                      "'");
+                                        throw fcp::exception(e.c_str());
                                 }
 
                                 P_DBG("  Got header\n");
@@ -256,26 +258,28 @@ namespace fcp {
                                                      re_.match_[1].rm_eo -
                                                      re_.match_[1].rm_so);
                                 if (tag_in == "") {
-                                        throw fcp::exception("Missing input tag "
-                                                             "in file "
-                                                             "'" + filename + "'"
-                                                             " at line "
-                                                             "'" +
-                                                             fcp::itos(number) +
-                                                             "'");
+                                        std::string e("Missing input tag "
+                                                      "in file "
+                                                      "'" + filename + "'"
+                                                      " at line "
+                                                      "'" +
+                                                      fcp::itos(number) +
+                                                      "'");
+                                        throw fcp::exception(e.c_str());
                                 }
 
                                 tag_out = line.substr(re_.match_[2].rm_so,
                                                       re_.match_[2].rm_eo -
                                                       re_.match_[2].rm_so);
                                 if (tag_out == "") {
-                                        throw fcp::exception("Missing output tag "
-                                                             "in file "
-                                                             "'" + filename + "'"
-                                                             " at line "
-                                                             "'" +
-                                                             fcp::itos(number) +
-                                                             "'");
+                                        std::string e("Missing output tag "
+                                                      "in file "
+                                                      "'" + filename + "'"
+                                                      " at line "
+                                                      "'" +
+                                                      fcp::itos(number) +
+                                                      "'");
+                                        throw fcp::exception(e.c_str());
                                 }
 
                                 BUG_ON(tag_in  == "");
@@ -301,14 +305,14 @@ namespace fcp {
                                 // Empty lines complete the body part
                                 if (line.size() == 0) {
                                         if (commands.size() == 0) {
-                                                throw fcp::exception("Missing body "
-                                                                     "in file "
-                                                                     "'" + filename + "'"
-                                                                     " at line "
-                                                                     "'" +
-                                                                     fcp::itos(number) +
-                                                                     "'");
-                                        }
+                                                std::string e("Missing body "
+                                                              "in file "
+                                                              "'" + filename + "'"
+                                                              " at line "
+                                                              "'" +
+                                                              fcp::itos(number) +
+                                                              "'");
+                                                throw fcp::exception(e.c_str());                                        }
 
                                         state = S_RULE_COMPLETE;
                                         continue;
@@ -317,13 +321,14 @@ namespace fcp {
                                 if (regexec(&re_.body_,
                                             line.c_str(),
                                             3, re_.match_, 0) != 0) {
-                                        throw fcp::exception("Wrong body "
-                                                             "in file "
-                                                             "'" + filename + "'"
-                                                             " at line "
-                                                             "'" +
-                                                             fcp::itos(number) +
-                                                             "'");
+                                        std::string e("Wrong body "
+                                                      "in file "
+                                                      "'" + filename + "'"
+                                                      " at line "
+                                                      "'" +
+                                                      fcp::itos(number) +
+                                                      "'");
+                                        throw fcp::exception(e.c_str());
                                 }
 
                                 DUMP_REGMATCHES(re_.match_);
@@ -470,14 +475,16 @@ namespace fcp {
 
                 in_type = input.type();
                 if (in_type.empty()) {
-                        throw fcp::exception("Cannot detect file type for "
-                                             "'" + input.name() + "'");
+                        std::string e("Cannot detect file type for "
+                                      "'" + input.name() + "'");
+                        throw fcp::exception(e.c_str());
                 }
 
                 out_type = output.type();
                 if (out_type.empty()) {
-                        throw fcp::exception("Cannot detect file type for "
-                                             "'" + output.name() + "'");
+                        std::string e("Cannot detect file type for "
+                                      "'" + output.name() + "'");
+                        throw fcp::exception(e.c_str());
                 }
 
                 TR_DBG("Input type  = '%s'\n", in_type.c_str());
