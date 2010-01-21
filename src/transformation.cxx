@@ -74,7 +74,7 @@ namespace fcp {
 
         transformation::~transformation()
         {
-                assert(chain_ != 0);
+                BUG_ON(chain_ == 0);
 
                 delete chain_;
         }
@@ -87,7 +87,7 @@ namespace fcp {
                        dry   ? "dry"    : "not dry",
                        force ? "forced" : "not forced");
 
-                assert(chain_ != 0);
+                BUG_ON(chain_ == 0);
 
                 chain_->run(dry, force);
         }
