@@ -286,7 +286,6 @@ int program(int argc, char * argv[])
                 if (vm.count("rules")) {
                         rules_user.push_back(vm["rules"].as<std::string>());
                 }
-
                 if (vm.count("max-depth")) {
                         max_depth = vm["max-depth"].as<int>();
                 }
@@ -297,35 +296,27 @@ int program(int argc, char * argv[])
                 if (vm.count("temp-dir")) {
                         temp_dir_name = vm["temp-dir"].as<std::string>();
                 }
-
                 if (vm.count("separator")) {
                         separator = vm["separator"].as<char>();
                 }
-
                 if (vm.count("no-std-rules")) {
                         rules_default.clear();
                 }
-
                 if (vm.count("dump-rules")) {
                         dump_rules = true;
                 }
-
                 if (vm.count("dry-run")) {
                         dry_run = true;
                 }
-
                 if (vm.count("force")) {
                         force = true;
                 }
-
                 if (vm.count("debug")) {
                         TR_CONFIG_LVL(TR_LVL_DEBUG);
                 }
-
                 if (vm.count("verbose")) {
                         TR_CONFIG_LVL(TR_LVL_VERBOSE);
                 }
-
                 if (vm.count("version")) {
                         version();
                         return 0;
