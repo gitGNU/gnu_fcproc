@@ -76,7 +76,9 @@ int           max_depth          = 16;
 void help(boost::program_options::options_description & options)
 {
         std::cout
-                << "Usage: " << PROGRAM_NAME << " [OPTION]... [TRANSFORMATION]..." <<
+                << "Usage: "
+                << PROGRAM_NAME
+                << " [OPTION]... [TRANSFORMATION]..." <<
                 std::endl
                 <<
                 std::endl
@@ -92,9 +94,12 @@ void help(boost::program_options::options_description & options)
                 std::endl
                 <<
                 std::endl
-                << "Default SEPARATOR is '" << separator << "'. INPUTFILE and OUTPUTFILE must be different." <<
+                << "Default SEPARATOR is "
+                << "'" << separator << "'. "
+                << "INPUTFILE and OUTPUTFILE must be different." <<
                 std::endl
-                << "File TYPE is optional and it will be guessed if not provided." <<
+                << "File TYPE is optional and it will be guessed "
+                << "if not provided." <<
                 std::endl
                 <<
                 std::endl
@@ -218,44 +223,45 @@ int program(int argc, char * argv[])
                 // Main options
                 boost::program_options::options_description main_options("Options");
 
-                main_options.add_options()("config,c",
-                                           boost::program_options::value<std::string>(),
-                                           "use alternate configuration file");
-                main_options.add_options()("rules,r",
-                                           boost::program_options::value<std::string>(),
-                                           "use alternate rules file");
-                main_options.add_options()("max-depth,m",
-                                           boost::program_options::value<int>(),
-                                           "set max filter-chains depth");
-                main_options.add_options()("temp-dir,t",
-                                           boost::program_options::value<std::string>(),
-                                           "set temporary directory");
-                main_options.add_options()("separator,s",
-                                           boost::program_options::value<char>(),
-                                           "set input/output separator character");
-                main_options.add_options()("no-std-rules,q",
-                                           "do not load standard rules");
-                main_options.add_options()("dump-rules,b",
-                                           "dump rules base, then exit");
-                main_options.add_options()("dry-run,n",
-                                           "display commands without modifying"
-                                           "any files");
-                main_options.add_options()("force,f",
-                                           "consider all files out of date");
-                main_options.add_options()("debug,d",
-                                           "enable debugging traces");
-                main_options.add_options()("verbose,v",
-                                           "verbosely report processing");
-                main_options.add_options()("help,h",
-                                           "print this help, then exit");
-                main_options.add_options()("version,V",
-                                           "print version number, then exit");
+                main_options.add_options()
+                        ("config,c",
+                         boost::program_options::value<std::string>(),
+                         "use alternate configuration file")
+                        ("rules,r",
+                         boost::program_options::value<std::string>(),
+                         "use alternate rules file")
+                        ("max-depth,m",
+                         boost::program_options::value<int>(),
+                         "set max filter-chains depth")
+                        ("temp-dir,t",
+                         boost::program_options::value<std::string>(),
+                         "set temporary directory")
+                        ("separator,s",
+                         boost::program_options::value<char>(),
+                         "set input/output separator character")
+                        ("no-std-rules,q",
+                         "do not load standard rules")
+                        ("dump-rules,b",
+                         "dump rules base, then exit")
+                        ("dry-run,n",
+                         "display commands without modifying any files")
+                        ("force,f",
+                         "consider all files outdated")
+                        ("debug,d",
+                         "enable debugging traces")
+                        ("verbose,v",
+                         "verbosely report processing")
+                        ("help,h",
+                         "print this help, then exit")
+                        ("version,V",
+                         "print version number, then exit");
 
                 // Command line positional/hidden options (transformations)
                 boost::program_options::options_description hidden_options("Hidden options");
-                hidden_options.add_options()("transformation,T",
-                                             boost::program_options::value<std::vector<std::string> >(),
-                                             "set transformation");
+                hidden_options.add_options()
+                        ("transformation,T",
+                         boost::program_options::value<std::vector<std::string> >(),
+                         "set transformation");
 
                 boost::program_options::positional_options_description positional_options;
                 positional_options.add("transformation", -1);
@@ -269,8 +275,9 @@ int program(int argc, char * argv[])
                 try {
                         boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all_options).positional(positional_options).run(),
                                                       vm);
-                } catch (...) {
-                        throw wrong_opt("?");
+                } catch (std::exception & e) {
+                        std::string s(e.what());
+                        throw wrong_opt(s.c_str());
                 }
                 boost::program_options::notify(vm);
 

@@ -82,13 +82,13 @@ namespace fcp {
                 regfree(&re_.comment_);
                 regfree(&re_.empty_);
 
-#if 1
                 std::map<std::string,
                         std::map<std::string,
                         std::vector<std::string> > >::const_iterator in;
                 std::map<std::string,
                         std::vector<std::string> >::const_iterator   out;
 
+                // Check for rule-loops
                 TR_DBG("Known rules:\n");
                 for (in  = rules_.begin();
                      in != rules_.end();
@@ -97,13 +97,12 @@ namespace fcp {
                         for (out  = in->second.begin();
                              out != in->second.end();
                              out++) {
-                                // There should be no loops
+                                // There must be no loops !
                                 BUG_ON(in->first == out->first);
 
                                 TR_DBG("    '%s'\n", out->first.c_str());
                         }
                 }
-#endif
         }
 
 #define PARSER_DEBUGS 0
