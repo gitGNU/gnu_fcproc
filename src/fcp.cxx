@@ -195,9 +195,132 @@ void run(const std::vector<std::string> & tags,
         TR_VRB("Operations complete\n");
 }
 
-int program(int argc, char * argv[])
+// XXX FIXME: This prototype sucks
+bool handle_options(int                      argc,
+                    char *                   argv[],
+                    bool                     & dry_run,
+                    bool                     & force,
+                    bool                     & dump_rules,
+                    std::vector<std::string> & transformations_tags,
+                    std::vector<std::string> & rules_default,
+                    std::vector<std::string> & rules_user,
+                    std::string              & temp_dir_name)
 {
         namespace bpo = boost::program_options;
+
+        // Main options
+        bpo::options_description main_options("Options");
+
+        main_options.add_options()
+                ("config,c",
+                 bpo::value<std::string>(),
+                 "use alternate configuration file")
+                ("rules,r",
+                 bpo::value<std::string>(),
+                 "use alternate rules file")
+                ("max-depth,m",
+                 bpo::value<int>(),
+                 "set max filter-chains depth")
+                ("temp-dir,t",
+                 bpo::value<std::string>(),
+                 "set temporary directory")
+                ("separator,s",
+                 bpo::value<char>(),
+                 "set input/output separator character")
+                ("no-std-rules,q",
+                 "do not load standard rules")
+                ("dump-rules,b",
+                 "dump rules base, then exit")
+                ("dry-run,n",
+                 "display commands without modifying any files")
+                ("force,f",
+                 "consider all files outdated")
+                ("debug,d",
+                 "enable debugging traces")
+                ("verbose,v",
+                 "verbosely report processing")
+                ("help,h",
+                 "print this help, then exit")
+                ("version,V",
+                 "print version number, then exit");
+
+        // Command line positional/hidden options (transformations)
+        bpo::options_description hidden_options("Hidden options");
+        hidden_options.add_options()
+                ("transformation,T",
+                 bpo::value<std::vector<std::string> >(),
+                 "set transformation");
+
+        bpo::positional_options_description positional_options;
+        positional_options.add("transformation", -1);
+
+        // Setting up the options parser
+        bpo::options_description all_options("All options");
+        all_options.add(main_options);
+        all_options.add(hidden_options);
+
+        bpo::variables_map vm;
+        bpo::store(bpo::command_line_parser(argc, argv).
+                   options(all_options).
+                   positional(positional_options).
+                   run(),
+                   vm);
+        bpo::notify(vm);
+
+        // Check options
+        if (vm.count("rules")) {
+                rules_user.push_back(vm["rules"].as<std::string>());
+        }
+        if (vm.count("max-depth")) {
+                max_depth = vm["max-depth"].as<int>();
+        }
+        if (max_depth < 1) {
+                throw wrong_opt("Wrong max-depth");
+        }
+        if (vm.count("temp-dir")) {
+                temp_dir_name = vm["temp-dir"].as<std::string>();
+        }
+        if (vm.count("separator")) {
+                separator = vm["separator"].as<char>();
+        }
+        if (vm.count("no-std-rules")) {
+                rules_default.clear();
+        }
+        if (vm.count("dump-rules")) {
+                dump_rules = true;
+        }
+        if (vm.count("dry-run")) {
+                dry_run = true;
+        }
+        if (vm.count("force")) {
+                force = true;
+        }
+        if (vm.count("transformation")) {
+                transformations_tags =
+                        vm["transformation"].as<std::vector<std::string> >();
+        }
+
+        if (vm.count("debug")) {
+                TR_CONFIG_LVL(TR_LVL_DEBUG);
+        }
+        if (vm.count("verbose")) {
+                TR_CONFIG_LVL(TR_LVL_VERBOSE);
+        }
+        if (vm.count("version")) {
+                version();
+                return false;
+        }
+        if (vm.count("help")) {
+                // Passing only main options
+                help(main_options);
+                return false;
+        }
+
+        return true;
+}
+
+int program(int argc, char * argv[])
+{
 
         int retval = 1;
 
@@ -218,113 +341,21 @@ int program(int argc, char * argv[])
 
                 TR_DBG("Parsing program options\n");
 
-                // Main options
-                bpo::options_description main_options("Options");
-
-                main_options.add_options()
-                        ("config,c",
-                         bpo::value<std::string>(),
-                         "use alternate configuration file")
-                        ("rules,r",
-                         bpo::value<std::string>(),
-                         "use alternate rules file")
-                        ("max-depth,m",
-                         bpo::value<int>(),
-                         "set max filter-chains depth")
-                        ("temp-dir,t",
-                         bpo::value<std::string>(),
-                         "set temporary directory")
-                        ("separator,s",
-                         bpo::value<char>(),
-                         "set input/output separator character")
-                        ("no-std-rules,q",
-                         "do not load standard rules")
-                        ("dump-rules,b",
-                         "dump rules base, then exit")
-                        ("dry-run,n",
-                         "display commands without modifying any files")
-                        ("force,f",
-                         "consider all files outdated")
-                        ("debug,d",
-                         "enable debugging traces")
-                        ("verbose,v",
-                         "verbosely report processing")
-                        ("help,h",
-                         "print this help, then exit")
-                        ("version,V",
-                         "print version number, then exit");
-
-                // Command line positional/hidden options (transformations)
-                bpo::options_description hidden_options("Hidden options");
-                hidden_options.add_options()
-                        ("transformation,T",
-                         bpo::value<std::vector<std::string> >(),
-                         "set transformation");
-
-                bpo::positional_options_description positional_options;
-                positional_options.add("transformation", -1);
-
-                // Setting up the options parser
-                bpo::options_description all_options("All options");
-                all_options.add(main_options);
-                all_options.add(hidden_options);
-
-                bpo::variables_map vm;
                 try {
-                        bpo::store(bpo::command_line_parser(argc, argv).options(all_options).positional(positional_options).run(),
-                                                      vm);
-                } catch (bpo::error & e) {
-                        throw wrong_opt(e.what());
-                }
-                bpo::notify(vm);
-
-                // Check options
-                if (vm.count("rules")) {
-                        rules_user.push_back(vm["rules"].as<std::string>());
-                }
-                if (vm.count("max-depth")) {
-                        max_depth = vm["max-depth"].as<int>();
-                }
-                if (max_depth < 1) {
-                        hint("Wrong max-depth");
-                        return 1;
-                }
-                if (vm.count("temp-dir")) {
-                        temp_dir_name = vm["temp-dir"].as<std::string>();
-                }
-                if (vm.count("separator")) {
-                        separator = vm["separator"].as<char>();
-                }
-                if (vm.count("no-std-rules")) {
-                        rules_default.clear();
-                }
-                if (vm.count("dump-rules")) {
-                        dump_rules = true;
-                }
-                if (vm.count("dry-run")) {
-                        dry_run = true;
-                }
-                if (vm.count("force")) {
-                        force = true;
-                }
-                if (vm.count("debug")) {
-                        TR_CONFIG_LVL(TR_LVL_DEBUG);
-                }
-                if (vm.count("verbose")) {
-                        TR_CONFIG_LVL(TR_LVL_VERBOSE);
-                }
-                if (vm.count("version")) {
-                        version();
-                        return 0;
-                }
-                if (vm.count("help")) {
-                        // Passing only main options
-                        help(main_options);
-                        return 0;
-                }
-
-                if (vm.count("transformation")) {
-                        transformations_tags = vm["transformation"].as<std::vector<std::string> >();
+                        if (!handle_options(argc, argv,
+                                            dry_run,
+                                            force,
+                                            dump_rules,
+                                            transformations_tags,
+                                            rules_default,
+                                            rules_user,
+                                            temp_dir_name)) {
+                                retval = 0;
+                                return retval;
+                        }
+                } catch (...) {
+                        TR_ERR("Cannot handle options\n");
+                        return retval;
                 }
 
                 TR_DBG("Option parsing complete\n");
