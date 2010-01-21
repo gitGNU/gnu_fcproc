@@ -45,20 +45,22 @@
 void version()
 {
         std::cout
-                << PROGRAM_NAME << " (" << PACKAGE_NAME  << ") " << PACKAGE_VERSION <<
-                std::endl
-                <<
-                std::endl
-                << "Copyright (C) 2008, 2009 Francesco Salvestrini" <<
-                std::endl
-                <<
-                std::endl
-                << "This is free software.  You may redistribute copies of it under the terms of" <<
-                std::endl
-                << "the GNU General Public License <http://www.gnu.org/licenses/gpl.html>." <<
-                std::endl
-                << "There is NO WARRANTY, to the extent permitted by law." <<
-                std::endl;
+                << PROGRAM_NAME
+                << " (" << PACKAGE_NAME  << ") "
+                << PACKAGE_VERSION
+                << std::endl
+                << std::endl
+                << "Copyright (C) 2008, 2009 Francesco Salvestrini"
+                << std::endl
+                << std::endl
+                << "This is free software.  "
+                << "You may redistribute copies of it under the terms of"
+                << std::endl
+                << "the GNU General Public License "
+                << "<http://www.gnu.org/licenses/gpl.html>."
+                << std::endl
+                << "There is NO WARRANTY, to the extent permitted by law."
+                << std::endl;
 }
 
 #define HARM_MY_FILESYSTEM 0
@@ -78,33 +80,27 @@ void help(boost::program_options::options_description & options)
         std::cout
                 << "Usage: "
                 << PROGRAM_NAME
-                << " [OPTION]... [TRANSFORMATION]..." <<
-                std::endl
-                <<
-                std::endl
-                <<
-                options
-                <<
-                std::endl
-                << "Specify TRANSFORMATION using the format:" <<
-                std::endl
-                <<
-                std::endl
-                << "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]" <<
-                std::endl
-                <<
-                std::endl
+                << " [OPTION]... [TRANSFORMATION]..."
+                << std::endl
+                << std::endl
+                << options
+                << std::endl
+                << "Specify TRANSFORMATION using the format:"
+                << std::endl
+                << std::endl
+                << "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]"
+                << std::endl
+                << std::endl
                 << "Default SEPARATOR is "
                 << "'" << separator << "'. "
-                << "INPUTFILE and OUTPUTFILE must be different." <<
-                std::endl
+                << "INPUTFILE and OUTPUTFILE must be different."
+                << std::endl
                 << "File TYPE is optional and it will be guessed "
-                << "if not provided." <<
-                std::endl
-                <<
-                std::endl
-                << "Report bugs to <" << PACKAGE_BUGREPORT << ">" <<
-                std::endl;
+                << "if not provided."
+                << std::endl
+                << std::endl
+                << "Report bugs to <" << PACKAGE_BUGREPORT << ">"
+                << std::endl;
 }
 
 void hint(const std::string & message)
