@@ -27,6 +27,7 @@
 #include <sstream>
 
 namespace fcp {
+
         // String
         std::string trim_left(const std::string & s,
                               const std::string & t);
@@ -49,6 +50,7 @@ namespace fcp {
         std::string getenv(const std::string & key);
         bool        setenv(const std::string & key,
                            const std::string & value);
+
 }
 
 #endif
