@@ -77,7 +77,7 @@ namespace fcp {
                 // modification time in order to avoid a rebuild
                 // if it is up-to-date
 
-                assert(boost::filesystem::exists(input_.path()));
+                BUG_ON(!boost::filesystem::exists(input_.path()));
 
                 if (!boost::filesystem::exists(output_.path())) {
                         TR_DBG("Output file does not exists\n");
