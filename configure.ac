@@ -62,8 +62,8 @@ AC_PROG_RANLIB
 #
 # gnulib related
 #
-GNULIB_EARLY
-GNULIB_INIT
+#GNULIB_EARLY
+#GNULIB_INIT
 
 #
 # BOOST related checks
@@ -103,7 +103,6 @@ AC_CONFIG_FILES([
 	Makefile
 
 	src/Makefile
-	src/gnulib/Makefile
 
 	tools/Makefile
 	tools/maint/Makefile

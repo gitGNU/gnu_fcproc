@@ -22,8 +22,7 @@ include $(top_srcdir)/Makefile.sub
 
 AUTOMAKE_OPTIONS = subdir-objects
 
-SUBDIRS = gnulib
-
+SUBDIRS    =
 EXTRA_DIST =
 
 ## Programs
@@ -75,7 +74,6 @@ fcp_SOURCES =					\
 fcp_CPPFLAGS =					\
 	$(COMMON_CPPFLAGS)
 fcp_LDADD =					\
-	gnulib/libgnu.a				\
         $(BOOST_LDFLAGS)			\
         $(BOOST_SYSTEM_LIB)			\
         $(BOOST_THREAD_LIB)			\
