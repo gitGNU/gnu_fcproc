@@ -125,6 +125,12 @@ public:
                 fcp::exception(message) { }
 };
 
+class wrong_opt : public fcp::exception {
+public:
+        wrong_opt(const char * message) :
+                fcp::exception(message) { }
+};
+
 void run(const std::vector<std::string> & tags,
          // XXX FIXME: Change to boost::filesystem::path
          const std::vector<std::string> & rules_filenames,
@@ -193,14 +199,10 @@ void run(const std::vector<std::string> & tags,
         TR_VRB("Operations complete\n");
 }
 
-class wrong_opt : public fcp::exception {
-public:
-        wrong_opt(const char * message) :
-                fcp::exception(message) { }
-};
-
 int program(int argc, char * argv[])
 {
+        namespace bpo = boost::program_options;
+
         int retval = 1;
 
         try {
@@ -221,23 +223,23 @@ int program(int argc, char * argv[])
                 TR_DBG("Parsing program options\n");
 
                 // Main options
-                boost::program_options::options_description main_options("Options");
+                bpo::options_description main_options("Options");
 
                 main_options.add_options()
                         ("config,c",
-                         boost::program_options::value<std::string>(),
+                         bpo::value<std::string>(),
                          "use alternate configuration file")
                         ("rules,r",
-                         boost::program_options::value<std::string>(),
+                         bpo::value<std::string>(),
                          "use alternate rules file")
                         ("max-depth,m",
-                         boost::program_options::value<int>(),
+                         bpo::value<int>(),
                          "set max filter-chains depth")
                         ("temp-dir,t",
-                         boost::program_options::value<std::string>(),
+                         bpo::value<std::string>(),
                          "set temporary directory")
                         ("separator,s",
-                         boost::program_options::value<char>(),
+                         bpo::value<char>(),
                          "set input/output separator character")
                         ("no-std-rules,q",
                          "do not load standard rules")
@@ -257,28 +259,28 @@ int program(int argc, char * argv[])
                          "print version number, then exit");
 
                 // Command line positional/hidden options (transformations)
-                boost::program_options::options_description hidden_options("Hidden options");
+                bpo::options_description hidden_options("Hidden options");
                 hidden_options.add_options()
                         ("transformation,T",
-                         boost::program_options::value<std::vector<std::string> >(),
+                         bpo::value<std::vector<std::string> >(),
                          "set transformation");
 
-                boost::program_options::positional_options_description positional_options;
+                bpo::positional_options_description positional_options;
                 positional_options.add("transformation", -1);
 
                 // Setting up the options parser
-                boost::program_options::options_description all_options("All options");
+                bpo::options_description all_options("All options");
                 all_options.add(main_options);
                 all_options.add(hidden_options);
 
-                boost::program_options::variables_map vm;
+                bpo::variables_map vm;
                 try {
-                        boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all_options).positional(positional_options).run(),
+                        bpo::store(bpo::command_line_parser(argc, argv).options(all_options).positional(positional_options).run(),
                                                       vm);
-                } catch (boost::program_options::error & e) {
+                } catch (bpo::error & e) {
                         throw wrong_opt(e.what());
                 }
-                boost::program_options::notify(vm);
+                bpo::notify(vm);
 
                 // Check options
                 if (vm.count("rules")) {
