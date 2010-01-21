@@ -58,8 +58,6 @@ fcp_SOURCES =					\
 	transformation.cxx			\
 	chain.h					\
 	chain.cxx				\
-	configuration.h				\
-	configuration.cxx			\
 	rules.h					\
 	rules.cxx				\
 	filter.h				\
@@ -81,7 +79,8 @@ fcp_LDADD =					\
         $(BOOST_LDFLAGS)			\
         $(BOOST_SYSTEM_LIB)			\
         $(BOOST_THREAD_LIB)			\
-        $(BOOST_FILESYSTEM_LIB)
+        $(BOOST_FILESYSTEM_LIB)			\
+        $(BOOST_PROGRAM_OPTIONS_LIB)
 
 ##
 ## Maintainer related targets
