@@ -78,6 +78,7 @@ Makefile
 /tests/test-hint-01
 /tests/test-multiline-01
 /tests/test-antiloop-01
+/tests/test-antiloop-02
 /tests/test-multipath-01
 /tests/test-samefile-01
 /tests/test-include-01
