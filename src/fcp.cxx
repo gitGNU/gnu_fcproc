@@ -216,7 +216,7 @@ bool handle_options(int                      argc,
                  bpo::value<std::string>(),
                  "use alternate configuration file")
                 ("rules,r",
-                 bpo::value<std::string>(),
+                 bpo::value<std::vector<std::string> >()->composing(),
                  "use alternate rules file")
                 ("max-depth,m",
                  bpo::value<int>(),
@@ -269,7 +269,8 @@ bool handle_options(int                      argc,
 
         // Check options
         if (vm.count("rules")) {
-                rules_user.push_back(vm["rules"].as<std::string>());
+                rules_user =
+                        vm["rules"].as<std::vector<std::string> >();
         }
         if (vm.count("max-depth")) {
                 max_depth = vm["max-depth"].as<int>();
