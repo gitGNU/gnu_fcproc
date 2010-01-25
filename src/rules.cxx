@@ -97,8 +97,10 @@ namespace fcp {
                         for (out  = in->second.begin();
                              out != in->second.end();
                              out++) {
-                                // There must be no loops !
-                                BUG_ON(in->first == out->first);
+                                if (in->first == out->first) {
+                                        std::string e("Rules loop found!");
+                                        throw fcp::exception(e.c_str());
+                                }
 
                                 TR_DBG("    '%s'\n", out->first.c_str());
                         }
@@ -327,7 +329,7 @@ namespace fcp {
                                                       " at line "
                                                       "'" +
                                                       fcp::itos(number) +
-                                                      "'");
+                                                      "' (missing tab ?)");
                                         throw fcp::exception(e.c_str());
                                 }
 
