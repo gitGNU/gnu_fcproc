@@ -66,6 +66,7 @@ FAIL_TESTS +=					\
 	test-execution-04			\
 	test-execution-05			\
 	test-samefile-01			\
+	test-antiloop-03			\
 	test-multipath-01
 
 SUCCESS_TESTS +=				\
@@ -83,7 +84,6 @@ SUCCESS_TESTS +=				\
 	test-multiline-01			\
 	test-antiloop-01			\
 	test-antiloop-02			\
-	test-antiloop-03			\
 	test-include-01				\
 	test-rules-01				\
 	test-rules-02				\

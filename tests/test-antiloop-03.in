@@ -23,33 +23,8 @@ required="diff"
 . $testdir/defs || exit 1
 
 cat > ./rules <<EOF
-changelog:wiki
+A:A
 	cat \$I > \$O
-	echo "changelog:wiki" >> \$O
-
-map:sxml
-	cat \$I > \$O
-	echo "map:sxml" >> \$O
-
-news:wiki
-	cat \$I > \$O
-	echo "news:wiki" >> \$O
-
-svnlog:wiki
-	cat \$I > \$O
-	echo "svnlog:wiki" >> \$O
-
-wiki:sxml
-	cat \$I > \$O
-	echo "wiki:sxml" >> \$O
-
-scm:sxml
-	cat \$I > \$O
-	echo "scm:sxml" >> \$O
-
-sxml:sxml
-	cat \$I > \$O
-	echo "sxml:sxml" >> $O
 EOF
 
 mkdir ./test_dir || exit 1
@@ -60,7 +35,7 @@ rm -f ./test1.in  || exit 1
 touch ./test1.in  || exit 1
 rm -f ./test1.out || exit 1
 
-$FCP -r ./rules -m 100 -s : -t test_dir test1.in%map:test1.out%sxml || exit 1
+$FCP -r ./rules -m 100 -s : -t test_dir test1.in%A:test1.out%A || exit 1
 
 rm -f test1.exp || exit 1
 cat > test1.exp <<EOF
@@ -68,37 +43,5 @@ map:sxml
 EOF
 
 diff ./test1.exp ./test1.out || exit 1
-
-# news -> sxml
-
-rm -f ./test2.in  || exit 1
-touch ./test2.in  || exit 1
-rm -f ./test2.out || exit 1
-
-$FCP -r ./rules -m 100 -s : -t test_dir test2.in%news:test2.out%sxml || exit 1
-
-rm -f test2.exp || exit 1
-cat > test2.exp <<EOF
-news:wiki
-wiki:sxml
-EOF
-
-diff ./test2.exp ./test2.out || exit 1
-
-# svnlog -> sxml
-
-rm -f ./test3.in  || exit 1
-touch ./test3.in  || exit 1
-rm -f ./test3.out || exit 1
-
-$FCP -r ./rules -m 100 -s : -t test_dir test3.in%svnlog:test3.out%sxml || exit 1
-
-rm -f test3.exp || exit 1
-cat > test3.exp <<EOF
-svnlog:wiki
-wiki:sxml
-EOF
-
-diff ./test3.exp ./test3.out || exit 1
 
 exit 0
