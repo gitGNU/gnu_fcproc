@@ -1,0 +1,97 @@
+#! @SHELL@
+
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+required="diff"
+
+. $testdir/defs || exit 1
+
+cat > ./rules <<EOF
+changelog:wiki
+	echo "changelog:wiki" > \$O
+
+map:sxml
+	echo "map:sxml" > \$O
+
+news:wiki
+	echo "news:wiki" > \$O
+
+svnlog:wiki
+	echo "svnlog:wiki" > \$O
+
+wiki:sxml
+	echo "wiki:sxml" > \$O
+
+scm:sxml
+	echo "scm:sxml" > \$O
+
+sxml:sxml
+	echo "sxml:sxml" > $O
+EOF
+
+mkdir ./test_dir || exit 1
+
+# map -> sxml
+
+rm -f ./test1.in       || exit 1
+echo "" > ./test1.ext1 || exit 1
+rm -f ./test1.out      || exit 1
+
+$FCP -r ./rules -m 100 -s : -t test_dir test1.in%map:test1.out%sxml || exit 1
+
+rm -f test.exp || exit 1
+cat > test.exp <<EOF
+map:sxml
+EOF
+
+diff ./test.exp ./test1.out || exit 1
+
+# news -> sxml
+
+rm -f ./test2.in       || exit 1
+echo "" > ./test2.ext1 || exit 1
+rm -f ./test2.out      || exit 1
+
+$FCP -r ./rules -m 100 -s : -t test_dir test2.in%map:test2.out%sxml || exit 1
+
+rm -f test.exp || exit 1
+cat > test.exp <<EOF
+news:wiki
+wiki:sxml
+EOF
+
+diff ./test.exp ./test1.out || exit 1
+
+# svnlog -> sxml
+
+rm -f ./test2.in       || exit 1
+echo "" > ./test2.ext1 || exit 1
+rm -f ./test2.out      || exit 1
+
+$FCP -r ./rules -m 100 -s : -t test_dir test2.in%svnlog:test2.out%sxml || exit 1
+
+rm -f test.exp || exit 1
+cat > test.exp <<EOF
+svnlog:wiki
+wiki:sxml
+EOF
+
+diff ./test.exp ./test1.out || exit 1
+
+exit 0

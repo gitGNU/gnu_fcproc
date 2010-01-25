@@ -83,6 +83,7 @@ SUCCESS_TESTS +=				\
 	test-multiline-01			\
 	test-antiloop-01			\
 	test-antiloop-02			\
+	test-antiloop-03			\
 	test-include-01				\
 	test-rules-01				\
 	test-rules-02				\
@@ -355,6 +356,18 @@ test-antiloop-02: $(srcdir)/test-antiloop-02.in Makefile
 	}
 EXTRA_DIST += test-antiloop-02.in
 CLEANFILES += test-antiloop-02
+
+test-antiloop-03: $(srcdir)/test-antiloop-03.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-antiloop-03.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-antiloop-03.in
+CLEANFILES += test-antiloop-03
 
 test-include-01: $(srcdir)/test-include-01.in Makefile
 	( rm -f $@ $@.tmp && \
