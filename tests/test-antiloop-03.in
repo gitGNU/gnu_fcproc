@@ -24,74 +24,81 @@ required="diff"
 
 cat > ./rules <<EOF
 changelog:wiki
-	echo "changelog:wiki" > \$O
+	cat \$I > \$O
+	echo "changelog:wiki" >> \$O
 
 map:sxml
-	echo "map:sxml" > \$O
+	cat \$I > \$O
+	echo "map:sxml" >> \$O
 
 news:wiki
-	echo "news:wiki" > \$O
+	cat \$I > \$O
+	echo "news:wiki" >> \$O
 
 svnlog:wiki
-	echo "svnlog:wiki" > \$O
+	cat \$I > \$O
+	echo "svnlog:wiki" >> \$O
 
 wiki:sxml
-	echo "wiki:sxml" > \$O
+	cat \$I > \$O
+	echo "wiki:sxml" >> \$O
 
 scm:sxml
-	echo "scm:sxml" > \$O
+	cat \$I > \$O
+	echo "scm:sxml" >> \$O
 
 sxml:sxml
-	echo "sxml:sxml" > $O
+	cat \$I > \$O
+	echo "sxml:sxml" >> $O
 EOF
 
 mkdir ./test_dir || exit 1
 
 # map -> sxml
 
-rm -f ./test1.in       || exit 1
-echo "" > ./test1.ext1 || exit 1
-rm -f ./test1.out      || exit 1
+rm -f ./test1.in  || exit 1
+touch ./test1.in  || exit 1
+rm -f ./test1.out || exit 1
 
 $FCP -r ./rules -m 100 -s : -t test_dir test1.in%map:test1.out%sxml || exit 1
 
-rm -f test.exp || exit 1
-cat > test.exp <<EOF
+rm -f test1.exp || exit 1
+cat > test1.exp <<EOF
 map:sxml
 EOF
 
-diff ./test.exp ./test1.out || exit 1
+diff ./test1.exp ./test1.out || exit 1
 
 # news -> sxml
 
-rm -f ./test2.in       || exit 1
-echo "" > ./test2.ext1 || exit 1
-rm -f ./test2.out      || exit 1
+rm -f ./test2.in  || exit 1
+touch ./test2.in  || exit 1
+rm -f ./test2.out || exit 1
 
-$FCP -r ./rules -m 100 -s : -t test_dir test2.in%map:test2.out%sxml || exit 1
+$FCP -r ./rules -m 100 -s : -t test_dir test2.in%news:test2.out%sxml || exit 1
 
-rm -f test.exp || exit 1
-cat > test.exp <<EOF
+rm -f test2.exp || exit 1
+cat > test2.exp <<EOF
 news:wiki
 wiki:sxml
 EOF
 
-diff ./test.exp ./test1.out || exit 1
+diff ./test2.exp ./test2.out || exit 1
 
 # svnlog -> sxml
 
-rm -f ./test2.in       || exit 1
-echo "" > ./test2.ext1 || exit 1
-rm -f ./test2.out      || exit 1
+rm -f ./test3.in  || exit 1
+touch ./test3.in  || exit 1
+rm -f ./test3.out || exit 1
 
-$FCP -r ./rules -m 100 -s : -t test_dir test2.in%svnlog:test2.out%sxml || exit 1
+$FCP -r ./rules -m 100 -s : -t test_dir test3.in%svnlog:test3.out%sxml || exit 1
 
-rm -f test.exp || exit 1
-cat > test.exp <<EOF
+rm -f test3.exp || exit 1
+cat > test3.exp <<EOF
 svnlog:wiki
 wiki:sxml
 EOF
 
-diff ./test.exp ./test1.out || exit 1
+diff ./test3.exp ./test3.out || exit 1
 
 exit 0
