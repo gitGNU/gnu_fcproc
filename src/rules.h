@@ -48,7 +48,7 @@ namespace fcp {
                 friend std::ostream & ::operator<<(std::ostream & stream,
                                                    const rules &  rules);
 
-                rules(const std::vector<std::string> & filenames);
+                rules(const std::vector<boost::filesystem::path> & files);
 
                 // Builds a filters-chain
                 std::vector<fcp::filter *>
@@ -56,6 +56,9 @@ namespace fcp {
                       const fcp::file &               output,
                       int                             mdepth,
                       const boost::filesystem::path & work) const;
+
+                size_t size();
+                bool   empty();
 
         protected:
 
@@ -75,7 +78,7 @@ namespace fcp {
                         std::vector<std::string> > > rules_;
 
                 std::string readline(std::ifstream & stream);
-                void        parse(const std::string & filename);
+                void        parse(const boost::filesystem::path & file);
 
                 typedef std::pair<std::string,
                                   std::vector<std::string> > node_t;

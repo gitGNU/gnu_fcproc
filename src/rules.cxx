@@ -37,7 +37,7 @@
 
 namespace fcp {
 
-        rules::rules(const std::vector<std::string> & filenames)
+        rules::rules(const std::vector<boost::filesystem::path> & files)
         {
                 if (regcomp(&re_.empty_,
                             "^[ \t]*$",
@@ -69,11 +69,11 @@ namespace fcp {
                         throw fcp::exception("Cannot compile body regexp");
                 }
 
-                std::vector<std::string>::const_iterator iter;
-                for (iter  = filenames.begin();
-                     iter != filenames.end();
+                std::vector<boost::filesystem::path>::const_iterator iter;
+                for (iter  = files.begin();
+                     iter != files.end();
                      iter++) {
-                        parse((* iter));
+                        parse(*iter);
                 }
 
                 regfree(&re_.body_);
@@ -89,23 +89,36 @@ namespace fcp {
                         std::vector<std::string> >::const_iterator   out;
 
                 // Check for rule-loops
-                TR_DBG("Known rules:\n");
+                //TR_DBG("Rules (%d):\n", rules_.size());
                 for (in  = rules_.begin();
                      in != rules_.end();
                      in++) {
-                        TR_DBG("  '%s' ->\n", in->first.c_str());
+                        //TR_DBG("  '%s' ->\n", in->first.c_str());
                         for (out  = in->second.begin();
                              out != in->second.end();
                              out++) {
                                 if (in->first == out->first) {
-                                        std::string e("Rules loop found!");
+                                        std::string e("Rules shortcircuit "
+                                                      "detected");
+                                        e = e +
+                                                std::string(" (") +
+                                                in->first         +
+                                                std::string(":")  +
+                                                out->first        +
+                                                std::string(")");
                                         throw fcp::exception(e.c_str());
                                 }
 
-                                TR_DBG("    '%s'\n", out->first.c_str());
+                                //TR_DBG("    '%s'\n", out->first.c_str());
                         }
                 }
         }
+
+        size_t rules::size()
+        { return rules_.size(); }
+
+        bool rules::empty()
+        { return ((rules_.size() == 0) ? true : false); }
 
 #define PARSER_DEBUGS 0
 #if PARSER_DEBUGS
@@ -150,18 +163,24 @@ namespace fcp {
                 return ret;
         }
 
-        void rules::parse(const std::string & filename)
+        void rules::parse(const boost::filesystem::path & file)
         {
+                if (!boost::filesystem::exists(file)) {
+                        fcp::exception((std::string("File '") +
+                                        file.string()         +
+                                        std::string("' is missing")).c_str());
+                }
+
                 // Always dump the file under examination
-                TR_DBG("Parsing rules from file '%s'\n", filename.c_str());
+                TR_DBG("Parsing rules from file '%s'\n",
+                       file.string().c_str());
 
                 std::ifstream stream;
-
-                stream.open(filename.c_str());
+                stream.open(file.string().c_str());
                 if (!stream) {
-                        std::string e("Cannot open file "
-                                      "'" + filename + "' "
-                                      "for reading");
+                        std::string e("Cannot open '" +
+                                      file.string()   +
+                                      "' for reading");
                         throw fcp::exception(e.c_str());
                 }
 
@@ -226,7 +245,7 @@ namespace fcp {
 
                                         P_DBG("  Got include is '%s'\n",
                                               include.c_str());
-                                        parse(include);
+                                        parse(boost::filesystem::path(include));
                                         continue;
                                 }
 
@@ -244,7 +263,7 @@ namespace fcp {
                                             3, re_.match_, 0) != 0) {
                                         std::string e("Missing header "
                                                       "in file "
-                                                      "'" + filename + "'"
+                                                      "'" + file.string() + "'"
                                                       " at line "
                                                       "'" +
                                                       fcp::itos(number) +
@@ -262,7 +281,7 @@ namespace fcp {
                                 if (tag_in == "") {
                                         std::string e("Missing input tag "
                                                       "in file "
-                                                      "'" + filename + "'"
+                                                      "'" + file.string() + "'"
                                                       " at line "
                                                       "'" +
                                                       fcp::itos(number) +
@@ -276,7 +295,7 @@ namespace fcp {
                                 if (tag_out == "") {
                                         std::string e("Missing output tag "
                                                       "in file "
-                                                      "'" + filename + "'"
+                                                      "'" + file.string() + "'"
                                                       " at line "
                                                       "'" +
                                                       fcp::itos(number) +
@@ -309,7 +328,7 @@ namespace fcp {
                                         if (commands.size() == 0) {
                                                 std::string e("Missing body "
                                                               "in file "
-                                                              "'" + filename + "'"
+                                                              "'" + file.string() + "'"
                                                               " at line "
                                                               "'" +
                                                               fcp::itos(number) +
@@ -325,7 +344,7 @@ namespace fcp {
                                             3, re_.match_, 0) != 0) {
                                         std::string e("Wrong body "
                                                       "in file "
-                                                      "'" + filename + "'"
+                                                      "'" + file.string() + "'"
                                                       " at line "
                                                       "'" +
                                                       fcp::itos(number) +
@@ -549,6 +568,8 @@ std::ostream & operator<<(std::ostream &     stream,
         std::map<std::string,
                 std::map<std::string,
                 std::vector<std::string> > >::const_iterator i;
+
+        TR_VRB("Rules:\n");
 
         for (i  = rules.rules_.begin();
              i != rules.rules_.end();
