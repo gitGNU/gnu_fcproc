@@ -38,6 +38,9 @@
 
 #define PROGRAM_NAME "fcp"
 
+namespace bpo = boost::program_options;
+namespace bfs = boost::filesystem;
+
 class wrong_option : public fcp::exception {
 public:
         wrong_option(const char * message) :
@@ -50,31 +53,12 @@ public:
                 fcp::exception(message) { }
 };
 
-class missing_directory : public fcp::exception {
-public:
-        missing_directory(const char * name) :
-                // XXX FIXME: Remove ASAP
-                fcp::exception((std::string("Directory '") +
-                                std::string(name)          +
-                                std::string("' is missing")).c_str()) { }
-};
-
-class missing_file : public fcp::exception {
-public:
-        missing_file(const char * name) :
-                // XXX FIXME: Remove ASAP
-                fcp::exception((std::string("File '") +
-                                std::string(name)     +
-                                std::string("' is missing")).c_str()) { }
-};
-
 void run(const std::vector<std::string> & tags,
-         // XXX FIXME: Change to boost::filesystem::path
          fcp::rules &                     rules,
          bool                             dump_rules,
          int                              max_depth,
          char                             separator,
-         const boost::filesystem::path &  work_dir,
+         const bfs::path &                work_dir,
          bool                             force,
          bool                             dry_run)
 {
@@ -144,7 +128,7 @@ void version()
 // XXX FIXME: Ugly as hell, please remove ASAP
 char separator = ':';
 
-void help(boost::program_options::options_description & options)
+void help(bpo::options_description & options)
 {
         std::cout
                 << "Usage: "
@@ -173,18 +157,17 @@ void help(boost::program_options::options_description & options)
 }
 
 // XXX FIXME: This prototype sucks
-bool handle_options(int                      argc,
-                    char *                   argv[],
-                    bool                     & dry_run,
-                    bool                     & force,
-                    bool                     & dump_rules,
+bool handle_options(int                        argc,
+                    char *                     argv[],
+                    bool &                     dry_run,
+                    bool &                     force,
+                    bool &                     dump_rules,
                     std::vector<std::string> & transformations_tags,
-                    std::vector<std::string> & rules_default,
-                    std::vector<std::string> & rules_user,
-                    std::string              & temp_dir_name,
-                    int                      & max_depth)
+                    std::vector<bfs::path> &   rules_default,
+                    std::vector<bfs::path> &   rules_user,
+                    bfs::path &                temp_dir,
+                    int &                      max_depth)
 {
-        namespace bpo = boost::program_options;
 
         // Main options
         bpo::options_description main_options("Options");
@@ -194,13 +177,13 @@ bool handle_options(int                      argc,
                  bpo::value<std::string>(),
                  "use alternate configuration file")
                 ("rules,r",
-                 bpo::value<std::vector<std::string> >()->composing(),
+                 bpo::value<std::vector<bfs::path> >()->composing(),
                  "use alternate rules file")
                 ("max-depth,m",
                  bpo::value<int>(),
                  "set max filter-chains depth")
                 ("temp-dir,t",
-                 bpo::value<std::string>(),
+                 bpo::value<bfs::path>(),
                  "set temporary directory")
                 ("separator,s",
                  bpo::value<char>(),
@@ -248,7 +231,7 @@ bool handle_options(int                      argc,
         // Check options
         if (vm.count("rules")) {
                 rules_user =
-                        vm["rules"].as<std::vector<std::string> >();
+                        vm["rules"].as<std::vector<bfs::path> >();
         }
         if (vm.count("max-depth")) {
                 max_depth = vm["max-depth"].as<int>();
@@ -257,7 +240,7 @@ bool handle_options(int                      argc,
                 throw wrong_option("Wrong max-depth");
         }
         if (vm.count("temp-dir")) {
-                temp_dir_name = vm["temp-dir"].as<std::string>();
+                temp_dir = vm["temp-dir"].as<bfs::path>();
         }
         if (vm.count("separator")) {
                 separator = vm["separator"].as<char>();
@@ -305,14 +288,13 @@ void program(int argc, char * argv[])
         bool                     dump_rules       = false;
         std::vector<std::string> transformations;
         int                      max_depth        = 16;
-        boost::filesystem::path  temp_dir("/tmp");
-        std::vector<std::string> rules_filenames;
+        bfs::path                temp_dir("/tmp");
+        std::vector<bfs::path>   rules_paths;
 
         // Do not pollute ...
         {
-                std::vector<std::string> rules_default;
-                std::vector<std::string> rules_user;
-                std::string              temp_dir_name;
+                std::vector<bfs::path> rules_default;
+                std::vector<bfs::path> rules_user;
 
                 // Push default rules
                 rules_default.push_back(fcp::getenv("HOME") +
@@ -331,7 +313,7 @@ void program(int argc, char * argv[])
                                     transformations,
                                     rules_default,
                                     rules_user,
-                                    temp_dir_name,
+                                    temp_dir,
                                     max_depth)) {
                         TR_DBG("Clean exit now ...\n");
                         return;
@@ -339,32 +321,17 @@ void program(int argc, char * argv[])
                 TR_DBG("Option parsing complete (must continue)\n");
 
                 // Insert default rules
-                rules_filenames.insert(rules_filenames.end(),
-                                       rules_default.begin(),
-                                       rules_default.end());
-                // Insert user rules
-                rules_filenames.insert(rules_filenames.end(),
-                                       rules_user.begin(),
-                                       rules_user.end());
+                rules_paths.insert(rules_paths.end(),
+                                   rules_default.begin(),
+                                   rules_default.end());
 
-                if (!temp_dir_name.empty()) {
-                        temp_dir = boost::filesystem::path(temp_dir_name);
-                }
+                // Insert user rules
+                rules_paths.insert(rules_paths.end(),
+                                   rules_user.begin(),
+                                   rules_user.end());
         }
 
         TR_VRB("Checking parameters ...\n");
-
-        std::vector<boost::filesystem::path>
-                rules_paths(rules_filenames.size());
-
-        // From filenames to paths (to be rearranged ASAP)
-        std::vector<std::string>::iterator             i;
-        std::vector<boost::filesystem::path>::iterator j;
-        for (i = rules_filenames.begin(), j = rules_paths.begin();
-             i != rules_filenames.end();
-             i++, j++) {
-                (*j) = boost::filesystem::path(*i);
-        }
 
         // Read rules file
         fcp::rules rules(rules_paths);
@@ -378,35 +345,39 @@ void program(int argc, char * argv[])
                 throw wrong_option("Missing transformation(s)");
         }
 
-        if (!boost::filesystem::exists(temp_dir)) {
-                throw missing_directory(temp_dir.string().c_str());
+        if (!bfs::exists(temp_dir)) {
+                std::string e(std::string("Directory '") +
+                              temp_dir.string()          +
+                              std::string("' is missing"));
+                throw fcp::exception(e.c_str());
         }
-        BUG_ON(!boost::filesystem::exists(temp_dir));
+        BUG_ON(!bfs::exists(temp_dir));
 
-        boost::filesystem::path work_dir;
+        bfs::path work_dir;
 
         try {
-                work_dir = boost::filesystem::path(temp_dir.string() +
-                                                   std::string("/") +
-                                                   (std::string(PROGRAM_NAME) +
-                                                    "-" +
-                                                    fcp::itos(getpid())));
+                work_dir = bfs::path(temp_dir.string() +
+                                     std::string("/") +
+                                     (std::string(PROGRAM_NAME) +
+                                      "-" +
+                                      fcp::itos(getpid())));
 
-                if (boost::filesystem::exists(work_dir)) {
+                if (bfs::exists(work_dir)) {
                         // Remove our working directory left from previous run
-                        boost::filesystem::remove_all(work_dir);
+                        bfs::remove_all(work_dir);
                 }
-                boost::filesystem::create_directory(work_dir);
+                bfs::create_directory(work_dir);
         } catch (...) {
-                throw cannot_run((std::string("Cannot create ")      +
-                                  std::string("working directory '") +
-                                  work_dir.string()                  +
-                                  std::string("'")).c_str());
+                std::string e(std::string("Problems while working on ") +
+                              std::string("'")                          +
+                              work_dir.string()                         +
+                              std::string("'"));
+                throw fcp::exception(e.c_str());
         }
-        BUG_ON(!boost::filesystem::exists(work_dir));
+        BUG_ON(!bfs::exists(work_dir));
 
         TR_DBG("Transformation(s) = %d\n",   transformations.size());
-        TR_DBG("Rules file(s)     = %d\n",   rules_filenames.size());
+        TR_DBG("Rules file(s)     = %d\n",   rules.size());
         TR_DBG("Separator         = '%c'\n", separator);
         TR_DBG("Max depth         = '%d'\n", max_depth);
         TR_DBG("Working directory = '%s'\n", work_dir.string().c_str());
@@ -417,27 +388,24 @@ void program(int argc, char * argv[])
 
         bool retval = false;
 
-        try {
-                run(transformations,
-                    rules,
-                    dump_rules,
-                    max_depth,
-                    separator,
-                    work_dir,
-                    force,
-                    dry_run);
-        } catch (fcp::exception & e) {
-                throw cannot_run(e.what());
-        }
+        run(transformations,
+            rules,
+            dump_rules,
+            max_depth,
+            separator,
+            work_dir,
+            force,
+            dry_run);
 
         try {
-                boost::filesystem::remove_all(work_dir);
+                bfs::remove_all(work_dir);
         } catch (...) {
-                // XXX FIXME: We should only warn our user here ...
-                throw cannot_run((std::string("Cannot remove ")      +
-                                  std::string("working directory '") +
-                                  work_dir.string()                  +
-                                  std::string("'")).c_str());
+                // XXX FIXME: Should we only warn our user here ?
+                std::string e(std::string("Cannot remove ")      +
+                              std::string("working directory '") +
+                              work_dir.string()                  +
+                              std::string("'"));
+                throw fcp::exception(e.c_str());
         }
 }
 
