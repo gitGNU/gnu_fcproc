@@ -30,10 +30,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
-#include <getopt.h>
-#include <sys/types.h>
-#include <unistd.h>
-
 #include "debug.h"
 #include "utility.h"
 #include "exception.h"
@@ -42,94 +38,39 @@
 
 #define PROGRAM_NAME "fcp"
 
-void version()
-{
-        std::cout
-                << PROGRAM_NAME
-                << " (" << PACKAGE_NAME  << ") "
-                << PACKAGE_VERSION
-                << std::endl
-                << std::endl
-                << "Copyright (C) 2008, 2009 Francesco Salvestrini"
-                << std::endl
-                << std::endl
-                << "This is free software.  "
-                << "You may redistribute copies of it under the terms of"
-                << std::endl
-                << "the GNU General Public License "
-                << "<http://www.gnu.org/licenses/gpl.html>."
-                << std::endl
-                << "There is NO WARRANTY, to the extent permitted by law."
-                << std::endl;
-}
-
-#define HARM_MY_FILESYSTEM 0
-
-char          separator          = ':';
-#define       DFLT_RULES                        \
-        (fcp::getenv("HOME") +                  \
-         std::string("/") +                     \
-         std::string(".") +                     \
-         std::string(PACKAGE_TARNAME) +         \
-         std::string("/") +                     \
-         std::string("rules"))
-int           max_depth          = 16;
-
-void help(boost::program_options::options_description & options)
-{
-        std::cout
-                << "Usage: "
-                << PROGRAM_NAME
-                << " [OPTION]... [TRANSFORMATION]..."
-                << std::endl
-                << std::endl
-                << options
-                << std::endl
-                << "Specify TRANSFORMATION using the format:"
-                << std::endl
-                << std::endl
-                << "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]"
-                << std::endl
-                << std::endl
-                << "Default SEPARATOR is "
-                << "'" << separator << "'. "
-                << "INPUTFILE and OUTPUTFILE must be different."
-                << std::endl
-                << "File TYPE is optional and it will be guessed "
-                << "if not provided."
-                << std::endl
-                << std::endl
-                << "Report bugs to <" << PACKAGE_BUGREPORT << ">"
-                << std::endl;
-}
-
-void hint(const std::string & message)
-{
-        BUG_ON(message.size() == 0);
-
-        std::cout
-                << message
-                << std::endl
-                << "Try `" << PROGRAM_NAME << " -h' "
-                <<"for more information."
-                << std::endl;
-}
-
-class cant_run : public fcp::exception {
+class wrong_option : public fcp::exception {
 public:
-        cant_run(const char * message) :
+        wrong_option(const char * message) :
                 fcp::exception(message) { }
 };
 
-class wrong_opt : public fcp::exception {
+class cannot_run : public fcp::exception {
 public:
-        wrong_opt(const char * message) :
+        cannot_run(const char * message) :
                 fcp::exception(message) { }
+};
+
+class missing_directory : public fcp::exception {
+public:
+        missing_directory(const char * name) :
+                // XXX FIXME: Remove ASAP
+                fcp::exception((std::string("Directory '") +
+                                std::string(name)          +
+                                std::string("' is missing")).c_str()) { }
+};
+
+class missing_file : public fcp::exception {
+public:
+        missing_file(const char * name) :
+                // XXX FIXME: Remove ASAP
+                fcp::exception((std::string("File '") +
+                                std::string(name)     +
+                                std::string("' is missing")).c_str()) { }
 };
 
 void run(const std::vector<std::string> & tags,
          // XXX FIXME: Change to boost::filesystem::path
-         const std::vector<std::string> & rules_filenames,
+         fcp::rules &                     rules,
          bool                             dump_rules,
          int                              max_depth,
          char                             separator,
@@ -137,23 +78,7 @@ void run(const std::vector<std::string> & tags,
          bool                             force,
          bool                             dry_run)
 {
-        // Read rules file
-        fcp::rules rules(rules_filenames);
-        if (dump_rules) {
-                TR_VRB("Rules:\n");
-                std::cout << rules;
-                return;
-        }
-
-        if (tags.size() == 0) {
-                throw cant_run("Missing transformation(s)");
-        }
-
-#if 0
-        TR_VRB("Read %d rule%c\n",
-               rules.size(),
-               (rules.size() > 1) ? 's' : ' ');
-#endif
+        BUG_ON(rules.size() <= 0);
 
         std::vector<fcp::transformation *> transformations(tags.size());
         std::vector<fcp::transformation *>::iterator it;
@@ -195,6 +120,58 @@ void run(const std::vector<std::string> & tags,
         TR_VRB("Operations complete\n");
 }
 
+void version()
+{
+        std::cout
+                << PROGRAM_NAME
+                << " (" << PACKAGE_NAME  << ") "
+                << PACKAGE_VERSION
+                << std::endl
+                << std::endl
+                << "Copyright (C) 2008, 2009 Francesco Salvestrini"
+                << std::endl
+                << std::endl
+                << "This is free software.  "
+                << "You may redistribute copies of it under the terms of"
+                << std::endl
+                << "the GNU General Public License "
+                << "<http://www.gnu.org/licenses/gpl.html>."
+                << std::endl
+                << "There is NO WARRANTY, to the extent permitted by law."
+                << std::endl;
+}
+
+// XXX FIXME: Ugly as hell, please remove ASAP
+char separator = ':';
+
+void help(boost::program_options::options_description & options)
+{
+        std::cout
+                << "Usage: "
+                << PROGRAM_NAME
+                << " [OPTION]... [TRANSFORMATION]..."
+                << std::endl
+                << std::endl
+                << options
+                << std::endl
+                << "Specify TRANSFORMATION using the format:"
+                << std::endl
+                << std::endl
+                << "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]"
+                << std::endl
+                << std::endl
+                << "Default SEPARATOR is "
+                << "'" << separator << "'. "
+                << "INPUTFILE and OUTPUTFILE must be different."
+                << std::endl
+                << "File TYPE is optional and it will be guessed "
+                << "if not provided."
+                << std::endl
+                << std::endl
+                << "Report bugs to <" << PACKAGE_BUGREPORT << ">"
+                << std::endl;
+}
+
 // XXX FIXME: This prototype sucks
 bool handle_options(int                      argc,
                     char *                   argv[],
@@ -204,7 +181,8 @@ bool handle_options(int                      argc,
                     std::vector<std::string> & transformations_tags,
                     std::vector<std::string> & rules_default,
                     std::vector<std::string> & rules_user,
-                    std::string              & temp_dir_name)
+                    std::string              & temp_dir_name,
+                    int                      & max_depth)
 {
         namespace bpo = boost::program_options;
 
@@ -276,7 +254,7 @@ bool handle_options(int                      argc,
                 max_depth = vm["max-depth"].as<int>();
         }
         if (max_depth < 1) {
-                throw wrong_opt("Wrong max-depth");
+                throw wrong_option("Wrong max-depth");
         }
         if (vm.count("temp-dir")) {
                 temp_dir_name = vm["temp-dir"].as<std::string>();
@@ -320,150 +298,159 @@ bool handle_options(int                      argc,
         return true;
 }
 
-int program(int argc, char * argv[])
+void program(int argc, char * argv[])
 {
+        bool                     dry_run          = false;
+        bool                     force            = false;
+        bool                     dump_rules       = false;
+        std::vector<std::string> transformations;
+        int                      max_depth        = 16;
+        boost::filesystem::path  temp_dir("/tmp");
+        std::vector<std::string> rules_filenames;
 
-        int retval = 1;
-
-        try {
-                bool                     dry_run       = false;
-                bool                     force         = false;
-                bool                     dump_rules    = false;
-
-                std::vector<std::string> transformations_tags;
-                std::vector<std::string> rules_all;
+        // Do not pollute ...
+        {
                 std::vector<std::string> rules_default;
                 std::vector<std::string> rules_user;
-
                 std::string              temp_dir_name;
 
                 // Push default rules
-                rules_default.push_back(DFLT_RULES);
+                rules_default.push_back(fcp::getenv("HOME") +
+                                        std::string("/") +      \
+                                        std::string(".") +      \
+                                        std::string(PACKAGE_TARNAME) +  \
+                                        std::string("/") +              \
+                                        std::string("rules"));
 
                 TR_DBG("Parsing program options\n");
 
-                try {
-                        if (!handle_options(argc, argv,
-                                            dry_run,
-                                            force,
-                                            dump_rules,
-                                            transformations_tags,
-                                            rules_default,
-                                            rules_user,
-                                            temp_dir_name)) {
-                                retval = 0;
-                                return retval;
-                        }
-                } catch (...) {
-                        TR_ERR("Cannot handle options\n");
-                        return retval;
+                if (!handle_options(argc, argv,
+                                    dry_run,
+                                    force,
+                                    dump_rules,
+                                    transformations,
+                                    rules_default,
+                                    rules_user,
+                                    temp_dir_name,
+                                    max_depth)) {
+                        TR_DBG("Clean exit now ...\n");
+                        return;
                 }
-
-                TR_DBG("Option parsing complete\n");
-
-                TR_DBG("Tags      '%d'\n", transformations_tags.size());
-                TR_DBG("Separator '%c'\n", separator);
-                TR_DBG("Max depth '%d'\n", max_depth);
-                BUG_ON(max_depth <= 0);
+                TR_DBG("Option parsing complete (must continue)\n");
 
                 // Insert default rules
-                rules_all.insert(rules_all.end(),
-                                 rules_default.begin(),
-                                 rules_default.end());
+                rules_filenames.insert(rules_filenames.end(),
+                                       rules_default.begin(),
+                                       rules_default.end());
                 // Insert user rules
-                rules_all.insert(rules_all.end(),
-                                 rules_user.begin(),
-                                 rules_user.end());
+                rules_filenames.insert(rules_filenames.end(),
+                                       rules_user.begin(),
+                                       rules_user.end());
 
-                if (rules_all.size() == 0) {
-                        // Hmmmm is this a real error ?
-                        hint("No rules available");
-                        return 1;
+                if (!temp_dir_name.empty()) {
+                        temp_dir = boost::filesystem::path(temp_dir_name);
                 }
+        }
 
-                TR_DBG("You have %d rule%c\n",
-                       rules_all.size(),
-                       (rules_all.size() > 1 ? 's' : ' '));
-                BUG_ON(rules_all.size() == 0);
+        TR_VRB("Checking parameters ...\n");
 
-                // Setup temporary directory
-                if (temp_dir_name.empty()) {
-                        temp_dir_name = std::string("/tmp/");
-                }
-                BUG_ON(temp_dir_name.empty());
+        std::vector<boost::filesystem::path>
+                rules_paths(rules_filenames.size());
 
-                boost::filesystem::path temp_dir(temp_dir_name +
-                                                 std::string("/") +
-                                                 (std::string(PROGRAM_NAME) +
-                                                  "-" +
-                                                  fcp::itos(getpid())));
+        // From filenames to paths (to be rearranged ASAP)
+        std::vector<std::string>::iterator             i;
+        std::vector<boost::filesystem::path>::iterator j;
+        for (i = rules_filenames.begin(), j = rules_paths.begin();
+             i != rules_filenames.end();
+             i++, j++) {
+                (*j) = boost::filesystem::path(*i);
+        }
 
-                bool remove_temp_dir = false;
-                if (!boost::filesystem::exists(temp_dir)) {
-                        boost::filesystem::create_directory(temp_dir);
-                        remove_temp_dir = true;
-                }
-                BUG_ON(!boost::filesystem::exists(temp_dir));
+        // Read rules file
+        fcp::rules rules(rules_paths);
+        if (dump_rules) {
+                std::cout << rules;
+                return;
+        }
 
-                TR_DBG("Temporary dir '%s' (%s)\n",
-                       temp_dir.string().c_str(),
-                       remove_temp_dir ? "remove" : "keep");
+        // Check required parameters
+        if (transformations.size() == 0) {
+                throw wrong_option("Missing transformation(s)");
+        }
 
-                // Setup working directory (inside temp directory)
-                boost::filesystem::path work_dir(temp_dir_name +
-                                                 std::string("/") +
-                                                 (std::string(PROGRAM_NAME) +
-                                                  "-" +
-                                                  fcp::itos(getpid())));
+        if (!boost::filesystem::exists(temp_dir)) {
+                throw missing_directory(temp_dir.string().c_str());
+        }
+        BUG_ON(!boost::filesystem::exists(temp_dir));
+
+        boost::filesystem::path work_dir;
+
+        try {
+                work_dir = boost::filesystem::path(temp_dir.string() +
+                                                   std::string("/") +
+                                                   (std::string(PROGRAM_NAME) +
+                                                    "-" +
+                                                    fcp::itos(getpid())));
+
                 if (boost::filesystem::exists(work_dir)) {
                         // Remove our working directory left from previous run
-#if HARM_MY_FILESYSTEM
                         boost::filesystem::remove_all(work_dir);
-#else
-                        TR_DBG("Avoiding '%s' directory removal\n",
-                               work_dir.string().c_str());
-#endif
                 }
                 boost::filesystem::create_directory(work_dir);
-                BUG_ON(!boost::filesystem::exists(work_dir));
-                TR_DBG("Working dir '%s' (%s)\n", work_dir.string().c_str());
+        } catch (...) {
+                throw cannot_run((std::string("Cannot create ")      +
+                                  std::string("working directory '") +
+                                  work_dir.string()                  +
+                                  std::string("'")).c_str());
+        }
+        BUG_ON(!boost::filesystem::exists(work_dir));
 
-                run(transformations_tags,
-                    rules_all,
+        TR_DBG("Transformation(s) = %d\n",   transformations.size());
+        TR_DBG("Rules file(s)     = %d\n",   rules_filenames.size());
+        TR_DBG("Separator         = '%c'\n", separator);
+        TR_DBG("Max depth         = '%d'\n", max_depth);
+        TR_DBG("Working directory = '%s'\n", work_dir.string().c_str());
+
+        BUG_ON(transformations.size() <= 0);
+        BUG_ON(rules.size() < 0);
+        BUG_ON(max_depth <= 0);
+
+        bool retval = false;
+
+        try {
+                run(transformations,
+                    rules,
                     dump_rules,
                     max_depth,
                     separator,
                     work_dir,
                     force,
                     dry_run);
-
-                // Remove our directories
-#if HARM_MY_FILESYSTEM
-                boost::filesystem::remove_all(work_dir);
-#else
-                TR_DBG("Avoiding '%s' directory removal\n",
-                       work_dir.string().c_str());
-#endif
-                if (remove_temp_dir) {
-#if HARM_MY_FILESYSTEM
-                        boost::filesystem::remove_all(temp_dir);
-#else
-                        TR_DBG("Avoiding '%s' directory removal\n",
-                               temp_dir.string().c_str());
-#endif
-                }
-
-                // Everything went smoothly ...
-                retval = 0;
-        } catch (cant_run & e) {
-                hint(e.what());
-        } catch (wrong_opt & e) {
-                hint(e.what());
         } catch (fcp::exception & e) {
-                TR_ERR("%s\n", e.what());
+                throw cannot_run(e.what());
         }
 
-        return retval;
+        try {
+                boost::filesystem::remove_all(work_dir);
+        } catch (...) {
+                // XXX FIXME: We should only warn our user here ...
+                throw cannot_run((std::string("Cannot remove ")      +
+                                  std::string("working directory '") +
+                                  work_dir.string()                  +
+                                  std::string("'")).c_str());
+        }
+}
+
+void hint(const std::string & message)
+{
+        BUG_ON(message.size() == 0);
+
+        std::cout
+                << message
+                << std::endl
+                << "Try `" << PROGRAM_NAME << " -h' "
+                <<"for more information."
+                << std::endl;
 }
 
 int main(int argc, char * argv[])
@@ -471,12 +458,22 @@ int main(int argc, char * argv[])
         TR_CONFIG_PFX(PROGRAM_NAME);
         TR_CONFIG_LVL(TR_LVL_DEFAULT);
 
+        TR_DBG("Program start ...\n");
+
+        int retval = EXIT_FAILURE;
         try {
-                return program(argc, argv);
+                program(argc, argv);
+                retval = EXIT_SUCCESS;
+        } catch (wrong_option & e) {
+                hint(e.what());
+        } catch (fcp::exception & e) {
+                TR_ERR("%s\n", e.what());
         } catch (...) {
                 // All unhandled exceptions are bugs for me !
                 BUG();
         }
 
-        return 1; // useless
+        TR_DBG("Program stop (retval = %d) ...\n", retval);
+
+        return retval;
 }
