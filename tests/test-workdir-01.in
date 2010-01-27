@@ -35,6 +35,11 @@ mkdir ./test.d  || exit 1
 
 $FCP -r ./rules -m 100 -t ./test.d -s : test1.ext1:test1.ext2
 
-rmdir ./test.d || exit 1
+for i in test.d/*
+do
+  if test -d $i || test -r $i; then
+    exit 1
+  fi
+done
 
-exit 0
+exit $RC
