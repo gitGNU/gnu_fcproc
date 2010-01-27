@@ -88,7 +88,8 @@ SUCCESS_TESTS +=				\
 	test-rules-01				\
 	test-rules-02				\
 	test-hint-01				\
-	test-tmpdir-01
+	test-tmpdir-01				\
+	test-workdir-01
 
 XFAIL_TESTS  = $(FAIL_TESTS)
 TESTS	     = $(FAIL_TESTS) $(SUCCESS_TESTS)
@@ -416,6 +417,18 @@ test-tmpdir-01: $(srcdir)/test-tmpdir-01.in Makefile
 	}
 EXTRA_DIST += test-tmpdir-01.in
 CLEANFILES += test-tmpdir-01
+
+test-workdir-01: $(srcdir)/test-workdir-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-workdir-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-workdir-01.in
+CLEANFILES += test-workdir-01
 
 clean-local:
 	rm -rf testSubDir-*
