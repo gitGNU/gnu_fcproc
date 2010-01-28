@@ -86,6 +86,9 @@ Makefile
 /tests/test-include-02
 /tests/test-tmpdir-01
 /tests/test-workdir-01
+/tests/test-cloptions-01
+/tests/test-cloptions-02
+/tests/test-cloptions-03
 
 /docs/man/fcp.1
 /docs/info/fcp.info
