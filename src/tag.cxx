@@ -60,7 +60,7 @@ namespace fcp {
                         TR_DBG("  Subpart type '%s'\n", type.c_str());
 
                         // Create the input filename
-                        lhs_ = fcp::file(name, type);
+                        input_ = fcp::file(name, type);
                 }
 
                 // Work on the output part
@@ -83,7 +83,7 @@ namespace fcp {
                         TR_DBG("  Subpart type '%s'\n", type.c_str());
 
                         // Create the output filename
-                        rhs_ = fcp::file(name, type);
+                        output_ = fcp::file(name, type);
                 }
         }
 
@@ -93,10 +93,10 @@ namespace fcp {
         const std::string & tag::id() const
         { return id_; }
 
-        const fcp::file & tag::rhs()
-        { return rhs_; }
+        const fcp::file & tag::output()
+        { return output_; }
 
-        const fcp::file & tag::lhs()
-        { return lhs_; }
+        const fcp::file & tag::input()
+        { return input_; }
 
 }

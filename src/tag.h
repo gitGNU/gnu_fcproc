@@ -35,16 +35,16 @@ namespace fcp {
                 ~tag();
 
                 const std::string & id() const;
-                const fcp::file &   rhs();
-                const fcp::file &   lhs();
+                const fcp::file &   input();
+                const fcp::file &   output();
 
         protected:
                 tag(void);
 
         private:
                 std::string id_;
-                fcp::file   rhs_;
-                fcp::file   lhs_;
+                fcp::file   input_;
+                fcp::file   output_;
         };
 }
 
