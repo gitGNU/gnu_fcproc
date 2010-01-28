@@ -70,7 +70,10 @@ FAIL_TESTS +=					\
 	test-multipath-01			\
 	test-cloptions-01			\
 	test-cloptions-02			\
-	test-cloptions-03
+	test-cloptions-03			\
+	test-cloptions-05			\
+	test-cloptions-06
+
 
 SUCCESS_TESTS +=				\
 	test-success				\
@@ -92,7 +95,8 @@ SUCCESS_TESTS +=				\
 	test-rules-02				\
 	test-hint-01				\
 	test-tmpdir-01				\
-	test-workdir-01
+	test-workdir-01				\
+	test-cloptions-04
 
 XFAIL_TESTS  = $(FAIL_TESTS)
 TESTS	     = $(FAIL_TESTS) $(SUCCESS_TESTS)
@@ -468,6 +472,42 @@ test-cloptions-03: $(srcdir)/test-cloptions-03.in Makefile
 	}
 EXTRA_DIST += test-cloptions-03.in
 CLEANFILES += test-cloptions-03
+
+test-cloptions-04: $(srcdir)/test-cloptions-04.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-cloptions-04.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-cloptions-04.in
+CLEANFILES += test-cloptions-04
+
+test-cloptions-05: $(srcdir)/test-cloptions-05.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-cloptions-05.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-cloptions-05.in
+CLEANFILES += test-cloptions-05
+
+test-cloptions-06: $(srcdir)/test-cloptions-06.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-cloptions-06.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-cloptions-06.in
+CLEANFILES += test-cloptions-06
 
 clean-local:
 	rm -rf testSubDir-*
