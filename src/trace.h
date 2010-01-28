@@ -46,7 +46,7 @@ extern int trace_mask;
         if (trace_mask & LVL) {                                         \
                 FILE * s;                                               \
                                                                         \
-                if (trace_mask & (TR_LVL_ERROR | TR_LVL_CRITICAL)) {    \
+                if (LVL & (TR_LVL_ERROR | TR_LVL_CRITICAL)) {    	\
                         s = stderr;                                     \
                 } else {                                                \
                         s = stdout;                                     \
