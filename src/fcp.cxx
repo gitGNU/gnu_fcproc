@@ -247,10 +247,10 @@ bool handle_options(int                        argc,
         }
 
         if (vm.count("debug")) {
-                TR_CONFIG_LVL(TR_LVL_DEBUG);
+                TR_CONFIG_LVL(TR_LVL_DEBUG, true);
         }
         if (vm.count("verbose")) {
-                TR_CONFIG_LVL(TR_LVL_VERBOSE);
+                TR_CONFIG_LVL(TR_LVL_VERBOSE, true);
         }
         if (vm.count("version")) {
                 version();
@@ -415,8 +415,12 @@ void hint(const std::string & message)
 
 int main(int argc, char * argv[])
 {
-        TR_CONFIG_PFX(PROGRAM_NAME);
-        TR_CONFIG_LVL(TR_LVL_DEFAULT);
+        TR_CONFIG_LVL(TR_LVL_CRITICAL, true);
+        TR_CONFIG_LVL(TR_LVL_ERROR,    true);
+        TR_CONFIG_LVL(TR_LVL_WARNING,  true);
+        TR_CONFIG_LVL(TR_LVL_NOTICE,   true);
+        TR_CONFIG_LVL(TR_LVL_VERBOSE,  false);
+        TR_CONFIG_LVL(TR_LVL_DEBUG,    false);
 
         TR_DBG("Program start ...\n");
 

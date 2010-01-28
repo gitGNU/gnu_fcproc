@@ -28,40 +28,38 @@
 //     This tracing interface is really awful. It will be replaced ASAP.
 //
 
-extern int          trace_level;
-extern const char * trace_prefix;
+//
+// XXX FIXME: This implementation is awful, please rewrite it ASAP
+//
 
 // Trace levels
-#define TR_LVL_CRITICAL 5
-#define TR_LVL_ERROR    4
-#define TR_LVL_WARNING  3
-#define TR_LVL_NOTICE   2
-#define TR_LVL_VERBOSE  1
-#define TR_LVL_DEBUG    0
+#define TR_LVL_CRITICAL 0x01
+#define TR_LVL_ERROR    0x02
+#define TR_LVL_WARNING  0x04
+#define TR_LVL_NOTICE   0x08
+#define TR_LVL_VERBOSE  0x10
+#define TR_LVL_DEBUG    0x20
 
-#define TR_LVL_DEFAULT TR_LVL_NOTICE
+extern int trace_mask;
 
 #define _TRACE(LVL,FMT,ARGS...) {                                       \
-        if ((LVL) >= trace_level) {                                     \
+        if (trace_mask & LVL) {                                         \
                 FILE * s;                                               \
                                                                         \
-                if (trace_level >= TR_LVL_ERROR) {                      \
+                if (trace_mask & (TR_LVL_ERROR | TR_LVL_CRITICAL)) {    \
                         s = stderr;                                     \
                 } else {                                                \
                         s = stdout;                                     \
                 }                                                       \
                                                                         \
-                if (trace_prefix) {                                     \
-                        fprintf(s, "%s: " FMT, trace_prefix, ##ARGS);   \
-                } else {                                                \
-                        fprintf(s, FMT, ##ARGS);                        \
-                }                                                       \
+                fprintf(s, "%s: " FMT, PACKAGE_TARNAME, ##ARGS);        \
         }                                                               \
 }
 
 // Shortcuts for configuration
-#define TR_CONFIG_LVL(LVL)  { trace_level  = LVL; }
-#define TR_CONFIG_PFX(PFX)  { trace_prefix = PFX; }
+#define TR_CONFIG_LVL(LVL, VALUE) {                     \
+	trace_mask |= ((VALUE == true) ? LVL : 0);      \
+}
 
 // Shortcuts for traces
 #define TR_DBG(FMT,ARGS...) _TRACE(TR_LVL_DEBUG,    FMT, ##ARGS)
