@@ -51,6 +51,7 @@ COMMON_CPPFLAGS =				\
 
 fcp_SOURCES =					\
 	fcp.cxx					\
+	namespace.h				\
 	tag.h					\
 	tag.cxx					\
 	transformation.h			\
@@ -78,6 +79,7 @@ fcp_LDADD =					\
         $(BOOST_SYSTEM_LIB)			\
         $(BOOST_THREAD_LIB)			\
         $(BOOST_FILESYSTEM_LIB)			\
+        $(BOOST_REGEX_LIB)			\
         $(BOOST_PROGRAM_OPTIONS_LIB)
 
 ##
