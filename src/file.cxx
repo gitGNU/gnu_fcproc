@@ -25,6 +25,7 @@
 
 #include "debug.h"
 #include "file.h"
+#include "namespace.h"
 
 namespace fcp {
 
@@ -43,13 +44,13 @@ namespace fcp {
                 return *this;
         }
 
-        file::file(const boost::filesystem::path & path,
-                   const std::string &             type) :
+        file::file(const bfs::path &   path,
+                   const std::string & type) :
                 path_(path),
                 type_(type)
         {
                 if (type.empty()) {
-                        std::string tmp = boost::filesystem::extension(path);
+                        std::string tmp = bfs::extension(path);
                         type_ = tmp.substr(1);
                 }
 
@@ -61,7 +62,7 @@ namespace fcp {
         file::~file()
         { }
 
-        const boost::filesystem::path & file::path() const
+        const bfs::path & file::path() const
         { return path_; }
 
         const std::string & file::name() const
@@ -71,6 +72,6 @@ namespace fcp {
         { return type_; }
 
         bool file::exists() const
-        { return boost::filesystem::exists(path_); }
+        { return bfs::exists(path_); }
 
 };

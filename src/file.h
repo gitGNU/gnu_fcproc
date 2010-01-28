@@ -26,18 +26,20 @@
 #include <string>
 #include <boost/filesystem.hpp>
 
+#include "namespace.h"
+
 namespace fcp {
         class file {
         public:
-                file(const boost::filesystem::path & path,
-                     const std::string &             type);
+                file(const bfs::path &   path,
+                     const std::string & type);
                 ~file();
 
-                const boost::filesystem::path & path()   const;
-                const std::string &             name()   const;
-                const std::string &             type()   const;
+                const bfs::path &   path()   const;
+                const std::string & name()   const;
+                const std::string & type()   const;
 
-                bool                            exists() const;
+                bool                exists() const;
 
                 file();
                 file & operator=(const file & rhs);
@@ -45,8 +47,8 @@ namespace fcp {
         protected:
 
         private:
-                boost::filesystem::path path_;
-                std::string             type_;
+                bfs::path   path_;
+                std::string type_;
         };
 }
 
