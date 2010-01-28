@@ -114,9 +114,6 @@ void version()
                 << std::endl;
 }
 
-// XXX FIXME: Ugly as hell, please remove ASAP
-char separator = ':';
-
 void help(bpo::options_description & options)
 {
         std::cout
@@ -133,8 +130,7 @@ void help(bpo::options_description & options)
                 << "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]"
                 << std::endl
                 << std::endl
-                << "Default SEPARATOR is "
-                << "'" << separator << "'. "
+                << "Default SEPARATOR is ':'"
                 << "INPUTFILE and OUTPUTFILE must be different."
                 << std::endl
                 << "File TYPE is optional and it will be guessed "
@@ -155,7 +151,8 @@ bool handle_options(int                        argc,
                     std::vector<bfs::path> &   rules_default,
                     std::vector<bfs::path> &   rules_user,
                     bfs::path &                temp_dir,
-                    int &                      max_depth)
+                    int &                      max_depth,
+                    char &                     separator)
 {
 
         // Main options
@@ -175,7 +172,7 @@ bool handle_options(int                        argc,
                  bpo::value<bfs::path>(),
                  "set temporary directory")
                 ("separator,s",
-                 bpo::value<char>(),
+                 bpo::value<char>(&separator)->default_value(':'),
                  "set input/output separator character")
                 ("no-std-rules,q",
                  "do not load standard rules")
@@ -231,9 +228,6 @@ bool handle_options(int                        argc,
         if (vm.count("temp-dir")) {
                 temp_dir = vm["temp-dir"].as<bfs::path>();
         }
-        if (vm.count("separator")) {
-                separator = vm["separator"].as<char>();
-        }
         if (vm.count("no-std-rules")) {
                 rules_default.clear();
         }
@@ -279,6 +273,7 @@ void program(int argc, char * argv[])
         int                      max_depth        = 16;
         bfs::path                temp_dir("/tmp");
         std::vector<bfs::path>   rules_paths;
+        char                     separator;
 
         // Do not pollute ...
         {
@@ -303,7 +298,8 @@ void program(int argc, char * argv[])
                                     rules_default,
                                     rules_user,
                                     temp_dir,
-                                    max_depth)) {
+                                    max_depth,
+                                    separator)) {
                         TR_DBG("Clean exit now ...\n");
                         return;
                 }
