@@ -106,7 +106,7 @@ namespace fcp {
 
                 TR_DBG("Checking dry/run/spurious\n");
 
-                if (!dry && !force) {
+                if (!dry) {
                         TR_DBG("Checking input file '%s' existance\n",
                                input_.name().c_str());
 
@@ -117,9 +117,11 @@ namespace fcp {
                                 throw fcp::exception(e.c_str());
                         }
 
-                        if (is_spurious()) {
-                                TR_DBG("Avoiding a spurious rebuild\n");
-                                return;
+                        if (!force) {
+                                if (is_spurious()) {
+                                        TR_DBG("Avoiding spurious rebuild\n");
+                                        return;
+                                }
                         }
                 }
 
