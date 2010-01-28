@@ -47,7 +47,6 @@ public:
 
 void run(const std::vector<std::string> & tags,
          fcp::rules &                     rules,
-         bool                             dump_rules,
          int                              max_depth,
          char                             separator,
          const bfs::path &                work_dir,
@@ -384,7 +383,6 @@ void program(int argc, char * argv[])
 
         run(transformations,
             rules,
-            dump_rules,
             max_depth,
             separator,
             work_dir,
