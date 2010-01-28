@@ -72,7 +72,8 @@ FAIL_TESTS +=					\
 	test-cloptions-02			\
 	test-cloptions-03			\
 	test-cloptions-05			\
-	test-cloptions-06
+	test-cloptions-06			\
+	test-cloptions-07
 
 
 SUCCESS_TESTS +=				\
@@ -508,6 +509,18 @@ test-cloptions-06: $(srcdir)/test-cloptions-06.in Makefile
 	}
 EXTRA_DIST += test-cloptions-06.in
 CLEANFILES += test-cloptions-06
+
+test-cloptions-07: $(srcdir)/test-cloptions-07.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-cloptions-07.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-cloptions-07.in
+CLEANFILES += test-cloptions-07
 
 clean-local:
 	rm -rf testSubDir-*

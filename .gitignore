@@ -92,6 +92,7 @@ Makefile
 /tests/test-cloptions-04
 /tests/test-cloptions-05
 /tests/test-cloptions-06
+/tests/test-cloptions-07
 
 /docs/man/fcp.1
 /docs/info/fcp.info
