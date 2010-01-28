@@ -35,15 +35,15 @@
 namespace fcp {
         class transformation : public boost::noncopyable {
         public:
-                transformation(const std::string &             tag,
-                               char                            separator,
-                               const fcp::rules &              rules,
-                               int                             depth,
-                               const boost::filesystem::path & work);
+                transformation(const std::string & tag,
+                               char                separator);
                 ~transformation();
 
-                void             run(bool dry,
-                                     bool force);
+                void             run(bool               dry,
+                                     bool               force,
+                                     const fcp::rules & rules,
+                                     int                depth,
+                                     const bfs::path &  work);
 
                 const fcp::tag & tag() const;
 
@@ -55,8 +55,7 @@ namespace fcp {
                            std::string &       name,
                            std::string &       type);
 
-                fcp::tag     tag_;
-                fcp::chain * chain_;
+                fcp::tag tag_;
         };
 }
 

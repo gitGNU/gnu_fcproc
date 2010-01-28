@@ -30,36 +30,49 @@
 #include "rules.h"
 #include "chain.h"
 #include "tag.h"
+#include "namespace.h"
 
 namespace fcp {
 
-        transformation::transformation(const std::string &             tag,
-                                       char                            sep, 
-                                       const fcp::rules &              rules,
-                                       int                             depth,
-                                       const boost::filesystem::path & work) :
-                tag_(tag, sep),
-                chain_(0)
-        {
-                fcp::file input(tag_.lhs());
-                fcp::file output(tag_.rhs());
+        transformation::transformation(const std::string & tag,
+                                       char                sep) :
+                tag_(tag, sep)
+        { }
 
-                if (boost::filesystem::exists(input.path())       &&
-                    boost::filesystem::exists(output.path())      &&
-                    boost::filesystem::equivalent(input.path(),
-                                                  output.path())) {
+        transformation::~transformation()
+        { }
+
+        void transformation::run(bool               dry,
+                                 bool               force,
+                                 const fcp::rules & rules,
+                                 int                depth,
+                                 const bfs::path &  work)
+        {
+                TR_DBG("Running transformation '%s' (%s, %s)\n",
+                       tag_.id().c_str(),
+                       dry   ? "dry"    : "not dry",
+                       force ? "forced" : "not forced");
+
+                fcp::file input(tag_.input());
+                fcp::file output(tag_.output());
+
+                if (bfs::exists(input.path())       &&
+                    bfs::exists(output.path())      &&
+                    bfs::equivalent(input.path(),
+                                    output.path())) {
                         std::string e("Transformation "
                                       "'" + tag_.id() + "' "
                                       "must have different "
-                                      "input and output "
-                                      "file");
+                                      "input and output");
                         throw fcp::exception(e.c_str());
                 }
 
                 // Build the chain for this transformation
-                std::vector<fcp::filter *> temp;
-                temp = rules.chain(input, output, depth, work);
-                if (temp.size() == 0) {
+                std::vector<fcp::filter *> rules_chain = rules.chain(input,
+                                                                     output,
+                                                                     depth,
+                                                                     work);
+                if (rules_chain.size() == 0) {
                         std::string e("No chain available for "
                                       "'" + tag_.id() + "' "
                                       "transformation");
@@ -67,31 +80,13 @@ namespace fcp {
                 }
 
                 // Finally create the chain from the filters sequence
-                chain_ = new fcp::chain(tag_.id(),
-                                        input,
-                                        output,
-                                        temp,
-                                        work);
-        }
+                fcp::chain filters_chain(tag_.id(),
+                                         input,
+                                         output,
+                                         rules_chain,
+                                         work);
 
-        transformation::~transformation()
-        {
-                BUG_ON(chain_ == 0);
-
-                delete chain_;
-        }
-
-        void transformation::run(bool dry,
-                                 bool force)
-        {
-                TR_DBG("Running transformation '%s' (%s, %s)\n",
-                       tag_.id().c_str(),
-                       dry   ? "dry"    : "not dry",
-                       force ? "forced" : "not forced");
-
-                BUG_ON(chain_ == 0);
-
-                chain_->run(dry, force);
+                filters_chain.run(dry, force);
         }
 
         const fcp::tag & transformation::tag() const
