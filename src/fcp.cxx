@@ -35,21 +35,13 @@
 #include "exception.h"
 #include "rules.h"
 #include "transformation.h"
+#include "namespace.h"
 
 #define PROGRAM_NAME "fcp"
-
-namespace bpo = boost::program_options;
-namespace bfs = boost::filesystem;
 
 class wrong_option : public fcp::exception {
 public:
         wrong_option(const char * message) :
-                fcp::exception(message) { }
-};
-
-class cannot_run : public fcp::exception {
-public:
-        cannot_run(const char * message) :
                 fcp::exception(message) { }
 };
 
@@ -68,19 +60,12 @@ void run(const std::vector<std::string> & tags,
         std::vector<fcp::transformation *>::iterator it;
 
         // Setup transformations
-        {
-                std::vector<std::string>::const_iterator tf =
-                        tags.begin();
+        std::vector<std::string>::const_iterator tf;
 
-                for (it =  transformations.begin();
-                     it != transformations.end();
-                     it++, tf++) {
-                        (*it) = new fcp::transformation((*tf),
-                                                        separator,
-                                                        rules,
-                                                        max_depth,
-                                                        work_dir);
-                }
+        for (it = transformations.begin(), tf = tags.begin();
+             it != transformations.end();
+             it++, tf++) {
+                (*it) = new fcp::transformation((*tf), separator);
         }
 
         TR_VRB("Performing %d transformation%c\n",
@@ -91,8 +76,14 @@ void run(const std::vector<std::string> & tags,
         for (it  = transformations.begin();
              it != transformations.end();
              it++) {
-                (*it)->run(dry_run, force);
+                (*it)->run(dry_run,
+                           force,
+                           rules,
+                           max_depth,
+                           work_dir);
         }
+
+        TR_VRB("All transformations complete\n");
 
         // Clean up everything
         for (it  = transformations.begin();
@@ -100,8 +91,6 @@ void run(const std::vector<std::string> & tags,
              it++) {
                 delete (*it);
         }
-
-        TR_VRB("Operations complete\n");
 }
 
 void version()
@@ -386,6 +375,7 @@ void program(int argc, char * argv[])
         BUG_ON(rules.size() < 0);
         BUG_ON(max_depth <= 0);
 
+        // Do the real thing ... now!
         bool retval = false;
 
         run(transformations,
@@ -437,7 +427,7 @@ int main(int argc, char * argv[])
         } catch (fcp::exception & e) {
                 TR_ERR("%s\n", e.what());
         } catch (...) {
-                // All unhandled exceptions are bugs for me !
+                // All unhandled exceptions are bugs for us !
                 BUG();
         }
 
