@@ -114,6 +114,8 @@ void version()
                 << std::endl;
 }
 
+#define DFLT_SEPARATOR ':'
+
 void help(bpo::options_description & options)
 {
         std::cout
@@ -130,7 +132,7 @@ void help(bpo::options_description & options)
                 << "  INPUTFILE[%TYPE]<SEPARATOR>OUTPUTFILE[%TYPE]"
                 << std::endl
                 << std::endl
-                << "Default SEPARATOR is ':'"
+                << "Default SEPARATOR is '" << DFLT_SEPARATOR << "'"
                 << "INPUTFILE and OUTPUTFILE must be different."
                 << std::endl
                 << "File TYPE is optional and it will be guessed "
@@ -172,7 +174,7 @@ bool handle_options(int                        argc,
                  bpo::value<bfs::path>(),
                  "set temporary directory")
                 ("separator,s",
-                 bpo::value<char>(&separator)->default_value(':'),
+                 bpo::value<char>(&separator)->default_value(DFLT_SEPARATOR),
                  "set input/output separator character")
                 ("no-std-rules,q",
                  "do not load standard rules")
