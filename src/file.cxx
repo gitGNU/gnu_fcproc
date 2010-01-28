@@ -64,6 +64,8 @@ namespace fcp {
                                         std::string("' type");
                                 throw fcp::exception(s.c_str());
                         }
+
+                        type_ = tmp.substr(1);
                 }
 
                 TR_DBG("File: name = '%s' / type = '%s'\n",
