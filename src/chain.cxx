@@ -85,12 +85,11 @@ namespace fcp {
                         return false;
                 }
 
-                TR_DBG("Output file exists\n");
-
-                if (bfs::last_write_time(input_.path()) <=
-                    bfs::last_write_time(output_.path())) {
-                        TR_DBG("Output file '%s' is up-to-date\n",
-                               output_.name().c_str());
+                time_t diff = (bfs::last_write_time(output_.path()) -
+                               bfs::last_write_time(input_.path()));
+                if (diff >= 0) {
+                        TR_DBG("Output file '%s' is up-to-date (delta = %d)\n",
+                               output_.name().c_str(), diff);
                         return true;
                 }
 
@@ -104,12 +103,10 @@ namespace fcp {
         {
                 TR_DBG("Running chain '%s'\n", id_.c_str());
 
-                TR_DBG("Checking dry/run/spurious\n");
+                TR_DBG("Checking input file '%s' existance\n",
+                       input_.name().c_str());
 
                 if (!dry) {
-                        TR_DBG("Checking input file '%s' existance\n",
-                               input_.name().c_str());
-
                         if (!bfs::exists(input_.path())) {
                                 std::string e("Missing input file "
                                               "for chain "
@@ -124,8 +121,6 @@ namespace fcp {
                                 }
                         }
                 }
-
-                TR_DBG("Working on filters\n");
 
                 std::vector<fcp::filter *>::iterator i;
                 for (i = filters_.begin(); i != filters_.end(); i++) {
