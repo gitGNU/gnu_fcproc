@@ -26,6 +26,7 @@
 #include "debug.h"
 #include "file.h"
 #include "namespace.h"
+#include "exception.h"
 
 namespace fcp {
 
@@ -50,8 +51,19 @@ namespace fcp {
                 type_(type)
         {
                 if (type.empty()) {
-                        std::string tmp = bfs::extension(path);
-                        type_ = tmp.substr(1);
+                        std::string tmp;
+
+                        // bfs::extension("alfa.beta") returns ".beta"
+                        tmp = bfs::extension(path);
+                        if (tmp.size() <= 1) {
+                                // tmp is "" or ".", this means no extension
+                                // or an empty extension ...
+                                std::string s =
+                                        std::string("Cannot detect file '") +
+                                        path.string()                       +
+                                        std::string("' type");
+                                throw fcp::exception(s.c_str());
+                        }
                 }
 
                 TR_DBG("File: name = '%s' / type = '%s'\n",
