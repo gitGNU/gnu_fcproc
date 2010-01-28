@@ -30,25 +30,27 @@
 #include <boost/filesystem.hpp>
 #include <boost/noncopyable.hpp>
 
+#include "namespace.h"
+
 namespace fcp {
         class filter : public boost::noncopyable {
         public:
-                filter(const boost::filesystem::path &  input,
-                       const boost::filesystem::path &  output,
+                filter(const bfs::path &                input,
+                       const bfs::path &                output,
                        const std::vector<std::string> & commands);
 
-                const boost::filesystem::path & input();
-                const boost::filesystem::path & output();
+                const bfs::path & input();
+                const bfs::path & output();
 
-                void             setup(const std::string &             id,
-                                       const boost::filesystem::path & tmp);
+                void             setup(const std::string & id,
+                                       const bfs::path &   tmp);
                 void             run(bool dry);
 
         protected:
 
         private:
-                boost::filesystem::path  input_;
-                boost::filesystem::path  output_;
+                bfs::path  input_;
+                bfs::path  output_;
                 std::vector<std::string> templates_;
                 std::vector<std::string> commands_;
 
@@ -58,10 +60,10 @@ namespace fcp {
                        size_t              index);
 
                 std::vector<std::string>
-                commands(const std::string &             id,
-                         const boost::filesystem::path & input,
-                         const boost::filesystem::path & output,
-                         const std::string &             work_dir);
+                commands(const std::string &  id,
+                         const bfs::path &    input,
+                         const bfs::path &    output,
+                         const std::string &  work_dir);
         };
 }
 

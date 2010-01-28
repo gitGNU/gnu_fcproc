@@ -30,11 +30,12 @@
 #include "exception.h"
 #include "filter.h"
 #include "utility.h"
+#include "namespace.h"
 
 namespace fcp {
 
-        filter::filter(const boost::filesystem::path &  input,
-                       const boost::filesystem::path &  output,
+        filter::filter(const bfs::path &                input,
+                       const bfs::path &                output,
                        const std::vector<std::string> & commands) :
                 input_(input),
                 output_(output),
@@ -43,10 +44,10 @@ namespace fcp {
                 commands_.clear(); // useless
         }
 
-        const boost::filesystem::path & filter::input()
+        const bfs::path & filter::input()
         { return input_; }
 
-        const boost::filesystem::path & filter::output()
+        const bfs::path & filter::output()
         { return output_; }
 
         std::string filter::mktemp(const std::string & id,
@@ -58,8 +59,8 @@ namespace fcp {
         }
 
         // XXX FIXME: Remove id parameter ASAP
-        void filter::setup(const std::string &             id,
-                           const boost::filesystem::path & work_dir)
+        void filter::setup(const std::string & id,
+                           const bfs::path &   work_dir)
         {
                 TR_DBG("Filter '%s' setup:\n",
                        id.c_str());
