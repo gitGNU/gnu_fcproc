@@ -30,11 +30,11 @@
 #include <set>
 #include <boost/filesystem.hpp>
 #include <boost/noncopyable.hpp>
-
-#include "regex.h"
+#include <boost/cregex.hpp>
 
 #include "filter.h"
 #include "file.h"
+#include "namespace.h"
 
 namespace fcp {
         class rules;
@@ -48,14 +48,14 @@ namespace fcp {
                 friend std::ostream & ::operator<<(std::ostream & stream,
                                                    const rules &  rules);
 
-                rules(const std::vector<boost::filesystem::path> & files);
+                rules(const std::vector<bfs::path> & files);
 
                 // Builds a filters-chain
                 std::vector<fcp::filter *>
-                chain(const fcp::file &               input,
-                      const fcp::file &               output,
-                      int                             mdepth,
-                      const boost::filesystem::path & work) const;
+                chain(const fcp::file & input,
+                      const fcp::file & output,
+                      int               mdepth,
+                      const bfs::path & work) const;
 
                 size_t size();
                 bool   empty();
@@ -64,12 +64,12 @@ namespace fcp {
 
         private:
                 struct {
-                        regmatch_t match_[3];
-                        regex_t    empty_;
-                        regex_t    comment_;
-                        regex_t    include_;
-                        regex_t    header_;
-                        regex_t    body_;
+                        boost::regmatch_t match_[3];
+                        boost::regex_t    empty_;
+                        boost::regex_t    comment_;
+                        boost::regex_t    include_;
+                        boost::regex_t    header_;
+                        boost::regex_t    body_;
                 } re_;
 
                 // rules = (input-tag, output-tag, commands)
@@ -78,7 +78,7 @@ namespace fcp {
                         std::vector<std::string> > > rules_;
 
                 std::string readline(std::ifstream & stream);
-                void        parse(const boost::filesystem::path & file);
+                void        parse(const bfs::path & file);
 
                 typedef std::pair<std::string,
                                   std::vector<std::string> > node_t;

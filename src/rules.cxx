@@ -25,62 +25,75 @@
 #include <map>
 #include <fstream>
 #include <algorithm>
-#include <boost/filesystem.hpp>
 
-#include "regex.h"
+#include <boost/filesystem.hpp>
+#include <boost/cregex.hpp>
 
 #include "debug.h"
 #include "utility.h"
 #include "exception.h"
 #include "rules.h"
 #include "file.h"
+#include "namespace.h"
 
 namespace fcp {
 
-        rules::rules(const std::vector<boost::filesystem::path> & files)
+        class parse_error : public fcp::exception {
+        public:
+                parse_error(const char *      message,
+                            const bfs::path & path,
+                            size_t            line) :
+                        fcp::exception((std::string(message)  +
+                                        std::string(" in ")   +
+                                        path.string()         +
+                                        std::string(":")      +
+                                        fcp::itos(line)).c_str()) { }
+        };
+
+        rules::rules(const std::vector<bfs::path> & files)
         {
-                if (regcomp(&re_.empty_,
-                            "^[ \t]*$",
-                            REG_NOSUB)) {
+                if (boost::regcomp(&re_.empty_,
+                                 "^[ \t]*$",
+                                   boost::REG_NOSUB)) {
                         throw fcp::exception("Cannot compile empty regexp");
                 }
 
-                if (regcomp(&re_.comment_,
+                if (boost::regcomp(&re_.comment_,
                             "^[ \t]*#.*$",
-                            REG_NOSUB)) {
+                            boost::REG_NOSUB)) {
                         throw fcp::exception("Cannot compile comment regexp");
                 }
 
-                if (regcomp(&re_.include_,
+                if (boost::regcomp(&re_.include_,
                             "^[ \t]*include[ \t]+\"(.*)\"[ \t]*$",
-                            REG_EXTENDED)) {
+                            boost::REG_EXTENDED)) {
                         throw fcp::exception("Cannot compile include regexp");
                 }
 
-                if (regcomp(&re_.header_,
+                if (boost::regcomp(&re_.header_,
                             "^(.*):(.*)[ \t]*$",
-                            REG_EXTENDED)) {
+                            boost::REG_EXTENDED)) {
                         throw fcp::exception("Cannot compile header regexp");
                 }
 
-                if (regcomp(&re_.body_,
+                if (boost::regcomp(&re_.body_,
                             "^\t(.*)$",
-                            REG_EXTENDED)) {
+                            boost::REG_EXTENDED)) {
                         throw fcp::exception("Cannot compile body regexp");
                 }
 
-                std::vector<boost::filesystem::path>::const_iterator iter;
+                std::vector<bfs::path>::const_iterator iter;
                 for (iter  = files.begin();
                      iter != files.end();
                      iter++) {
                         parse(*iter);
                 }
 
-                regfree(&re_.body_);
-                regfree(&re_.header_);
-                regfree(&re_.include_);
-                regfree(&re_.comment_);
-                regfree(&re_.empty_);
+                boost::regfree(&re_.body_);
+                boost::regfree(&re_.header_);
+                boost::regfree(&re_.include_);
+                boost::regfree(&re_.comment_);
+                boost::regfree(&re_.empty_);
 
                 std::map<std::string,
                         std::map<std::string,
@@ -98,14 +111,14 @@ namespace fcp {
                              out != in->second.end();
                              out++) {
                                 if (in->first == out->first) {
-                                        std::string e("Rules shortcircuit "
-                                                      "detected");
-                                        e = e +
-                                                std::string(" (") +
-                                                in->first         +
-                                                std::string(":")  +
-                                                out->first        +
-                                                std::string(")");
+                                        std::string e;
+
+                                        e = (std::string("Rules shortcircuit "
+                                                         "detected (")        +
+                                             in->first                        +
+                                             std::string(":")                 +
+                                             out->first                       +
+                                             std::string(")"));
                                         throw fcp::exception(e.c_str());
                                 }
 
@@ -163,9 +176,9 @@ namespace fcp {
                 return ret;
         }
 
-        void rules::parse(const boost::filesystem::path & file)
+        void rules::parse(const bfs::path & file)
         {
-                if (!boost::filesystem::exists(file)) {
+                if (!bfs::exists(file)) {
                         fcp::exception((std::string("File '") +
                                         file.string()         +
                                         std::string("' is missing")).c_str());
@@ -245,7 +258,7 @@ namespace fcp {
 
                                         P_DBG("  Got include is '%s'\n",
                                               include.c_str());
-                                        parse(boost::filesystem::path(include));
+                                        parse(bfs::path(include));
                                         continue;
                                 }
 
@@ -261,14 +274,9 @@ namespace fcp {
                                 if (regexec(&re_.header_,
                                             line.c_str(),
                                             3, re_.match_, 0) != 0) {
-                                        std::string e("Missing header "
-                                                      "in file "
-                                                      "'" + file.string() + "'"
-                                                      " at line "
-                                                      "'" +
-                                                      fcp::itos(number) +
-                                                      "'");
-                                        throw fcp::exception(e.c_str());
+                                        throw parse_error("Missing header",
+                                                          file,
+                                                          number);
                                 }
 
                                 P_DBG("  Got header\n");
@@ -279,28 +287,18 @@ namespace fcp {
                                                      re_.match_[1].rm_eo -
                                                      re_.match_[1].rm_so);
                                 if (tag_in == "") {
-                                        std::string e("Missing input tag "
-                                                      "in file "
-                                                      "'" + file.string() + "'"
-                                                      " at line "
-                                                      "'" +
-                                                      fcp::itos(number) +
-                                                      "'");
-                                        throw fcp::exception(e.c_str());
+                                        throw parse_error("Missing input tag",
+                                                          file,
+                                                          number);
                                 }
 
                                 tag_out = line.substr(re_.match_[2].rm_so,
                                                       re_.match_[2].rm_eo -
                                                       re_.match_[2].rm_so);
                                 if (tag_out == "") {
-                                        std::string e("Missing output tag "
-                                                      "in file "
-                                                      "'" + file.string() + "'"
-                                                      " at line "
-                                                      "'" +
-                                                      fcp::itos(number) +
-                                                      "'");
-                                        throw fcp::exception(e.c_str());
+                                        throw parse_error("Missing output tag",
+                                                          file,
+                                                          number);
                                 }
 
                                 BUG_ON(tag_in  == "");
@@ -325,31 +323,22 @@ namespace fcp {
 
                                 // Empty lines complete the body part
                                 if (line.size() == 0) {
-                                        if (commands.size() == 0) {
-                                                std::string e("Missing body "
-                                                              "in file "
-                                                              "'" + file.string() + "'"
-                                                              " at line "
-                                                              "'" +
-                                                              fcp::itos(number) +
-                                                              "'");
-                                                throw fcp::exception(e.c_str());                                        }
+                                        if (commands.size() != 0) {
+                                                state = S_RULE_COMPLETE;
+                                                continue;
+                                        }
 
-                                        state = S_RULE_COMPLETE;
-                                        continue;
+                                        throw parse_error("Missing body",
+                                                          file,
+                                                          number);
                                 }
 
                                 if (regexec(&re_.body_,
                                             line.c_str(),
                                             3, re_.match_, 0) != 0) {
-                                        std::string e("Wrong body "
-                                                      "in file "
-                                                      "'" + file.string() + "'"
-                                                      " at line "
-                                                      "'" +
-                                                      fcp::itos(number) +
-                                                      "' (missing tab ?)");
-                                        throw fcp::exception(e.c_str());
+                                        throw parse_error("Wrong body",
+                                                          file,
+                                                          number);
                                 }
 
                                 DUMP_REGMATCHES(re_.match_);
@@ -475,7 +464,7 @@ namespace fcp {
         rules::chain(const fcp::file &               input,
                      const fcp::file &               output,
                      int                             depth,
-                     const boost::filesystem::path & work) const
+                     const bfs::path & work) const
         {
                 BUG_ON(depth <= 0);
 
@@ -532,11 +521,11 @@ namespace fcp {
                 // on the 'work' path on all remaining nodes
 
                 // The starting point lives on the input path
-                boost::filesystem::path src(input.path());
+                bfs::path src(input.path());
 
                 std::vector<node_t>::size_type i;
                 for (i = 0; i < data.size(); i++) {
-                        boost::filesystem::path tmp;
+                        bfs::path tmp;
 
                         if (i == (data.size() - 1)) {
                                 // The ending point lives on the output path
@@ -544,12 +533,12 @@ namespace fcp {
                         } else {
                                 // All the others must live in the work path
                                 tmp = work /
-                                        (boost::filesystem::basename(src) +
+                                        (bfs::basename(src) +
                                          "." +
                                          data[i].first);
                         }
 
-                        boost::filesystem::path dst(tmp);
+                        bfs::path dst(tmp);
                         fcp::filter * f = new fcp::filter(src, dst,
                                                           data[i].second);
                         ret.push_back(f);
