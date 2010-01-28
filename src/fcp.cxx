@@ -292,19 +292,25 @@ void program(int argc, char * argv[])
 
                 TR_DBG("Parsing program options\n");
 
-                if (!handle_options(argc, argv,
-                                    dry_run,
-                                    force,
-                                    dump_rules,
-                                    transformations,
-                                    rules_default,
-                                    rules_user,
-                                    temp_dir,
-                                    max_depth,
-                                    separator)) {
-                        TR_DBG("Clean exit now ...\n");
-                        return;
+                try {
+                        if (!handle_options(argc, argv,
+                                            dry_run,
+                                            force,
+                                            dump_rules,
+                                            transformations,
+                                            rules_default,
+                                            rules_user,
+                                            temp_dir,
+                                            max_depth,
+                                            separator)) {
+                                TR_DBG("Clean exit now ...\n");
+                                return;
+                        }
+                } catch (bpo::error & e) {
+                        // Boost program_options error handler
+                        throw fcp::exception(e.what());
                 }
+
                 TR_DBG("Option parsing complete (must continue)\n");
 
                 // Insert default rules
