@@ -20,4 +20,4 @@
 
 #include "config.h"
 
-int trace_mask   = 0;
+int trace_mask = 0;
