@@ -32,14 +32,15 @@
 #include "chain.h"
 #include "filter.h"
 #include "file.h"
+#include "namespace.h"
 
 namespace fcp {
 
-        chain::chain(const std::string &             id,
-                     const fcp::file &               input,
-                     const fcp::file &               output,
-                     std::vector<fcp::filter *> &    filters,
-                     const boost::filesystem::path & work) :
+        chain::chain(const std::string &          id,
+                     const fcp::file &            input,
+                     const fcp::file &            output,
+                     std::vector<fcp::filter *> & filters,
+                     const bfs::path &            work) :
                 id_(id),
                 input_(input),
                 output_(output),
@@ -77,17 +78,17 @@ namespace fcp {
                 // modification time in order to avoid a rebuild
                 // if it is up-to-date
 
-                BUG_ON(!boost::filesystem::exists(input_.path()));
+                BUG_ON(!bfs::exists(input_.path()));
 
-                if (!boost::filesystem::exists(output_.path())) {
+                if (!bfs::exists(output_.path())) {
                         TR_DBG("Output file does not exists\n");
                         return false;
                 }
 
                 TR_DBG("Output file exists\n");
 
-                if (boost::filesystem::last_write_time(input_.path()) <=
-                    boost::filesystem::last_write_time(output_.path())) {
+                if (bfs::last_write_time(input_.path()) <=
+                    bfs::last_write_time(output_.path())) {
                         TR_DBG("Output file '%s' is up-to-date\n",
                                output_.name().c_str());
                         return true;
@@ -109,7 +110,7 @@ namespace fcp {
                         TR_DBG("Checking input file '%s' existance\n",
                                input_.name().c_str());
 
-                        if (!boost::filesystem::exists(input_.path())) {
+                        if (!bfs::exists(input_.path())) {
                                 std::string e("Missing input file "
                                               "for chain "
                                               "'" + input_.name() + "'");

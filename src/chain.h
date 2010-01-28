@@ -30,15 +30,16 @@
 
 #include "filter.h"
 #include "file.h"
+#include "namespace.h"
 
 namespace fcp {
         class chain : public boost::noncopyable {
         public:
-                chain(const std::string &             id,
-                      const fcp::file &               input,
-                      const fcp::file &               output,
-                      std::vector<fcp::filter *> &    filters,
-                      const boost::filesystem::path & work);
+                chain(const std::string &          id,
+                      const fcp::file &            input,
+                      const fcp::file &            output,
+                      std::vector<fcp::filter *> & filters,
+                      const bfs::path &            work);
 
                 const std::string & id()
                 { return id_; }
