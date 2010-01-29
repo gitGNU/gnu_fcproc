@@ -69,7 +69,6 @@ FAIL_TESTS +=					\
 	test-antiloop-03			\
 	test-multipath-01			\
 	test-cloptions-01			\
-	test-cloptions-02			\
 	test-cloptions-03			\
 	test-cloptions-05			\
 	test-cloptions-06			\
@@ -81,6 +80,7 @@ SUCCESS_TESTS +=				\
 	test-dump-01				\
 	test-debug				\
 	test-verbose				\
+	test-execution-forced-01		\
 	test-parse-02				\
 	test-parse-03				\
 	test-parse-04				\
@@ -450,17 +450,17 @@ test-cloptions-01: $(srcdir)/test-cloptions-01.in Makefile
 EXTRA_DIST += test-cloptions-01.in
 CLEANFILES += test-cloptions-01
 
-test-cloptions-02: $(srcdir)/test-cloptions-02.in Makefile
+test-execution-forced-01: $(srcdir)/test-execution-forced-01.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-cloptions-02.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-execution-forced-01.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-cloptions-02.in
-CLEANFILES += test-cloptions-02
+EXTRA_DIST += test-execution-forced-01.in
+CLEANFILES += test-execution-forced-01
 
 test-cloptions-03: $(srcdir)/test-cloptions-03.in Makefile
 	( rm -f $@ $@.tmp && \

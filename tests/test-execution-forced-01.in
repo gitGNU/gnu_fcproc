@@ -18,20 +18,26 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-required=""
+required="diff"
 
 . $testdir/defs || exit 1
 
 cat > ./rules <<EOF
 ext1:ext2
-	cat \$I >> \$O
+	echo "C" >> \$O
 EOF
 
 mkdir ./test.d || exit 1
-: >test.ext1   || exit 1
+echo "A" > test.ext1 || exit 1
 $sleep
-: >test.ext2   || exit 1
+echo "A" > test.ext2 || exit 1
 
-$FCP -r ./rules -m 100 -s : -t test.d test.ext1:test.ext2 || exit 1
+$FCP -r ./rules -m 100 -f -s : -t test.d test.ext1:test.ext2 || exit 1
 
-exit 0
+diff test.ext1 test.ext2 || {
+     rm -f test.ext1
+     rm -f test.ext2
+     exit 0
+}
+
+exit 1
