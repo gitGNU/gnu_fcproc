@@ -75,6 +75,7 @@ Makefile
 /tests/test-execution-04
 /tests/test-execution-05
 /tests/test-execution-06
+/tests/test-execution-forced-01
 /tests/test-hint-01
 /tests/test-multiline-01
 /tests/test-antiloop-01
@@ -87,7 +88,6 @@ Makefile
 /tests/test-tmpdir-01
 /tests/test-workdir-01
 /tests/test-cloptions-01
-/tests/test-cloptions-02
 /tests/test-cloptions-03
 /tests/test-cloptions-04
 /tests/test-cloptions-05
