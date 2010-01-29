@@ -52,7 +52,8 @@ do_subst_MAINTAINER =
 do_subst_SPECIFIC = \
   -e 's,[@]PERL[@],$(PERL),g' \
   -e 's,[@]SED[@],$(SED),g' \
-  -e 's,[@]GREP[@],$(GREP),g'
+  -e 's,[@]GREP[@],$(GREP),g' \
+  -e 's,[@]MODIFICATION_DELAY[@],$(MODIFICATION_DELAY),g'
 
 do_subst = $(SED) \
   $(do_subst_AUTOTOOLS) \

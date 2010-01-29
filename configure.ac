@@ -91,6 +91,17 @@ AX_PATH_MISSING([WGET],     [wget])
 AX_PATH_MISSING([DNT],      [dnt])
 AX_PATH_MISSING([SORT],     [sort])
 
+# The amount we should wait after modifying files depends on the platform.
+# On Windows '95, '98 and ME, files modifications have 2-seconds
+# granularity and can be up to 3 seconds in the future w.r.t. the
+# system clock.  When it is important to ensure one file is older
+# than another we wait at least 5 seconds between creations.
+case $build in
+  *-pc-msdosdjgpp) MODIFICATION_DELAY=5;;
+  *)               MODIFICATION_DELAY=2;;
+esac
+AC_SUBST([MODIFICATION_DELAY])
+
 #
 # Check for execinfo.h, backtrace() and backtrace_symbols(). They may be useful
 #

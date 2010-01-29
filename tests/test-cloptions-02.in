@@ -29,6 +29,7 @@ EOF
 
 mkdir ./test.d || exit 1
 : >test.ext1   || exit 1
+$sleep
 : >test.ext2   || exit 1
 
 $FCP -r ./rules -m 100 -s : -t test.d test.ext1:test.ext2 || exit 1
