@@ -65,15 +65,15 @@ FAIL_TESTS +=					\
 	test-transformation-01			\
 	test-execution-04			\
 	test-execution-05			\
+	test-execution-forced-02		\
 	test-samefile-01			\
 	test-antiloop-03			\
 	test-multipath-01			\
-	test-options-01			\
-	test-options-03			\
-	test-options-05			\
-	test-options-06			\
+	test-options-01				\
+	test-options-03				\
+	test-options-05				\
+	test-options-06				\
 	test-options-07
-
 
 SUCCESS_TESTS +=				\
 	test-success				\
@@ -438,18 +438,6 @@ test-workdir-01: $(srcdir)/test-workdir-01.in Makefile
 EXTRA_DIST += test-workdir-01.in
 CLEANFILES += test-workdir-01
 
-test-options-01: $(srcdir)/test-options-01.in Makefile
-	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-options-01.in > $@.tmp && \
-	  chmod +x $@.tmp && \
-	  chmod a-w $@.tmp && \
-	  mv -f $@.tmp $@ ) || { \
-		rm -f $@ $@.tmp ; \
-		exit 1 ; \
-	}
-EXTRA_DIST += test-options-01.in
-CLEANFILES += test-options-01
-
 test-execution-forced-01: $(srcdir)/test-execution-forced-01.in Makefile
 	( rm -f $@ $@.tmp && \
 	  $(do_subst) < $(srcdir)/test-execution-forced-01.in > $@.tmp && \
@@ -461,6 +449,30 @@ test-execution-forced-01: $(srcdir)/test-execution-forced-01.in Makefile
 	}
 EXTRA_DIST += test-execution-forced-01.in
 CLEANFILES += test-execution-forced-01
+
+test-execution-forced-02: $(srcdir)/test-execution-forced-02.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-execution-forced-02.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-execution-forced-02.in
+CLEANFILES += test-execution-forced-02
+
+test-options-01: $(srcdir)/test-options-01.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-options-01.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-options-01.in
+CLEANFILES += test-options-01
 
 test-options-03: $(srcdir)/test-options-03.in Makefile
 	( rm -f $@ $@.tmp && \
