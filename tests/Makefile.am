@@ -65,6 +65,7 @@ FAIL_TESTS +=					\
 	test-transformation-01			\
 	test-execution-04			\
 	test-execution-05			\
+	test-execution-forced-02		\
 	test-samefile-01			\
 	test-antiloop-03			\
 	test-multipath-01			\
@@ -461,6 +462,18 @@ test-execution-forced-01: $(srcdir)/test-execution-forced-01.in Makefile
 	}
 EXTRA_DIST += test-execution-forced-01.in
 CLEANFILES += test-execution-forced-01
+
+test-execution-forced-02: $(srcdir)/test-execution-forced-02.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-execution-forced-02.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-execution-forced-02.in
+CLEANFILES += test-execution-forced-02
 
 test-cloptions-03: $(srcdir)/test-cloptions-03.in Makefile
 	( rm -f $@ $@.tmp && \
