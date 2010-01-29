@@ -87,12 +87,12 @@ Makefile
 /tests/test-include-02
 /tests/test-tmpdir-01
 /tests/test-workdir-01
-/tests/test-cloptions-01
-/tests/test-cloptions-03
-/tests/test-cloptions-04
-/tests/test-cloptions-05
-/tests/test-cloptions-06
-/tests/test-cloptions-07
+/tests/test-options-01
+/tests/test-options-03
+/tests/test-options-04
+/tests/test-options-05
+/tests/test-options-06
+/tests/test-options-07
 
 /docs/man/fcp.1
 /docs/info/fcp.info

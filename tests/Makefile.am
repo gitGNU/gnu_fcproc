@@ -68,11 +68,11 @@ FAIL_TESTS +=					\
 	test-samefile-01			\
 	test-antiloop-03			\
 	test-multipath-01			\
-	test-cloptions-01			\
-	test-cloptions-03			\
-	test-cloptions-05			\
-	test-cloptions-06			\
-	test-cloptions-07
+	test-options-01			\
+	test-options-03			\
+	test-options-05			\
+	test-options-06			\
+	test-options-07
 
 
 SUCCESS_TESTS +=				\
@@ -97,7 +97,7 @@ SUCCESS_TESTS +=				\
 	test-hint-01				\
 	test-tmpdir-01				\
 	test-workdir-01				\
-	test-cloptions-04
+	test-options-04
 
 XFAIL_TESTS  = $(FAIL_TESTS)
 TESTS	     = $(FAIL_TESTS) $(SUCCESS_TESTS)
@@ -438,17 +438,17 @@ test-workdir-01: $(srcdir)/test-workdir-01.in Makefile
 EXTRA_DIST += test-workdir-01.in
 CLEANFILES += test-workdir-01
 
-test-cloptions-01: $(srcdir)/test-cloptions-01.in Makefile
+test-options-01: $(srcdir)/test-options-01.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-cloptions-01.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-options-01.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-cloptions-01.in
-CLEANFILES += test-cloptions-01
+EXTRA_DIST += test-options-01.in
+CLEANFILES += test-options-01
 
 test-execution-forced-01: $(srcdir)/test-execution-forced-01.in Makefile
 	( rm -f $@ $@.tmp && \
@@ -462,65 +462,65 @@ test-execution-forced-01: $(srcdir)/test-execution-forced-01.in Makefile
 EXTRA_DIST += test-execution-forced-01.in
 CLEANFILES += test-execution-forced-01
 
-test-cloptions-03: $(srcdir)/test-cloptions-03.in Makefile
+test-options-03: $(srcdir)/test-options-03.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-cloptions-03.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-options-03.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-cloptions-03.in
-CLEANFILES += test-cloptions-03
+EXTRA_DIST += test-options-03.in
+CLEANFILES += test-options-03
 
-test-cloptions-04: $(srcdir)/test-cloptions-04.in Makefile
+test-options-04: $(srcdir)/test-options-04.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-cloptions-04.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-options-04.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-cloptions-04.in
-CLEANFILES += test-cloptions-04
+EXTRA_DIST += test-options-04.in
+CLEANFILES += test-options-04
 
-test-cloptions-05: $(srcdir)/test-cloptions-05.in Makefile
+test-options-05: $(srcdir)/test-options-05.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-cloptions-05.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-options-05.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-cloptions-05.in
-CLEANFILES += test-cloptions-05
+EXTRA_DIST += test-options-05.in
+CLEANFILES += test-options-05
 
-test-cloptions-06: $(srcdir)/test-cloptions-06.in Makefile
+test-options-06: $(srcdir)/test-options-06.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-cloptions-06.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-options-06.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-cloptions-06.in
-CLEANFILES += test-cloptions-06
+EXTRA_DIST += test-options-06.in
+CLEANFILES += test-options-06
 
-test-cloptions-07: $(srcdir)/test-cloptions-07.in Makefile
+test-options-07: $(srcdir)/test-options-07.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-cloptions-07.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-options-07.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-cloptions-07.in
-CLEANFILES += test-cloptions-07
+EXTRA_DIST += test-options-07.in
+CLEANFILES += test-options-07
 
 clean-local:
 	rm -rf testSubDir-*
