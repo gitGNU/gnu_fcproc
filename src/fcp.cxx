@@ -326,7 +326,8 @@ void program(int argc, char * argv[])
         TR_VRB("Checking parameters ...\n");
 
         // Read rules file
-        fcp::rules rules(rules_paths);
+        bfs::path base_path(bfs::initial_path<bfs::path>());
+        fcp::rules rules(rules_paths, base_path);
         if (dump_rules) {
                 std::cout << rules;
                 return;

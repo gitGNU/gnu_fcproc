@@ -50,7 +50,8 @@ namespace fcp {
                                         fcp::itos(line)).c_str()) { }
         };
 
-        rules::rules(const std::vector<bfs::path> & files)
+        rules::rules(const std::vector<bfs::path> & files,
+                     bfs::path &                    base_path)
         {
                 if (boost::regcomp(&re_.empty_,
                                  "^[ \t]*$",
@@ -86,7 +87,7 @@ namespace fcp {
                 for (iter  = files.begin();
                      iter != files.end();
                      iter++) {
-                        parse(*iter);
+                        parse(*iter, base_path);
                 }
 
                 boost::regfree(&re_.body_);
@@ -176,23 +177,34 @@ namespace fcp {
                 return ret;
         }
 
-        void rules::parse(const bfs::path & file)
+        void rules::parse(const bfs::path & file,
+                          bfs::path &       base_path)
         {
-                if (!bfs::exists(file)) {
+                bfs::path file_path;
+
+                if (file.root_directory() != "") {
+                        file_path = file;
+                        base_path = bfs::path(file_path.parent_path());
+                } else {
+                        file_path = base_path / file;
+                        base_path = file_path.parent_path();
+                }
+
+                if (!bfs::exists(file_path)) {
                         fcp::exception((std::string("File '") +
-                                        file.string()         +
+                                        file_path.string()    +
                                         std::string("' is missing")).c_str());
                 }
 
                 // Always dump the file under examination
                 TR_DBG("Parsing rules from file '%s'\n",
-                       file.string().c_str());
+                       file_path.string().c_str());
 
                 std::ifstream stream;
-                stream.open(file.string().c_str());
+                stream.open(file_path.string().c_str());
                 if (!stream) {
-                        std::string e("Cannot open '" +
-                                      file.string()   +
+                        std::string e("Cannot open '"    +
+                                      file_path.string() +
                                       "' for reading");
                         throw fcp::exception(e.c_str());
                 }
@@ -258,7 +270,8 @@ namespace fcp {
 
                                         P_DBG("  Got include is '%s'\n",
                                               include.c_str());
-                                        parse(bfs::path(include));
+                                        parse(bfs::path(include),
+                                              base_path);
                                         continue;
                                 }
 

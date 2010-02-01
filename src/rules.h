@@ -48,7 +48,8 @@ namespace fcp {
                 friend std::ostream & ::operator<<(std::ostream & stream,
                                                    const rules &  rules);
 
-                rules(const std::vector<bfs::path> & files);
+                rules(const std::vector<bfs::path> & files,
+                      bfs::path &                    base_path);
 
                 // Builds a filters-chain
                 std::vector<fcp::filter *>
@@ -78,7 +79,8 @@ namespace fcp {
                         std::vector<std::string> > > rules_;
 
                 std::string readline(std::ifstream & stream);
-                void        parse(const bfs::path & file);
+                void        parse(const bfs::path & file,
+                                  bfs::path &       base_path);
 
                 typedef std::pair<std::string,
                                   std::vector<std::string> > node_t;
