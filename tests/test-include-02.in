@@ -22,38 +22,16 @@ required=""
 
 . $testdir/defs || exit 1
 
+mkdir test || exit 1
+
 cat > ./rules <<EOF
+include "./include-1"
 ext1:ext2
-	cat   \$I >  \$O
-	echo "12" >> \$O
-
-ext2:ext3
-	cat   \$I >  \$O
-	echo "23" >> \$O
-
-ext2:ext4
-	cat   \$I >  \$O
-	echo "24" >> \$O
-
-ext3:ext5
-	cat   \$I >  \$O
-	echo "35" >> \$O
-
-ext4:ext5
-	cat   \$I >  \$O
-	echo "45" >> \$O
-
-ext5:ext6
-	cat   \$I >  \$O
-	echo "56" >> \$O
+	cat \$I >> \$O
 EOF
 
-rm -f ./test-in.ext1 || exit 1
-touch ./test-in.ext1
-rm -f ./test-out.ext6 || exit 1
+rm -f ./include-1 || exit 1
 
-mkdir ./test_dir || exit 1
-
-$FCP -r ./rules -m 100 -s : -n -t ./test_dir test-in.ext1:test-out.ext6 || exit 1
+$FCP_NOFLAGS -r ./rules -b >test.out || exit 1
 
 exit 0

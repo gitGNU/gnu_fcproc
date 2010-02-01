@@ -62,6 +62,7 @@ SUCCESS_TESTS =
 FAIL_TESTS +=					\
 	test-fail				\
 	test-parse-01				\
+	test-include-02				\
 	test-transformation-01			\
 	test-execution-04			\
 	test-execution-05			\
@@ -69,6 +70,7 @@ FAIL_TESTS +=					\
 	test-samefile-01			\
 	test-antiloop-03			\
 	test-multipath-01			\
+	test-multipath-02			\
 	test-options-01				\
 	test-options-03				\
 	test-options-05				\
@@ -330,6 +332,18 @@ test-multipath-01: $(srcdir)/test-multipath-01.in Makefile
 EXTRA_DIST += test-multipath-01.in
 CLEANFILES += test-multipath-01
 
+test-multipath-02: $(srcdir)/test-multipath-02.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-multipath-02.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-multipath-02.in
+CLEANFILES += test-multipath-02
+
 test-multiline-01: $(srcdir)/test-multiline-01.in Makefile
 	( rm -f $@ $@.tmp && \
 	  $(do_subst) < $(srcdir)/test-multiline-01.in > $@.tmp && \
@@ -389,6 +403,18 @@ test-include-01: $(srcdir)/test-include-01.in Makefile
 	}
 EXTRA_DIST += test-include-01.in
 CLEANFILES += test-include-01
+
+test-include-02: $(srcdir)/test-include-02.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-include-02.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-include-02.in
+CLEANFILES += test-include-02
 
 test-rules-01: $(srcdir)/test-rules-01.in Makefile
 	( rm -f $@ $@.tmp && \

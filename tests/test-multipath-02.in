@@ -46,6 +46,10 @@ ext4:ext5
 ext5:ext6
 	cat   \$I >  \$O
 	echo "56" >> \$O
+
+ext1:ext6
+	cat   \$I >  \$O
+	echo "16" >> \$O
 EOF
 
 rm -f ./test-in.ext1 || exit 1
