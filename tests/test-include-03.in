@@ -22,8 +22,11 @@ required="diff"
 
 . $testdir/defs || exit 1
 
-mkdir -p includes/1   || exit 1
-mkdir -p includes/2/a || exit 1
+rm -r -f ./includes     || exit 1
+mkdir    ./includes     || exit 1
+mkdir    ./includes/1   || exit 1
+mkdir    ./includes/2   || exit 1
+mkdir    ./includes/2/a || exit 1
 
 ABS_DIR=`pwd`/includes
 
