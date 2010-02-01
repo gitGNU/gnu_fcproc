@@ -94,6 +94,7 @@ SUCCESS_TESTS +=				\
 	test-antiloop-01			\
 	test-antiloop-02			\
 	test-include-01				\
+	test-include-03				\
 	test-rules-01				\
 	test-rules-02				\
 	test-hint-01				\
@@ -415,6 +416,18 @@ test-include-02: $(srcdir)/test-include-02.in Makefile
 	}
 EXTRA_DIST += test-include-02.in
 CLEANFILES += test-include-02
+
+test-include-03: $(srcdir)/test-include-03.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-include-03.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-include-03.in
+CLEANFILES += test-include-03
 
 test-rules-01: $(srcdir)/test-rules-01.in Makefile
 	( rm -f $@ $@.tmp && \
