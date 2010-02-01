@@ -1,0 +1,8 @@
+/out/*
+/in/.sitetool
+/in/site.as
+/in/site.stamp
+/in/todos.sxml
+/in/todos.dump
+/in/news.sxml
+/in/news.dump
