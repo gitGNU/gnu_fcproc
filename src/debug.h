@@ -28,9 +28,9 @@
 
 #include "trace.h"
 
-extern void backtrace_dump(void);
+void backtrace_dump(void);
 
-#define ABORT() {                                               \
+#define BACKTRACE() {                                           \
         backtrace_dump();                                       \
         TR_CRT("\n");                                           \
         TR_CRT("Please report to <%s>\n", PACKAGE_BUGREPORT);   \
@@ -41,7 +41,7 @@ extern void backtrace_dump(void);
         TR_CRT("Bug hit in '%s' (%s:%d)\n",                     \
                __PRETTY_FUNCTION__, __FILE__, __LINE__);        \
         TR_CRT("\n");                                           \
-        ABORT();                                                \
+        BACKTRACE();                                            \
 }
 
 #define BUG_ON(X) {                                                     \
@@ -49,7 +49,7 @@ extern void backtrace_dump(void);
                 TR_CRT("Unsatisfied condition '%s' in '%s' (%s:%d)\n",  \
                        #X, __PRETTY_FUNCTION__, __FILE__, __LINE__);    \
                 TR_CRT("\n");                                           \
-                ABORT();                                                \
+                BACKTRACE();                                            \
         }                                                               \
 }
 

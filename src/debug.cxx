@@ -20,22 +20,26 @@
 
 #include "config.h"
 
-#include <cstdlib>
+//
+// XXX FIXME:
+//     This implementation is ugly (at least). We must move this functionality
+//     to a proper place while reimplementing in another way
+//
 
-// XXX FIXME: Ugly, move (and redefine) to a proper place
 #if defined(HAVE_EXECINFO_H) && \
         defined(HAVE_BACKTRACE) && \
         defined(HAVE_BACKTRACE_SYMBOLS)
 #define BACKTRACE_ENABLED
-#endif
-
-#ifdef  BACKTRACE_ENABLED
-#include <execinfo.h>
+#else
+#undef BACKTRACE_ENABLED
 #endif
 
 #include "trace.h"
 
 #ifdef  BACKTRACE_ENABLED
+#include <cstdlib>
+#include <execinfo.h>
+
 #define BACKTRACE_SIZE 1024
 
 static void * buffer[BACKTRACE_SIZE];
@@ -64,7 +68,5 @@ void backtrace_dump(void)
 }
 #else
 void backtrace_dump(void)
-{
-        TR_CRT("No backtrace available\n");
-}
+{ TR_CRT("No backtrace dump available\n"); }
 #endif
