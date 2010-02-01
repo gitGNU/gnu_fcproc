@@ -26,6 +26,7 @@
 #include <fstream>
 #include <algorithm>
 
+#include <boost/version.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/cregex.hpp>
 
@@ -184,10 +185,18 @@ namespace fcp {
 
                 if (file.root_directory() != "") {
                         file_path = file;
+#if (BOOST_VERSION >= 103600)
                         base_path = bfs::path(file_path.parent_path());
+#else
+                        base_path = bfs::path(file_path.branch_path());
+#endif
                 } else {
                         file_path = base_path / file;
+#if (BOOST_VERSION >= 103600)
                         base_path = file_path.parent_path();
+#else
+                        base_path = file_path.branch_path();
+#endif
                 }
 
                 if (!bfs::exists(file_path)) {
