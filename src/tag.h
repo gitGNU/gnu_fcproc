@@ -28,6 +28,7 @@
 #include "file.h"
 
 namespace fcp {
+
         class tag {
         public:
                 tag(const std::string & name,
@@ -46,6 +47,7 @@ namespace fcp {
                 fcp::file   input_;
                 fcp::file   output_;
         };
+
 }
 
 #endif

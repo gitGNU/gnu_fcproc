@@ -29,6 +29,7 @@
 #include "namespace.h"
 
 namespace fcp {
+
         class file {
         public:
                 file(const bfs::path &   path,
@@ -50,6 +51,7 @@ namespace fcp {
                 bfs::path   path_;
                 std::string type_;
         };
+
 }
 
 #endif

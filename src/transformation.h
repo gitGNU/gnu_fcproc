@@ -33,6 +33,7 @@
 #include "file.h"
 
 namespace fcp {
+
         class transformation : public boost::noncopyable {
         public:
                 transformation(const std::string & tag,
@@ -57,6 +58,7 @@ namespace fcp {
 
                 fcp::tag tag_;
         };
+
 }
 
 #endif

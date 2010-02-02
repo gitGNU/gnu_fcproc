@@ -33,6 +33,7 @@
 #include "namespace.h"
 
 namespace fcp {
+
         class chain : public boost::noncopyable {
         public:
                 chain(const std::string &          id,
@@ -57,6 +58,7 @@ namespace fcp {
 
                 bool is_spurious();
         };
+
 }
 
 #endif
