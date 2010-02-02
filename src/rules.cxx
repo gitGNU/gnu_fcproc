@@ -51,82 +51,86 @@ namespace fcp {
                                         fcp::itos(line)).c_str()) { }
         };
 
-        rules::rules(const std::vector<bfs::path> & files,
-                     bfs::path &                    base_path)
+        rules::~rules()
         {
-                if (boost::regcomp(&re_.empty_,
-                                 "^[ \t]*$",
-                                   boost::REG_NOSUB)) {
-                        throw fcp::exception("Cannot compile empty regexp");
-                }
-
-                if (boost::regcomp(&re_.comment_,
-                            "^[ \t]*#.*$",
-                            boost::REG_NOSUB)) {
-                        throw fcp::exception("Cannot compile comment regexp");
-                }
-
-                if (boost::regcomp(&re_.include_,
-                            "^[ \t]*include[ \t]+\"(.*)\"[ \t]*$",
-                            boost::REG_EXTENDED)) {
-                        throw fcp::exception("Cannot compile include regexp");
-                }
-
-                if (boost::regcomp(&re_.header_,
-                            "^(.*):(.*)[ \t]*$",
-                            boost::REG_EXTENDED)) {
-                        throw fcp::exception("Cannot compile header regexp");
-                }
-
-                if (boost::regcomp(&re_.body_,
-                            "^\t(.*)$",
-                            boost::REG_EXTENDED)) {
-                        throw fcp::exception("Cannot compile body regexp");
-                }
-
-                std::vector<bfs::path>::const_iterator iter;
-                for (iter  = files.begin();
-                     iter != files.end();
-                     iter++) {
-                        parse(*iter, base_path);
-                }
-
                 boost::regfree(&re_.body_);
                 boost::regfree(&re_.header_);
                 boost::regfree(&re_.include_);
                 boost::regfree(&re_.comment_);
                 boost::regfree(&re_.empty_);
+        }
 
+        rules::rules()
+        {
+                if (boost::regcomp(&re_.empty_,
+                                   "^[ \t]*$",
+                                   boost::REG_NOSUB)) {
+                        throw fcp::exception("Cannot compile empty regexp");
+                }
+
+                if (boost::regcomp(&re_.comment_,
+                                   "^[ \t]*#.*$",
+                                   boost::REG_NOSUB)) {
+                        throw fcp::exception("Cannot compile comment regexp");
+                }
+
+                if (boost::regcomp(&re_.include_,
+                                   "^[ \t]*include[ \t]+\"(.*)\"[ \t]*$",
+                                   boost::REG_EXTENDED)) {
+                        throw fcp::exception("Cannot compile include regexp");
+                }
+
+                if (boost::regcomp(&re_.header_,
+                                   "^(.*):(.*)[ \t]*$",
+                                   boost::REG_EXTENDED)) {
+                        throw fcp::exception("Cannot compile header regexp");
+                }
+
+                if (boost::regcomp(&re_.body_,
+                                   "^\t(.*)$",
+                                   boost::REG_EXTENDED)) {
+                        throw fcp::exception("Cannot compile body regexp");
+                }
+        }
+
+
+        void rules::parse_files(const std::vector<bfs::path> & files,
+                                const bfs::path &              base_path)
+        {
+
+                std::vector<bfs::path>::const_iterator iter;
+                for (iter  = files.begin();
+                     iter != files.end();
+                     iter++) {
+                        parse_file(*iter, base_path);
+                        if (!is_valid()) {
+                                throw fcp::exception("Invalid rules set");
+                        }
+                }
+        }
+
+        bool rules::is_valid()
+        {
                 std::map<std::string,
                         std::map<std::string,
                         std::vector<std::string> > >::const_iterator in;
                 std::map<std::string,
                         std::vector<std::string> >::const_iterator   out;
 
-                // Check for rule-loops
-                //TR_DBG("Rules (%d):\n", rules_.size());
                 for (in  = rules_.begin();
                      in != rules_.end();
                      in++) {
-                        //TR_DBG("  '%s' ->\n", in->first.c_str());
                         for (out  = in->second.begin();
                              out != in->second.end();
                              out++) {
                                 if (in->first == out->first) {
-                                        std::string e;
-
-                                        e = (std::string("Rules shortcircuit "
-                                                         "detected (")        +
-                                             in->first                        +
-                                             std::string(":")                 +
-                                             out->first                       +
-                                             std::string(")"));
-                                        throw fcp::exception(e.c_str());
+                                        // Rules short-circuit detected
+                                        return false;
                                 }
-
-                                //TR_DBG("    '%s'\n", out->first.c_str());
                         }
                 }
+
+                return true;
         }
 
         size_t rules::size()
@@ -178,25 +182,15 @@ namespace fcp {
                 return ret;
         }
 
-        void rules::parse(const bfs::path & file,
-                          bfs::path &       base_path)
+        void rules::parse_file(const bfs::path & file,
+                               const bfs::path & base)
         {
                 bfs::path file_path;
 
                 if (file.root_directory() != "") {
                         file_path = file;
-#if (BOOST_VERSION >= 103600)
-                        base_path = bfs::path(file_path.parent_path());
-#else
-                        base_path = bfs::path(file_path.branch_path());
-#endif
                 } else {
-                        file_path = base_path / file;
-#if (BOOST_VERSION >= 103600)
-                        base_path = file_path.parent_path();
-#else
-                        base_path = file_path.branch_path();
-#endif
+                        file_path = base / file;
                 }
 
                 if (!bfs::exists(file_path)) {
@@ -204,6 +198,14 @@ namespace fcp {
                                         file_path.string()    +
                                         std::string("' is missing")).c_str());
                 }
+
+                bfs::path base_path;
+
+#if (BOOST_VERSION >= 103600)
+                base_path = file_path.parent_path();
+#else
+                base_path = file_path.branch_path();
+#endif
 
                 // Always dump the file under examination
                 TR_DBG("Parsing rules from file '%s'\n",
@@ -279,8 +281,8 @@ namespace fcp {
 
                                         P_DBG("  Got include is '%s'\n",
                                               include.c_str());
-                                        parse(bfs::path(include),
-                                              base_path);
+                                        parse_file(bfs::path(include),
+                                                   base_path);
                                         continue;
                                 }
 

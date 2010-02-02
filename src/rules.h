@@ -43,13 +43,17 @@ namespace fcp {
 std::ostream & operator<<(std::ostream & stream, const fcp::rules & rules);
 
 namespace fcp {
+
         class rules : public boost::noncopyable {
         public:
                 friend std::ostream & ::operator<<(std::ostream & stream,
                                                    const rules &  rules);
 
-                rules(const std::vector<bfs::path> & files,
-                      bfs::path &                    base_path);
+                rules();
+                ~rules();
+
+                void parse_files(const std::vector<bfs::path> & files,
+                                 const bfs::path &              base_path);
 
                 // Builds a filters-chain
                 std::vector<fcp::filter *>
@@ -64,6 +68,11 @@ namespace fcp {
         protected:
 
         private:
+                // rules = (input-tag, output-tag, commands)
+                std::map<std::string,
+                        std::map<std::string,
+                        std::vector<std::string> > > rules_;
+
                 struct {
                         boost::regmatch_t match_[3];
                         boost::regex_t    empty_;
@@ -73,14 +82,10 @@ namespace fcp {
                         boost::regex_t    body_;
                 } re_;
 
-                // rules = (input-tag, output-tag, commands)
-                std::map<std::string,
-                        std::map<std::string,
-                        std::vector<std::string> > > rules_;
-
                 std::string readline(std::ifstream & stream);
-                void        parse(const bfs::path & file,
-                                  bfs::path &       base_path);
+                void        parse_file(const bfs::path & file,
+                                       const bfs::path & base);
+                bool        is_valid();
 
                 typedef std::pair<std::string,
                                   std::vector<std::string> > node_t;
@@ -110,6 +115,7 @@ namespace fcp {
                                  int                   mdepth,
                                  std::vector<node_t> & data) const;
         };
+
 }
 
 #endif
