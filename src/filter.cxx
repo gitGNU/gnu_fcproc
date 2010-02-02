@@ -20,9 +20,11 @@
 
 #include "config.h"
 
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <csignal>
+
 #include <boost/filesystem.hpp>
 
 #include "debug.h"
@@ -44,10 +46,10 @@ namespace fcp {
                 commands_.clear(); // useless
         }
 
-        const bfs::path & filter::input()
+        bfs::path filter::input()
         { return input_; }
 
-        const bfs::path & filter::output()
+        bfs::path filter::output()
         { return output_; }
 
         std::string filter::mktemp(const std::string & id,
@@ -81,54 +83,42 @@ namespace fcp {
                 //TR_DBG("Replacing variables\n")
                 std::vector<std::string>::iterator ic;
                 for (ic  = commands_.begin(); ic != commands_.end(); ic++) {
-                        std::string command;
-
-                        command = (*ic);
-
-                        command = fcp::replace(command,
-                                               "$I",
-                                               input_.string().c_str());
-                        command = fcp::replace(command,
-                                               "$O",
-                                               output_.string().c_str());
+                        std::string command = (*ic);
+                        command = fcp::replace(command,"$I",input_.string());
+                        command = fcp::replace(command,"$O",output_.string());
 
                         //TR_DBG("  Command '%s'\n", command.c_str());
 
                         // Ugly
                         for (;;) {
                                 //TR_DBG("    Replace in progress\n");
-                                std::string::size_type s;
-                                std::string::size_type e;
-                                std::string            v;
-
-                                s = 0;
-                                e = 0;
 
                                 //
                                 // XXX FIXME:
                                 //     Add environment variable substitution
                                 //
 
-                                s = command.find("$T");
+                                std::string::size_type s =
+                                        command.find("$T");
                                 //TR_DBG("      s = %d, e = %d\n", s, e);
                                 if ((s == 0) || (s == std::string::npos)) {
                                         break;
                                 }
 
-                                e = command.find_first_not_of("0123456789",
-                                                              s + 1);
+                                std::string::size_type e =
+                                        command.find_first_not_of("0123456789",
+                                                                  s + 1);
                                 //TR_DBG("      s = %d, e = %d\n", s, e);
                                 if ((e == 0) || (e == std::string::npos)) {
                                         break;
                                 }
 
-                                v = command.substr(s, e - s + 2);
+                                std::string v = command.substr(s, e - s + 2);
                                 BUG_ON(v.size() == 0);
 
                                 //TR_DBG("      v = '%s'\n", v.c_str());
 
-                                std::string t;
-                                t = temps[v];
+                                std::string t = temps[v];
                                 if (t == "") {
                                         t = mktemp(id,
                                                    work_dir.string().c_str(),

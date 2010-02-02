@@ -33,24 +33,25 @@
 #include "namespace.h"
 
 namespace fcp {
+
         class filter : public boost::noncopyable {
         public:
                 filter(const bfs::path &                input,
                        const bfs::path &                output,
                        const std::vector<std::string> & commands);
 
-                const bfs::path & input();
-                const bfs::path & output();
+                bfs::path input();
+                bfs::path output();
 
-                void             setup(const std::string & id,
-                                       const bfs::path &   tmp);
-                void             run(bool dry);
+                void      setup(const std::string & id,
+                                const bfs::path &   tmp);
+                void      run(bool dry);
 
         protected:
 
         private:
-                bfs::path  input_;
-                bfs::path  output_;
+                bfs::path                input_;
+                bfs::path                output_;
                 std::vector<std::string> templates_;
                 std::vector<std::string> commands_;
 
@@ -58,13 +59,8 @@ namespace fcp {
                 mktemp(const std::string & id,
                        const std::string & tmp_dir,
                        size_t              index);
-
-                std::vector<std::string>
-                commands(const std::string &  id,
-                         const bfs::path &    input,
-                         const bfs::path &    output,
-                         const std::string &  work_dir);
         };
+
 }
 
 #endif
