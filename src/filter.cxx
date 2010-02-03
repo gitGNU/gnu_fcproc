@@ -23,7 +23,6 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
-#include <csignal>
 
 #include <boost/filesystem.hpp>
 
@@ -33,6 +32,7 @@
 #include "filter.h"
 #include "utility.h"
 #include "namespace.h"
+#include "command.h"
 
 namespace fcp {
 
@@ -153,27 +153,9 @@ namespace fcp {
                                 continue;
                         }
 
-                        int ret;
+                        fcp::command c(*i);
 
-                        BUG_ON((*i).size() == 0);
-
-                        TR_DBG("  Calling system(\"%s\")\n", (*i).c_str());
-
-                        // XXX FIXME: Use gnulib system()
-                        ret = system((*i).c_str());
-                        if (ret == -1) {
-                                throw fcp::exception("Got fork() failure");
-                        }
-                        if (WIFSIGNALED(ret) &&
-                            (WTERMSIG(ret) == SIGINT ||
-                             WTERMSIG(ret) == SIGQUIT)) {
-                                throw fcp::exception("Interrupted");
-                        }
-                        if (WEXITSTATUS(ret) != 0) {
-                                std::string e("Got problems running "
-                                              "command '" + (*i) + "'");
-                                throw fcp::exception(e.c_str());
-                        }
+                        c.run(dry);
                 }
         }
 

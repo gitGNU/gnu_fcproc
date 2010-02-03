@@ -21,6 +21,8 @@
 #include "config.h"
 
 #include <string>
+#include <cstdlib>
+#include <csignal>
 
 #include "debug.h"
 #include "string.h"
@@ -40,6 +42,30 @@ namespace fcp {
         { }
 
         void command::run(bool dry)
-        { }
+        {
+                int ret;
+
+                TR_DBG("Calling system(\"%s\")\n", shell_.c_str());
+                if (dry) {
+                        return;
+                }
+
+                ret = system(shell_.c_str());
+                if (ret == -1) {
+                        throw fcp::exception("Got fork() failure");
+                }
+
+                if (WIFSIGNALED(ret) &&
+                    (WTERMSIG(ret) == SIGINT ||
+                     WTERMSIG(ret) == SIGQUIT)) {
+                        throw fcp::exception("Interrupted");
+                }
+
+                if (WEXITSTATUS(ret) != 0) {
+                        std::string e("Got problems running "
+                                      "command '" + shell_ + "'");
+                        throw fcp::exception(e.c_str());
+                }
+        }
 
 }
