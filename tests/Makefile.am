@@ -97,6 +97,7 @@ SUCCESS_TESTS +=				\
 	test-include-03				\
 	test-rules-01				\
 	test-rules-02				\
+	test-rules-03				\
 	test-hint-01				\
 	test-tmpdir-01				\
 	test-workdir-01				\
@@ -452,6 +453,18 @@ test-rules-02: $(srcdir)/test-rules-02.in Makefile
 	}
 EXTRA_DIST += test-rules-02.in
 CLEANFILES += test-rules-02
+
+test-rules-03: $(srcdir)/test-rules-03.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-rules-03.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-rules-03.in
+CLEANFILES += test-rules-03
 
 test-tmpdir-01: $(srcdir)/test-tmpdir-01.in Makefile
 	( rm -f $@ $@.tmp && \
