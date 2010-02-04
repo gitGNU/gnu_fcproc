@@ -132,6 +132,9 @@
 		<entry priority="high" start="1265303378">
 			Add support for trasformation where input matches output (ext:ext); think about a rule-in-the-middle for handling required temporary file
 		</entry>
+		<entry priority="veryhigh" start="1265304704">
+			Check the non-coexistence between two alike rules (no matter what their actions are)
+		</entry>
 	</entry>
 	<entry priority="high" start="1233736742">
 		Release 0.2.0
@@ -152,6 +155,9 @@
 		</entry>
 		<entry priority="low" start="1227122737">
 			Rearrange the build process in order to use EXEEXT (if needed)
+		</entry>
+		<entry priority="high" start="1265304459">
+			Add hints support in order to route the rules
 		</entry>
 	</entry>
 	<entry priority="medium" start="1233738977">
