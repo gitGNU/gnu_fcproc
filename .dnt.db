@@ -129,6 +129,9 @@
 				Reimplement old code using boost
 			</entry>
 		</entry>
+		<entry priority="high" start="1265303378">
+			Add support for trasformation where input matches output (ext:ext); think about a rule-in-the-middle for handling required temporary file
+		</entry>
 	</entry>
 	<entry priority="high" start="1233736742">
 		Release 0.2.0
