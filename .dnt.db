@@ -42,18 +42,6 @@
 				Done
 			</comment>
 		</entry>
-		<entry end="1240523577" priority="high" start="1240470789">
-			Add file type hinting
-			<comment>
-				Done
-			</comment>
-			<entry end="1240483206" priority="high" start="1240483188">
-				Add test for file type hinting
-				<comment>
-					Done
-				</comment>
-			</entry>
-		</entry>
 		<entry end="1244809690" priority="high" start="1240482005">
 			Create temporary directories in /tmp (or similar) instead of using home directory ...
 			<comment>
@@ -90,13 +78,10 @@
 				Done
 			</comment>
 		</entry>
-		<entry priority="veryhigh" start="1228259379">
-			Add multi-input/single-output handling
-		</entry>
 		<entry end="1256059410" priority="veryhigh" start="1252443493">
 			Rearrange the build-related code (macros, makefiles, bootstrap, gnulib-use)
 		</entry>
-		<entry priority="high" start="1244809732">
+		<entry end="1265306917" priority="high" start="1244809732">
 			Fix includes related code
 		</entry>
 		<entry end="1257344339" priority="high" start="1253138872">
@@ -120,26 +105,23 @@
 		<entry end="1255090997" priority="medium" start="1255090990">
 			Grouped as external some site files and added a target to fetch them
 		</entry>
-		<entry priority="high" start="1263987145">
+		<entry end="1265306771" priority="high" start="1263987145">
 			Substitute old code with boost
 			<entry end="1263987273" priority="high" start="1263987166">
 				Add configure related checks
 			</entry>
-			<entry priority="high" start="1263987184">
-				Reimplement old code using boost
-			</entry>
-		</entry>
-		<entry priority="high" start="1265303378">
-			Add support for trasformation where input matches output (ext:ext); think about a rule-in-the-middle for handling required temporary file
 		</entry>
 		<entry priority="veryhigh" start="1265304704">
 			Check the non-coexistence between two alike rules (no matter what their actions are)
+		</entry>
+		<entry priority="high" start="1265306643">
+			Fix multipath related tests
 		</entry>
 	</entry>
 	<entry priority="high" start="1233736742">
 		Release 0.2.0
 		<entry priority="veryhigh" start="1226585740">
-			Add Stream class in order to wrap the std::stream, obtaining a multithread logging mechanism
+			Add a stream class in order to wrap the std::stream, obtaining a multithread logging mechanism
 			<entry priority="low" start="1226590640">
 				Replace all those ugly TR_XXX macros
 			</entry>
@@ -158,6 +140,24 @@
 		</entry>
 		<entry priority="high" start="1265304459">
 			Add hints support in order to route the rules
+		</entry>
+		<entry priority="veryhigh" start="1228259379">
+			Add multi-input/single-output handling
+		</entry>
+		<entry end="1240523577" priority="high" start="1240470789">
+			Add file type hinting
+			<comment>
+				Done
+			</comment>
+			<entry end="1240483206" priority="high" start="1240483188">
+				Add test for file type hinting
+				<comment>
+					Done
+				</comment>
+			</entry>
+		</entry>
+		<entry priority="high" start="1265303378">
+			Add support for trasformation where input matches output (ext:ext); think about a rule-in-the-middle for handling required temporary file
 		</entry>
 	</entry>
 	<entry priority="medium" start="1233738977">
