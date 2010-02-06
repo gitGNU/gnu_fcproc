@@ -79,6 +79,7 @@ test -n "$DEBUG"       && FLAGS="$FLAGS --debug"
 #       default rules, using the -q flag
 test -z "$FCP"         && FCP="@abs_top_builddir@/src/fcp -q $FLAGS"
 test -z "$FCP_NOFLAGS" && FCP_NOFLAGS="@abs_top_builddir@/src/fcp -q"
+test -z "$FCP2DOT"     && FCP2DOT="@abs_top_builddir@/src/fcp2dot"
 
 PATH=`pwd`:$PATH
 echo $PATH
