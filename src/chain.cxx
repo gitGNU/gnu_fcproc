@@ -103,10 +103,10 @@ namespace fcp {
         {
                 TR_DBG("Running chain '%s'\n", id_.c_str());
 
-                TR_DBG("Checking input file '%s' existance\n",
-                       input_.name().c_str());
-
                 if (!dry) {
+                        TR_DBG("Checking input file '%s'\n",
+                               input_.name().c_str());
+
                         if (!bfs::exists(input_.path())) {
                                 std::string e("Missing input file "
                                               "for chain "
