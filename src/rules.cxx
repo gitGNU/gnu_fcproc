@@ -48,7 +48,7 @@ namespace fcp {
                                         std::string(" in ")   +
                                         path.string()         +
                                         std::string(":")      +
-                                        fcp::itos(line)).c_str()) { }
+                                        fcp::string::itos(line)).c_str()) { }
         };
 
         rules::~rules()
@@ -171,7 +171,7 @@ namespace fcp {
                         std::string tmp;
 
                         std::getline(stream, tmp);
-                        tmp = fcp::trim_right(tmp, " \t");
+                        tmp = fcp::string::trim_right(tmp, " \t");
                         if (tmp.find_last_of("\\") != tmp.size()) {
                                 stop = true;
                         }

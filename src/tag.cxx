@@ -55,7 +55,7 @@ namespace fcp {
                         // Slice it in (name, type)
                         std::string name;
                         std::string type;
-                        fcp::slice(tmp, '%', name, type);
+                        fcp::string::slice(tmp, '%', name, type);
                         TR_DBG("  Subpart name '%s'\n", name.c_str());
                         TR_DBG("  Subpart type '%s'\n", type.c_str());
 
@@ -78,7 +78,7 @@ namespace fcp {
                         // Slice it in (name, type)
                         std::string name;
                         std::string type;
-                        fcp::slice(tmp, '%', name, type);
+                        fcp::string::slice(tmp, '%', name, type);
                         TR_DBG("  Subpart name '%s'\n", name.c_str());
                         TR_DBG("  Subpart type '%s'\n", type.c_str());
 

@@ -282,7 +282,7 @@ void program(int argc, char * argv[])
                 std::vector<bfs::path> rules_user;
 
                 // Push default rules
-                rules_default.push_back(fcp::getenv("HOME") +
+                rules_default.push_back(fcp::environment::get("HOME") +
                                         std::string("/") +      \
                                         std::string(".") +      \
                                         std::string(PACKAGE_TARNAME) +  \
@@ -356,7 +356,7 @@ void program(int argc, char * argv[])
                                      std::string("/") +
                                      (std::string(PROGRAM_NAME) +
                                       "-" +
-                                      fcp::itos(getpid())));
+                                      fcp::string::itos(getpid())));
 
                 if (bfs::exists(work_dir)) {
                         // Remove our working directory left from previous run

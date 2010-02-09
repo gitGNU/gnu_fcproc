@@ -57,7 +57,7 @@ namespace fcp {
                                    size_t              index)
         {
                 return dir + std::string("/") + id + std::string("-") +
-                        fcp::itos(index);
+                        fcp::string::itos(index);
         }
 
         // XXX FIXME: Remove id parameter ASAP
@@ -84,8 +84,10 @@ namespace fcp {
                 std::vector<std::string>::iterator ic;
                 for (ic  = commands_.begin(); ic != commands_.end(); ic++) {
                         std::string command = (*ic);
-                        command = fcp::replace(command,"$I",input_.string());
-                        command = fcp::replace(command,"$O",output_.string());
+                        command = fcp::string::replace(command,
+                                                       "$I", input_.string());
+                        command = fcp::string::replace(command,
+                                                       "$O", output_.string());
 
                         //TR_DBG("  Command '%s'\n", command.c_str());
 
@@ -127,7 +129,7 @@ namespace fcp {
                                         temps[v] = t;
                                 }
 
-                                command = fcp::replace(command, v, t);
+                                command = fcp::string::replace(command, v, t);
 
                                 //TR_DBG("    Replaced '%s' with '%s'\n",
                                 //       v.c_str(), t.c_str());
