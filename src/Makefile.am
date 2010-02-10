@@ -29,22 +29,7 @@ EXTRA_DIST =
 
 bin_PROGRAMS =					\
 	fcp
-
-bin_SCRIPTS =					\
-	fcp2dot
-
-#CLEANFILES = $(bin_SCRIPTS)
-#
-#fcp2dot: $(srcdir)/fcp2dot.in Makefile
-#	( rm -f $@ $@.tmp && \
-#	  $(do_subst) < $(srcdir)/fcp2dot.in > $@.tmp && \
-#	  chmod +x $@.tmp && \
-#	  chmod a-w $@.tmp && \
-#	  mv -f $@.tmp $@ ) || { \
-#		rm -f $@ $@.tmp ; \
-#		exit 1 ; \
-#	}
-EXTRA_DIST += fcp2dot.in
+bin_SCRIPTS  =
 
 COMMON_CPPFLAGS =				\
 	$(BOOST_CPPFLAGS)
