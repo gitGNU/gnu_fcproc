@@ -99,7 +99,6 @@ SUCCESS_TESTS +=				\
 	test-rules-01				\
 	test-rules-02				\
 	test-rules-03				\
-	test-fcp2dot-01				\
 	test-hint-01				\
 	test-tmpdir-01				\
 	test-workdir-01				\
@@ -311,18 +310,6 @@ test-execution-06: $(srcdir)/test-execution-06.in Makefile
 	}
 EXTRA_DIST += test-execution-06.in
 CLEANFILES += test-execution-06
-
-test-fcp2dot-01: $(srcdir)/test-fcp2dot-01.in Makefile
-	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-fcp2dot-01.in > $@.tmp && \
-	  chmod +x $@.tmp && \
-	  chmod a-w $@.tmp && \
-	  mv -f $@.tmp $@ ) || { \
-		rm -f $@ $@.tmp ; \
-		exit 1 ; \
-	}
-EXTRA_DIST += test-fcp2dot-01.in
-CLEANFILES += test-fcp2dot-01
 
 test-hint-01: $(srcdir)/test-hint-01.in Makefile
 	( rm -f $@ $@.tmp && \
