@@ -160,9 +160,9 @@
 			Add support for trasformation where input matches output (ext:ext); think about a rule-in-the-middle for handling required temporary file
 		</entry>
 		<entry priority="high" start="1265801702">
-			Add library to parse rules file
-			<entry priority="medium" start="1265801812">
-				Rewrite fcp2dot in C++
+			Rewrite fcp2dot using C++
+			<entry end="1265900876" priority="medium" start="1265801812">
+				Add a library containing the rule parsing code
 			</entry>
 		</entry>
 	</entry>
