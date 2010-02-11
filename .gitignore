@@ -1,8 +1,6 @@
 *~
 .deps
 .dirstamp
-*.o
-*.a
 Makefile.in
 Makefile
 
@@ -23,22 +21,4 @@ Makefile
 /config.log
 /config.status
 
-/tools/autotools/link-warning.h
-
-/tools/maint/fetch
-/tools/maint/wordwrap-detect
-/tools/maint/whitespace-detect
-/tools/maint/gitlog-to-committers
-/tools/maint/gittag-to-date
 /.releases
-/tools/maint/releases-to-news
-/tools/maint/guards-check
-
-/tools/autotools/install-sh
-/tools/autotools/missing
-/tools/autotools/mdate-sh
-/tools/autotools/texinfo.tex
-/tools/autotools/compile
-/tools/autotools/depcomp
-/tools/autotools/config.guess
-/tools/autotools/config.sub
