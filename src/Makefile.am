@@ -34,6 +34,15 @@ bin_SCRIPTS  =
 COMMON_CPPFLAGS =				\
 	$(BOOST_CPPFLAGS)
 
+noinst_LIBRARIES =				\
+	libparser.a
+
+libparser_a_SOURCES = 				\
+	parser.h				\
+	parser.cxx
+libparser_a_CPPFLAGS =				\
+	$(COMMON_CPPFLAGS)
+
 fcp_SOURCES =					\
 	fcp.cxx					\
 	namespace.h				\
@@ -67,7 +76,8 @@ fcp_LDADD =					\
         $(BOOST_THREAD_LIB)			\
         $(BOOST_FILESYSTEM_LIB)			\
         $(BOOST_REGEX_LIB)			\
-        $(BOOST_PROGRAM_OPTIONS_LIB)
+        $(BOOST_PROGRAM_OPTIONS_LIB)		\
+	libparser.a
 
 ##
 ## Maintainer related targets

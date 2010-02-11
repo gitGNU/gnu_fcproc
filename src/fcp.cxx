@@ -34,6 +34,7 @@
 #include "utility.h"
 #include "exception.h"
 #include "rules.h"
+#include "parser.h"
 #include "transformation.h"
 #include "namespace.h"
 
@@ -265,6 +266,14 @@ bool handle_options(int                        argc,
         return true;
 }
 
+// XXX FIXME: This is a shame, please remove ASAP
+fcp::rules  rules;
+
+void feeder(const std::string &              i,
+            const std::string &              o,
+            const std::vector<std::string> & c)
+{ rules.add(i, o, c); }
+
 void program(int argc, char * argv[])
 {
         bool                     dry_run          = false;
@@ -326,9 +335,30 @@ void program(int argc, char * argv[])
         TR_VRB("Checking parameters ...\n");
 
         // Read rules files first (dump operation requires this step)
-        fcp::rules rules;
+        fcp::parser parser;
 
-        rules.parse_files(rules_paths, bfs::initial_path<bfs::path>());
+        {
+                std::vector<bfs::path>::const_iterator iter;
+
+                for (iter  = rules_paths.begin();
+                     iter != rules_paths.end();
+                     iter++) {
+                        parser.parse(*iter,
+                                     bfs::initial_path<bfs::path>(),
+                                     feeder);
+                        if (!rules.is_valid()) {
+                                std::string e =
+                                        std::string("Invalid rules set "
+                                                    "detected while "
+                                                    "parsing ") +
+                                        (*iter).string();
+
+                                throw fcp::exception(e.c_str());
+                        }
+                }
+        }
+
+        BUG_ON(!rules.is_valid());
 
         // Dump rules upon request
         if (dump_rules) {

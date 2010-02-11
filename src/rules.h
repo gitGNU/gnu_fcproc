@@ -52,8 +52,9 @@ namespace fcp {
                 rules();
                 ~rules();
 
-                void parse_files(const std::vector<bfs::path> & files,
-                                 const bfs::path &              base_path);
+                void add(const std::string &              tag_in,
+                         const std::string &              tag_out,
+                         const std::vector<std::string> & commands);
 
                 // Builds a filters-chain
                 std::vector<fcp::filter *>
@@ -64,6 +65,7 @@ namespace fcp {
 
                 size_t size();
                 bool   empty();
+                bool   is_valid();
 
         protected:
 
@@ -72,20 +74,6 @@ namespace fcp {
                 std::map<std::string,
                         std::map<std::string,
                         std::vector<std::string> > > rules_;
-
-                struct {
-                        boost::regmatch_t match_[3];
-                        boost::regex_t    empty_;
-                        boost::regex_t    comment_;
-                        boost::regex_t    include_;
-                        boost::regex_t    header_;
-                        boost::regex_t    body_;
-                } re_;
-
-                std::string readline(std::ifstream & stream);
-                void        parse_file(const bfs::path & file,
-                                       const bfs::path & base);
-                bool        is_valid();
 
                 typedef std::pair<std::string,
                                   std::vector<std::string> > node_t;
