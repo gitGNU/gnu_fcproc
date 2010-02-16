@@ -159,7 +159,6 @@ bool handle_options(int                        argc,
 
         // Main options
         bpo::options_description main_options("Options");
-
         main_options.add_options()
                 ("config,c",
                  bpo::value<std::string>(),
