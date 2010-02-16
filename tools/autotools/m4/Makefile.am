@@ -32,22 +32,22 @@ EXTERNAL =						\
 	$(URL_AA)/ax_missing_prog.m4			\
 	$(URL_AA)/ax_path_missing.m4			\
         $(URL_AA)/ax_cxxcpp_check_flag.m4		\
-	$(URB_AA)/ax_boost_asio.m4			\
-	$(URB_AA)/ax_boost_base.m4			\
-	$(URB_AA)/ax_boost_date_time.m4			\
-	$(URB_AA)/ax_boost_filesystem.m4		\
-	$(URB_AA)/ax_boost_iostreams.m4			\
-	$(URB_AA)/ax_boost_program_options.m4		\
-	$(URB_AA)/ax_boost_python.m4			\
-	$(URB_AA)/ax_boost_regex.m4			\
-	$(URB_AA)/ax_boost_serialization.m4		\
-	$(URB_AA)/ax_boost_signals.m4			\
-	$(URB_AA)/ax_boost_system.m4			\
-	$(URB_AA)/ax_boost_test_exec_monitor.m4		\
-	$(URB_AA)/ax_boost_thread.m4			\
-	$(URB_AA)/ax_boost_unit_test_framework.m4	\
-	$(URB_AA)/ax_boost_wave.m4			\
-	$(URB_AA)/ax_boost_wserialization.m4
+	$(URL_AA)/ax_boost_asio.m4			\
+	$(URL_AA)/ax_boost_base.m4			\
+	$(URL_AA)/ax_boost_date_time.m4			\
+	$(URL_AA)/ax_boost_filesystem.m4		\
+	$(URL_AA)/ax_boost_iostreams.m4			\
+	$(URL_AA)/ax_boost_program_options.m4		\
+	$(URL_AA)/ax_boost_python.m4			\
+	$(URL_AA)/ax_boost_regex.m4			\
+	$(URL_AA)/ax_boost_serialization.m4		\
+	$(URL_AA)/ax_boost_signals.m4			\
+	$(URL_AA)/ax_boost_system.m4			\
+	$(URL_AA)/ax_boost_test_exec_monitor.m4		\
+	$(URL_AA)/ax_boost_thread.m4			\
+	$(URL_AA)/ax_boost_unit_test_framework.m4	\
+	$(URL_AA)/ax_boost_wave.m4			\
+	$(URL_AA)/ax_boost_wserialization.m4
 
 INTERNAL =					\
 	gnulib-cache.m4
