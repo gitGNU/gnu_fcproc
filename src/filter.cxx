@@ -81,8 +81,10 @@ namespace fcp {
                 count = 0;
 
                 //TR_DBG("Replacing variables\n")
-                std::vector<std::string>::iterator ic;
-                for (ic  = commands_.begin(); ic != commands_.end(); ic++) {
+                for (std::vector<std::string>::iterator ic =
+                             commands_.begin();
+                     ic != commands_.end();
+                     ic++) {
                         std::string command = (*ic);
                         command = fcp::string::replace(command,
                                                        "$I", input_.string());
@@ -148,8 +150,10 @@ namespace fcp {
                 // XXX FIXME: Place a more specific trace ...
                 TR_DBG("Running filter commands\n");
 
-                std::vector<std::string>::iterator i;
-                for (i  = commands_.begin(); i != commands_.end(); i++) {
+                for (std::vector<std::string>::iterator i =
+                             commands_.begin();
+                     i != commands_.end();
+                     i++) {
                         if (dry) {
                                 TR_VRB("%s\n", (*i).c_str());
                                 continue;

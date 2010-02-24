@@ -336,24 +336,21 @@ void program(int argc, char * argv[])
         // Read rules files first (dump operation requires this step)
         fcp::parser parser;
 
-        {
-                std::vector<bfs::path>::const_iterator iter;
+        for (std::vector<bfs::path>::const_iterator iter =
+                     rules_paths.begin();
+             iter != rules_paths.end();
+             iter++) {
+                parser.parse(*iter,
+                             bfs::initial_path<bfs::path>(),
+                             feeder);
+                if (!rules.is_valid()) {
+                        std::string e =
+                                std::string("Invalid rules set "
+                                            "detected while "
+                                            "parsing ") +
+                                (*iter).string();
 
-                for (iter  = rules_paths.begin();
-                     iter != rules_paths.end();
-                     iter++) {
-                        parser.parse(*iter,
-                                     bfs::initial_path<bfs::path>(),
-                                     feeder);
-                        if (!rules.is_valid()) {
-                                std::string e =
-                                        std::string("Invalid rules set "
-                                                    "detected while "
-                                                    "parsing ") +
-                                        (*iter).string();
-
-                                throw fcp::exception(e.c_str());
-                        }
+                        throw fcp::exception(e.c_str());
                 }
         }
 
