@@ -128,9 +128,12 @@ namespace fcp {
                                 data.push_back(t);
 
                                 if (found_path) {
-                                        TR_DBG("Multipath is not allowed\n");
-                                        return false;
+                                        std::string e("Multipaths are not "
+                                                      "allowed");
+                                        throw fcp::exception(e.c_str());
                                 }
+
+                                antiloop.remove(tag_in, tag_out);
                                 return true;
                         }
 
@@ -146,8 +149,9 @@ namespace fcp {
                                 data.push_back(t);
 
                                 if (found_path) {
-                                        TR_DBG("Multipath is not allowed\n");
-                                        return false;
+                                        std::string e("Multipaths are not "
+                                                      "allowed");
+                                        throw fcp::exception(e.c_str());
                                 }
                                 found_path = true;
                         } else {
@@ -155,6 +159,9 @@ namespace fcp {
                         }
                 }
 
+                if (found_path) {
+                        antiloop.remove(tag_in, tag_out);
+                }
                 return found_path;
         }
 
