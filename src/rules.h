@@ -95,6 +95,12 @@ namespace fcp {
                                 set_.insert(t);
                                 return true;
                         }
+
+                        bool remove(const std::string & in,
+                                    const std::string & out) {
+                                std::pair<std::string, std::string> t(in,out);
+                                set_.erase(t);
+                        }
                 };
 
                 bool chain_nodes(Antiloop &            antiloop,
