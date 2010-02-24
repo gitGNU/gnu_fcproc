@@ -113,6 +113,7 @@ namespace fcp {
                         return false;
                 }
 
+                bool found_path = false;
                 std::map<std::string,
                         std::vector<std::string> >::const_iterator j;
                 for (j = i->second.begin(); j != i->second.end(); j++) {
@@ -126,6 +127,10 @@ namespace fcp {
                                        i->first.c_str(), j->first.c_str());
                                 data.push_back(t);
 
+                                if (found_path) {
+                                        TR_DBG("Multipath is not allowed\n");
+                                        return false;
+                                }
                                 return true;
                         }
 
@@ -140,11 +145,17 @@ namespace fcp {
                                        i->first.c_str(), j->first.c_str());
                                 data.push_back(t);
 
-                                return true;
+                                if (found_path) {
+                                        TR_DBG("Multipath is not allowed\n");
+                                        return false;
+                                }
+                                found_path = true;
+                        } else {
+                                return false;
                         }
                 }
 
-                return false;
+                return found_path;
         }
 
         std::vector<fcp::filter *>
