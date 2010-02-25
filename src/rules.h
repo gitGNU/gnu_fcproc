@@ -103,11 +103,19 @@ namespace fcp {
                         }
                 };
 
+                typedef enum {
+                        END_REACH,
+                        END_FOUND,
+                        END_NOT_FOUND,
+                        ERROR
+                } chain_nodes_state_t;
+
                 bool chain_nodes(Antiloop &            antiloop,
                                  const std::string &   tag_in,
                                  const std::string &   tag_out,
                                  int                   mdepth,
-                                 std::vector<node_t> & data) const;
+                                 std::vector<node_t> & data,
+                                 chain_nodes_state_t & state) const;
         };
 
 }

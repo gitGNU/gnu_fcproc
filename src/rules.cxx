@@ -81,7 +81,8 @@ namespace fcp {
                                 const std::string &   tag_in,
                                 const std::string &   tag_out,
                                 int                   depth,
-                                std::vector<node_t> & data) const
+                                std::vector<node_t> & data,
+                                chain_nodes_state_t & state) const
         {
                 BUG_ON(depth < 0); // Allow depth == 1
 
@@ -91,6 +92,7 @@ namespace fcp {
                 depth--;
                 if (depth < 0) {
                         TR_DBG("Max chain size exceeded\n");
+                        state = ERROR;
                         return false;
                 }
 
@@ -101,6 +103,7 @@ namespace fcp {
                 if (i == rules_.end()) {
                         TR_DBG("No rules available for '%s' -> '%s'\n",
                                tag_in.c_str(), tag_out.c_str());
+                        state = ERROR;
                         return false;
                 }
 
@@ -110,13 +113,14 @@ namespace fcp {
                 if (!antiloop.insert(tag_in, tag_out)) {
                         TR_DBG("Got a loop while walking '%s' -> '%s'\n",
                                tag_in.c_str(), tag_out.c_str());
+                        state = ERROR;
                         return false;
                 }
 
-                bool found_path = false;
                 std::map<std::string,
                         std::vector<std::string> >::const_iterator j;
                 for (j = i->second.begin(); j != i->second.end(); j++) {
+                        chain_nodes_state_t current_state = END_NOT_FOUND;
 
                         // We have got a node
                         node_t t(j->first, j->second);
@@ -125,44 +129,90 @@ namespace fcp {
                                 // This node is the last node in the chain
                                 TR_DBG("Got chain end ('%s' -> '%s')\n",
                                        i->first.c_str(), j->first.c_str());
-                                data.push_back(t);
 
-                                if (found_path) {
-                                        std::string e("Multipaths are not "
-                                                      "allowed");
-                                        throw fcp::exception(e.c_str());
+                                current_state = END_REACH;
+                        } else {
+                                // This is not the last one, let us
+                                // recurse in order to find our way
+                                // out
+                                if (chain_nodes(antiloop,
+                                                j->first,
+                                                tag_out,
+                                                depth,
+                                                data,
+                                                state)) {
+                                        TR_DBG("Got chain node "
+                                               "('%s' -> '%s')\n",
+                                               i->first.c_str(),
+                                               j->first.c_str());
+
+                                        current_state = END_FOUND;
                                 }
-
-                                antiloop.remove(tag_in, tag_out);
-                                return true;
                         }
 
-                        // This is not the last one, let us recurse in order
-                        // to find our way out
-                        if (chain_nodes(antiloop,
-                                        j->first,
-                                        tag_out,
-                                        depth,
-                                        data)) {
-                                TR_DBG("Got chain node ('%s' -> '%s')\n",
-                                       i->first.c_str(), j->first.c_str());
-                                data.push_back(t);
-
-                                if (found_path) {
-                                        std::string e("Multipaths are not "
-                                                      "allowed");
-                                        throw fcp::exception(e.c_str());
-                                }
-                                found_path = true;
-                        } else {
+                        if (state == ERROR) {
                                 return false;
                         }
+
+                        if (current_state == END_REACH) {
+
+                                if (state == END_FOUND) {
+                                        // Only here we could detect a
+                                        // if a previous path was
+                                        // really found
+
+                                        TR_DBG("Multipath is not allowed\n");
+
+                                        state = ERROR;
+                                        return false;
+                                } else if (state == END_NOT_FOUND) {
+                                        // No previous path, so this
+                                        // is the one
+
+                                        data.push_back(t);
+
+                                        state = END_FOUND;
+                                        continue;
+                                } else {
+                                        BUG();
+                                }
+                        } else if (current_state == END_FOUND) {
+                                // This state represent the recursion
+                                // unrolling phases when a path has
+                                // been found
+
+                                data.push_back(t);
+
+                                if (state == END_FOUND) {
+                                        continue;
+                                } else if (state == END_NOT_FOUND) {
+                                        state = END_FOUND;
+                                        continue;
+                                } else {
+                                        BUG();
+                                }
+                        } else if (current_state == END_NOT_FOUND) {
+
+                                // This state represent the recursion
+                                // unrolling phases when a path has
+                                // not been found, simply move forth
+                                // and try another path
+
+                                if ((state != END_FOUND) &&
+                                    (state != END_NOT_FOUND)) {
+                                        BUG();
+                                }
+                                continue;
+                        } else {
+                                BUG();
+                        }
                 }
 
-                if (found_path) {
-                        antiloop.remove(tag_in, tag_out);
-                }
-                return found_path;
+                // We should clean up the antiloop to avoiding
+                // multiple match amongst different paths
+                antiloop.remove(tag_in, tag_out);
+
+                return ((state == END_NOT_FOUND) ? false : true);
         }
 
         std::vector<fcp::filter *>
@@ -187,6 +237,7 @@ namespace fcp {
                 Antiloop            antiloop;
                 std::string         in_type;
                 std::string         out_type;
+                chain_nodes_state_t state;
 
                 in_type = input.type();
                 if (in_type.empty()) {
@@ -202,10 +253,18 @@ namespace fcp {
                         throw fcp::exception(e.c_str());
                 }
 
+                state = END_NOT_FOUND;
+
                 TR_DBG("Input type  = '%s'\n", in_type.c_str());
                 TR_DBG("Output type = '%s'\n", out_type.c_str());
 
-                if (!chain_nodes(antiloop, in_type, out_type, depth, data)) {
+
+                if (!chain_nodes(antiloop,
+                                 in_type,
+                                 out_type,
+                                 depth,
+                                 data,
+                                 state)) {
                         TR_DBG("No chain found ...\n");
                         data.clear();
                         return ret;
