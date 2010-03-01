@@ -25,10 +25,14 @@
 
 #include <string>
 #include <sstream>
+#include <boost/filesystem.hpp>
+
+#include "namespace.h"
 
 namespace fcp {
 
         namespace string {
+
                 std::string trim_left(const std::string & s,
                                       const std::string & t);
                 std::string trim_right(const std::string & s,
@@ -43,15 +47,23 @@ namespace fcp {
                                   char                separator,
                                   std::string &       out1,
                                   std::string &       out2);
+
+                std::string quote(const std::string & s);
+                std::string quote(const bfs::path & p);
+
         }
 
         namespace environment {
+
                 std::string get(const char*         key);
                 std::string get(const std::string & key);
                 bool        set(const std::string & key,
                                 const std::string & value);
+
         }
 
 }
+
+#define QUOTE(S) fcp::string::quote(S)
 
 #endif

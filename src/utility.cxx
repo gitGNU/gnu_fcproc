@@ -115,9 +115,17 @@ namespace fcp {
                         out1 = in.substr(0, p);
                         out2 = in.substr(p + 1);
                 }
+
+                std::string quote(const std::string & s)
+                { return std::string("`") + s + std::string("'"); }
+
+                std::string quote(const bfs::path & p)
+                { return quote(p.string()); }
+
         }
 
         namespace environment {
+
                 std::string get(const char * key)
                 {
                         BUG_ON(key == 0);
@@ -143,6 +151,7 @@ namespace fcp {
 
                         return true;
                 }
+
         }
 
 }
