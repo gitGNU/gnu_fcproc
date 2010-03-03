@@ -28,6 +28,7 @@
 #include "string.h"
 #include "exception.h"
 #include "command.h"
+#include "utility.h"
 
 namespace fcp {
 
@@ -63,7 +64,7 @@ namespace fcp {
 
                 if (WEXITSTATUS(ret) != 0) {
                         std::string e("Got problems running "
-                                      "command '" + shell_ + "'");
+                                      "command " + QUOTE(shell_));
                         throw fcp::exception(e.c_str());
                 }
         }

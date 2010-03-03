@@ -30,6 +30,7 @@
 #include "rules.h"
 #include "chain.h"
 #include "tag.h"
+#include "utility.h"
 #include "namespace.h"
 
 namespace fcp {
@@ -48,8 +49,8 @@ namespace fcp {
                                  int                depth,
                                  const bfs::path &  work)
         {
-                TR_DBG("Running transformation '%s' (%s, %s)\n",
-                       tag_.id().c_str(),
+                TR_DBG("Running transformation %s (%s, %s)\n",
+                       CQUOTE(tag_.id()),
                        dry   ? "dry"    : "not dry",
                        force ? "forced" : "not forced");
 
@@ -60,9 +61,9 @@ namespace fcp {
                     bfs::exists(output.path())      &&
                     bfs::equivalent(input.path(),
                                     output.path())) {
-                        std::string e("Transformation "
-                                      "'" + tag_.id() + "' "
-                                      "must have different "
+                        std::string e("Transformation "       +
+                                      QUOTE(tag_.id())        +
+                                      " must have different " +
                                       "input and output");
                         throw fcp::exception(e.c_str());
                 }
@@ -73,8 +74,8 @@ namespace fcp {
                                                                      depth,
                                                                      work);
                 if (rules_chain.size() == 0) {
-                        std::string e("No chain available for "
-                                      "'" + tag_.id() + "' "
+                        std::string e("No chain available for " +
+                                      QUOTE(tag_.id())          +
                                       "transformation");
                         throw fcp::exception(e.c_str());
                 }

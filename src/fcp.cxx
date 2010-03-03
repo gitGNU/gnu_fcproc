@@ -368,9 +368,9 @@ void program(int argc, char * argv[])
         }
 
         if (!bfs::exists(temp_dir)) {
-                std::string e(std::string("Directory '") +
-                              temp_dir.string()          +
-                              std::string("' is missing"));
+                std::string e(std::string("Directory ")  +
+                              QUOTE(temp_dir)            +
+                              std::string(" is missing"));
                 throw fcp::exception(e.c_str());
         }
         BUG_ON(!bfs::exists(temp_dir));
@@ -391,18 +391,16 @@ void program(int argc, char * argv[])
                 bfs::create_directory(work_dir);
         } catch (...) {
                 std::string e(std::string("Problems while working on ") +
-                              std::string("'")                          +
-                              work_dir.string()                         +
-                              std::string("'"));
+                              QUOTE(work_dir));
                 throw fcp::exception(e.c_str());
         }
         BUG_ON(!bfs::exists(work_dir));
 
-        TR_DBG("Transformation(s) = %d\n",   transformations.size());
-        TR_DBG("Rules file(s)     = %d\n",   rules.size());
-        TR_DBG("Separator         = '%c'\n", separator);
-        TR_DBG("Max depth         = '%d'\n", max_depth);
-        TR_DBG("Working directory = '%s'\n", work_dir.string().c_str());
+        TR_DBG("Transformation(s) = %d\n", transformations.size());
+        TR_DBG("Rules file(s)     = %d\n", rules.size());
+        TR_DBG("Separator         = %c\n", separator);
+        TR_DBG("Max depth         = %d\n", max_depth);
+        TR_DBG("Working directory = %s\n", CQUOTE(work_dir));
 
         BUG_ON(transformations.size() <= 0);
         BUG_ON(rules.size() < 0);
@@ -423,10 +421,9 @@ void program(int argc, char * argv[])
                 bfs::remove_all(work_dir);
         } catch (...) {
                 // XXX FIXME: Should we only warn our user here ?
-                std::string e(std::string("Cannot remove ")      +
-                              std::string("working directory '") +
-                              work_dir.string()                  +
-                              std::string("'"));
+                std::string e(std::string("Cannot remove ")     +
+                              std::string("working directory ") +
+                              QUOTE(work_dir));
                 throw fcp::exception(e.c_str());
         }
 }

@@ -28,6 +28,7 @@
 #include "debug.h"
 #include "exception.h"
 #include "parser.h"
+#include "utility.h"
 
 namespace fcp {
 
@@ -143,9 +144,10 @@ namespace fcp {
                 }
 
                 if (!bfs::exists(file_path)) {
-                        fcp::exception((std::string("File '") +
-                                        file_path.string()    +
-                                        std::string("' is missing")).c_str());
+                        std::string e(std::string("File ")       +
+                                      QUOTE(file_path)           +
+                                      std::string(" is missing"));
+                        fcp::exception(e.c_str());
                 }
 
                 bfs::path base_path;
@@ -157,15 +159,15 @@ namespace fcp {
 #endif
 
                 // Always dump the file under examination
-                TR_DBG("Parsing rules from file '%s'\n",
-                       file_path.string().c_str());
+                TR_DBG("Parsing rules from file %s\n",
+                       CQUOTE(file_path));
 
                 std::ifstream stream;
                 stream.open(file_path.string().c_str());
                 if (!stream) {
-                        std::string e("Cannot open '"    +
-                                      file_path.string() +
-                                      "' for reading");
+                        std::string e("Cannot open "   +
+                                      QUOTE(file_path) +
+                                      " for reading");
                         throw fcp::exception(e.c_str());
                 }
 
@@ -187,14 +189,14 @@ namespace fcp {
                 state = S_IDLE;
                 while (!stream.eof()) {
                         if (state == S_IDLE) {
-                                P_DBG("State %d, number %d, line '%s'\n",
-                                      state, number, line.c_str());
+                                P_DBG("State %d, number %d, line %s\n",
+                                      state, number, CQUOTE(line));
 
                                 // Read a new line
                                 line = readline(stream); number++;
 
-                                P_DBG("  line %d = '%s'\n",
-                                      number, line.c_str());
+                                P_DBG("  line %d = %s\n",
+                                      number, CQUOTE(line));
 
                                 // Is this an empty line ?
                                 if (regexec(&re_.empty_,
@@ -228,8 +230,8 @@ namespace fcp {
                                                             re_.match_[1].
                                                             rm_so);
 
-                                        P_DBG("  Got include is '%s'\n",
-                                              include.c_str());
+                                        P_DBG("  Got include is %s\n",
+                                              CQUOTE(include));
                                         parse(bfs::path(include),
                                               base_path,
                                               feeder);
@@ -241,8 +243,8 @@ namespace fcp {
                                 continue;
 
                         } else if (state == S_RULE_HEADER) {
-                                P_DBG("State %d, number %d, line '%s'\n",
-                                      state, number, line.c_str());
+                                P_DBG("State %d, number %d, line %s\n",
+                                      state, number, CQUOTE(line));
 
                                 // Is this an header line ?
                                 if (regexec(&re_.header_,
@@ -278,22 +280,24 @@ namespace fcp {
                                 BUG_ON(tag_in  == "");
                                 BUG_ON(tag_out == "");
 
-                                P_DBG("  tag in  = '%s'\n", tag_in.c_str());
-                                P_DBG("  tag out = '%s'\n", tag_out.c_str());
+                                P_DBG("  tag in  = %s\n",
+                                      CQUOTE(tag_in));
+                                P_DBG("  tag out = %s\n",
+                                      CQUOTE(tag_out));
 
                                 // Header read, start reading body
                                 state = S_RULE_BODY;
                                 continue;
 
                         } else if (state == S_RULE_BODY) {
-                                P_DBG("State %d, number %d, line '%s'\n",
-                                      state, number, line.c_str());
+                                P_DBG("State %d, number %d, line %s\n",
+                                      state, number, CQUOTE(line));
 
                                 // Read a new line
                                 line = readline(stream); number++;
 
-                                P_DBG("  State %d, number %d, line '%s'\n",
-                                      state, number, line.c_str());
+                                P_DBG("  State %d, number %d, line %s\n",
+                                      state, number, CQUOTE(line));
 
                                 // Empty lines complete the body part
                                 if (line.size() == 0) {
@@ -325,8 +329,8 @@ namespace fcp {
                                 continue;
 
                         } else if (state == S_RULE_COMPLETE) {
-                                P_DBG("State %d, number %d, line '%s'\n",
-                                      state, number, line.c_str());
+                                P_DBG("State %d, number %d, line %s\n",
+                                      state, number, CQUOTE(line));
 
                                 BUG_ON(tag_in  == "");
                                 BUG_ON(tag_out == "");

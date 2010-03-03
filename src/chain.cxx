@@ -32,6 +32,7 @@
 #include "chain.h"
 #include "filter.h"
 #include "file.h"
+#include "utility.h"
 #include "namespace.h"
 
 namespace fcp {
@@ -46,14 +47,10 @@ namespace fcp {
                 output_(output),
                 filters_(filters)
         {
-                TR_DBG("Creating chain '%s'\n",
-                       id.c_str());
-                TR_DBG("  Working directory '%s'\n",
-                       work.string().c_str());
-                TR_DBG("  Chain input file  '%s'\n",
-                       input_.name().c_str());
-                TR_DBG("  Chain output file '%s'\n",
-                       output_.name().c_str());
+                TR_DBG("Creating chain %s\n",      CQUOTE(id));
+                TR_DBG("  Working directory %s\n", CQUOTE(work));
+                TR_DBG("  Chain input file  %s\n", CQUOTE(input_.name()));
+                TR_DBG("  Chain output file %s\n", CQUOTE(output_.name()));
 
                 std::vector<fcp::filter *>::iterator i;
                 for (i = filters_.begin(); i != filters_.end(); i++) {
@@ -61,12 +58,11 @@ namespace fcp {
                         (*i)->setup(id_, work);
                 }
 
-                TR_DBG("Chain for transformation '%s':\n",
-                       id_.c_str());
+                TR_DBG("Chain for transformation %s:\n",CQUOTE(id_));
                 for (i = filters_.begin(); i != filters_.end(); i++) {
-                        TR_DBG("  '%s' -> '%s'\n",
-                               (*i)->input().string().c_str(),
-                               (*i)->output().string().c_str());
+                        TR_DBG("  %s -> %s\n",
+                               CQUOTE((*i)->input()),
+                               CQUOTE((*i)->output()));
                 }
         }
 
@@ -88,8 +84,8 @@ namespace fcp {
                 time_t diff = (bfs::last_write_time(output_.path()) -
                                bfs::last_write_time(input_.path()));
                 if (diff >= 0) {
-                        TR_DBG("Output file '%s' is up-to-date (delta = %d)\n",
-                               output_.name().c_str(), diff);
+                        TR_DBG("Output file %s is up-to-date (delta = %ld)\n",
+                               CQUOTE(output_.name()), diff);
                         return true;
                 }
 
@@ -101,16 +97,15 @@ namespace fcp {
         void chain::run(bool dry,
                         bool force)
         {
-                TR_DBG("Running chain '%s'\n", id_.c_str());
+                TR_DBG("Running chain %s\n", CQUOTE(id_));
 
                 if (!dry) {
-                        TR_DBG("Checking input file '%s'\n",
-                               input_.name().c_str());
+                        TR_DBG("Checking input file %s\n",
+                               CQUOTE(input_.name()));
 
                         if (!bfs::exists(input_.path())) {
-                                std::string e("Missing input file "
-                                              "for chain "
-                                              "'" + input_.name() + "'");
+                                std::string e("Missing input file for chain " +
+                                              QUOTE(input_.name()));
                                 throw fcp::exception(e.c_str());
                         }
 

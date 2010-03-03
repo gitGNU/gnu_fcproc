@@ -64,14 +64,10 @@ namespace fcp {
         void filter::setup(const std::string & id,
                            const bfs::path &   work_dir)
         {
-                TR_DBG("Filter '%s' setup:\n",
-                       id.c_str());
-                TR_DBG("  Input       '%s\n",
-                       input_.string().c_str());
-                TR_DBG("  Output      '%s'\n",
-                       output_.string().c_str());
-                TR_DBG("  working dir '%s'\n",
-                       work_dir.string().c_str());
+                TR_DBG("Filter %s setup:\n", CQUOTE(id));
+                TR_DBG("  Input       %s\n", CQUOTE(input_));
+                TR_DBG("  Output      %s\n", CQUOTE(output_));
+                TR_DBG("  working dir %s\n", CQUOTE(work_dir));
 
                 commands_ = templates_;
 
@@ -91,7 +87,7 @@ namespace fcp {
                         command = fcp::string::replace(command,
                                                        "$O", output_.string());
 
-                        //TR_DBG("  Command '%s'\n", command.c_str());
+                        //TR_DBG("  Command %s\n", CQUOTE(command));
 
                         // Ugly
                         for (;;) {
@@ -120,7 +116,7 @@ namespace fcp {
                                 std::string v = command.substr(s, e - s + 2);
                                 BUG_ON(v.size() == 0);
 
-                                //TR_DBG("      v = '%s'\n", v.c_str());
+                                //TR_DBG("      v = %s\n", CQUOTE(v));
 
                                 std::string t = temps[v];
                                 if (t == "") {
@@ -133,11 +129,13 @@ namespace fcp {
 
                                 command = fcp::string::replace(command, v, t);
 
-                                //TR_DBG("    Replaced '%s' with '%s'\n",
-                                //       v.c_str(), t.c_str());
+                                //TR_DBG("    Replaced %s with %s\n",
+                                //       CQUOTE(v),
+                                //       CQUOTE(t));
                         }
 
-                        //TR_DBG("    Command is now '%s'\n", command.c_str());
+                        //TR_DBG("    Command is now %s\n",
+                        //       CQUOTE(command));
 
                         (*ic) = command;
                 }

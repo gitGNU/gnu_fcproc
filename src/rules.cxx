@@ -86,8 +86,10 @@ namespace fcp {
         {
                 BUG_ON(depth < 0); // Allow depth == 1
 
-                TR_DBG("Walking '%s' -> '%s' (depth = %d)\n",
-                       tag_in.c_str(), tag_out.c_str(), depth);
+                TR_DBG("Walking %s -> %s (depth = %d)\n",
+                       CQUOTE(tag_in),
+                       CQUOTE(tag_out),
+                       depth);
 
                 depth--;
                 if (depth < 0) {
@@ -101,18 +103,20 @@ namespace fcp {
                         std::vector<std::string> > >::const_iterator i;
                 i = rules_.find(tag_in);
                 if (i == rules_.end()) {
-                        TR_DBG("No rules available for '%s' -> '%s'\n",
-                               tag_in.c_str(), tag_out.c_str());
+                        TR_DBG("No rules available for %s -> %s\n",
+                               CQUOTE(tag_in),
+                               CQUOTE(tag_out));
                         state = ERROR;
                         return false;
                 }
 
-                TR_DBG("Got '%s' node\n", tag_in.c_str());
+                TR_DBG("Got %s node\n", CQUOTE(tag_in));
 
                 // Antiloop detection check
                 if (!antiloop.insert(tag_in, tag_out)) {
-                        TR_DBG("Got a loop while walking '%s' -> '%s'\n",
-                               tag_in.c_str(), tag_out.c_str());
+                        TR_DBG("Got a loop while walking %s -> %s\n",
+                               CQUOTE(tag_in),
+                               CQUOTE(tag_out));
                         state = ERROR;
                         return false;
                 }
@@ -127,8 +131,9 @@ namespace fcp {
 
                         if (j->first == tag_out) {
                                 // This node is the last node in the chain
-                                TR_DBG("Got chain end ('%s' -> '%s')\n",
-                                       i->first.c_str(), j->first.c_str());
+                                TR_DBG("Got chain end (%s -> %s)\n",
+                                       CQUOTE(i->first),
+                                       CQUOTE(j->first));
 
                                 current_state = END_REACH;
                         } else {
@@ -142,9 +147,9 @@ namespace fcp {
                                                 data,
                                                 state)) {
                                         TR_DBG("Got chain node "
-                                               "('%s' -> '%s')\n",
-                                               i->first.c_str(),
-                                               j->first.c_str());
+                                               "(%s -> %s)\n",
+                                               CQUOTE(i->first),
+                                               CQUOTE(j->first));
 
                                         current_state = END_FOUND;
                                 }
@@ -223,10 +228,10 @@ namespace fcp {
         {
                 BUG_ON(depth <= 0);
 
-                TR_DBG("Looking for chain '%s' -> '%s' "
+                TR_DBG("Looking for chain %s -> %s "
                        "(max depth %d)\n",
-                       input.name().c_str(),
-                       output.name().c_str(),
+                       CQUOTE(input.name()),
+                       CQUOTE(output.name()),
                        depth);
 
                 std::set<std::pair<std::string, std::string> > loop;
@@ -241,22 +246,22 @@ namespace fcp {
 
                 in_type = input.type();
                 if (in_type.empty()) {
-                        std::string e("Cannot detect file type for "
-                                      "'" + input.name() + "'");
+                        std::string e("Cannot detect file type for " +
+                                      QUOTE(input.name()));
                         throw fcp::exception(e.c_str());
                 }
 
                 out_type = output.type();
                 if (out_type.empty()) {
-                        std::string e("Cannot detect file type for "
-                                      "'" + output.name() + "'");
+                        std::string e("Cannot detect file type for " +
+                                      QUOTE(output.name()));
                         throw fcp::exception(e.c_str());
                 }
 
                 state = END_NOT_FOUND;
 
-                TR_DBG("Input type  = '%s'\n", in_type.c_str());
-                TR_DBG("Output type = '%s'\n", out_type.c_str());
+                TR_DBG("Input type  = %s\n", CQUOTE(in_type));
+                TR_DBG("Output type = %s\n", CQUOTE(out_type));
 
 
                 if (!chain_nodes(antiloop,

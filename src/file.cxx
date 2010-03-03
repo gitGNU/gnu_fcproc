@@ -26,6 +26,7 @@
 #include "debug.h"
 #include "file.h"
 #include "namespace.h"
+#include "utility.h"
 #include "exception.h"
 
 namespace fcp {
@@ -59,18 +60,18 @@ namespace fcp {
                                 // tmp is "" or ".", this means no extension
                                 // or an empty extension ...
                                 std::string s =
-                                        std::string("Cannot detect file '") +
-                                        path.string()                       +
-                                        std::string("' type");
+                                        std::string("Cannot detect file ") +
+                                        QUOTE(path)                        +
+                                        std::string(" type");
                                 throw fcp::exception(s.c_str());
                         }
 
                         type_ = tmp.substr(1);
                 }
 
-                TR_DBG("File: name = '%s' / type = '%s'\n",
-                       path_.string().c_str(),
-                       type_.c_str());
+                TR_DBG("File: name = %s / type = %s\n",
+                       CQUOTE(path_),
+                       CQUOTE(type_));
         }
 
         file::~file()

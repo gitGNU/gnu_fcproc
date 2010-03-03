@@ -34,9 +34,8 @@ namespace fcp {
                 const std::string::size_type p = id_.find(separator);
 
                 if ((p < 0) || (p > id_.size())) {
-                        std::string e("Missing separator "
-                                      "in tag "
-                                      "'" + id_ + "'");
+                        std::string e("Missing separator in tag " +
+                                      QUOTE(id_));
                         throw fcp::exception(e.c_str());
                 }
 
@@ -46,18 +45,18 @@ namespace fcp {
                         std::string tmp = id_.substr(0, p);
                         if (tmp.size() == 0) {
                                 std::string e("Missing input file "
-                                              "in transformation "
-                                              "'" + id_ + "'");
+                                              "in transformation " +
+                                              QUOTE(id_));
                                 throw fcp::exception(e.c_str());
                         }
-                        TR_DBG("Tag subpart '%s' (input)\n", tmp.c_str());
+                        TR_DBG("Tag subpart %s (input)\n", CQUOTE(tmp));
 
                         // Slice it in (name, type)
                         std::string name;
                         std::string type;
                         fcp::string::slice(tmp, '%', name, type);
-                        TR_DBG("  Subpart name '%s'\n", name.c_str());
-                        TR_DBG("  Subpart type '%s'\n", type.c_str());
+                        TR_DBG("  Subpart name %s\n", CQUOTE(name));
+                        TR_DBG("  Subpart type %s\n", CQUOTE(type));
 
                         // Create the input filename
                         input_ = fcp::file(name, type);
@@ -69,18 +68,19 @@ namespace fcp {
                         std::string tmp = id_.substr(p + 1);
                         if (tmp.size() == 0) {
                                 std::string e("Missing output file "
-                                              "in transformation "
-                                              "'" + id_ + "'");
+                                              "in transformation " +
+                                              QUOTE(id_));
                                 throw fcp::exception(e.c_str());
                         }
-                        TR_DBG("Tag subpart '%s' (output)\n", tmp.c_str());
+                        TR_DBG("Tag subpart %s (output)\n",
+                               CQUOTE(tmp));
 
                         // Slice it in (name, type)
                         std::string name;
                         std::string type;
                         fcp::string::slice(tmp, '%', name, type);
-                        TR_DBG("  Subpart name '%s'\n", name.c_str());
-                        TR_DBG("  Subpart type '%s'\n", type.c_str());
+                        TR_DBG("  Subpart name %s\n", CQUOTE(name));
+                        TR_DBG("  Subpart type %s\n", CQUOTE(type));
 
                         // Create the output filename
                         output_ = fcp::file(name, type);

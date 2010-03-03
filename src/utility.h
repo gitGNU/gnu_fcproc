@@ -64,6 +64,7 @@ namespace fcp {
 
 }
 
-#define QUOTE(S) fcp::string::quote(S)
+#define QUOTE(S)  fcp::string::quote(S)
+#define CQUOTE(S) (QUOTE(S)).c_str()
 
 #endif
