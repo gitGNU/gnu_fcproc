@@ -40,6 +40,12 @@ namespace fcp {
         rules::rules()
         { }
 
+        rules::iterator rules::begin()
+        { return rules_.begin(); }
+
+        rules::iterator rules::end()
+        { return rules_.end(); }
+
         bool rules::is_valid()
         {
                 std::map<std::string,

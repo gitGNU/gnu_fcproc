@@ -56,6 +56,13 @@ namespace fcp {
                          const std::string &              tag_out,
                          const std::vector<std::string> & commands);
 
+                typedef std::map<std::string,
+                                 std::map<std::string,
+                                          std::vector<std::string> > >::iterator iterator;
+
+                iterator begin();
+                iterator end();
+
                 // Builds a filters-chain
                 std::vector<fcp::filter *>
                 chain(const fcp::file & input,
