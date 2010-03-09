@@ -42,23 +42,25 @@
 
 extern int trace_mask;
 
-#define _TRACE(LVL,FMT,ARGS...) {                                       \
-        if (trace_mask & LVL) {                                         \
-                FILE * s;                                               \
-                                                                        \
-                if (LVL & (TR_LVL_ERROR | TR_LVL_CRITICAL)) {    	\
-                        s = stderr;                                     \
-                } else {                                                \
-                        s = stdout;                                     \
-                }                                                       \
-                                                                        \
-                fprintf(s, "%s: " FMT, PACKAGE_TARNAME, ##ARGS);        \
-        }                                                               \
+#define _TRACE(LVL,FMT,ARGS...) {                               \
+        if (trace_mask & LVL) {                                 \
+                FILE * trace_stream;                            \
+                                                                \
+                if (LVL & (TR_LVL_ERROR | TR_LVL_CRITICAL)) {   \
+                        trace_stream = stderr;                  \
+                } else {                                        \
+                        trace_stream = stdout;                  \
+                }                                               \
+                                                                \
+                fprintf(trace_stream,                           \
+                        "%s: " FMT,                             \
+                        PACKAGE_TARNAME, ##ARGS);               \
+        }                                                       \
 }
 
 // Shortcuts for configuration
 #define TR_CONFIG_LVL(LVL, VALUE) {                     \
-	trace_mask |= ((VALUE == true) ? LVL : 0);      \
+        trace_mask |= ((VALUE == true) ? LVL : 0);      \
 }
 
 // Shortcuts for traces
