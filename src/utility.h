@@ -24,7 +24,6 @@
 #include "config.h"
 
 #include <string>
-#include <sstream>
 #include <boost/filesystem.hpp>
 
 #include "namespace.h"
@@ -55,7 +54,7 @@ namespace fcp {
 
         namespace environment {
 
-                std::string get(const char*         key);
+                std::string get(const char *        key);
                 std::string get(const std::string & key);
                 bool        set(const std::string & key,
                                 const std::string & value);

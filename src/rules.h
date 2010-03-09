@@ -58,7 +58,8 @@ namespace fcp {
 
                 typedef std::map<std::string,
                                  std::map<std::string,
-                                          std::vector<std::string> > >::iterator iterator;
+                                          std::vector<std::string> > >
+                ::iterator iterator;
 
                 iterator begin();
                 iterator end();
