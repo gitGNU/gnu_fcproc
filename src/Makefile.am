@@ -28,7 +28,8 @@ EXTRA_DIST =
 ## Programs
 
 bin_PROGRAMS =					\
-	fcp
+	fcp					\
+	fcp2dot
 bin_SCRIPTS  =
 
 COMMON_CPPFLAGS =				\
@@ -79,6 +80,36 @@ fcp_LDADD =					\
         $(BOOST_PROGRAM_OPTIONS_LIB)		\
 	libparser.a
 
+fcp2dot_SOURCES =				\
+	fcp2dot.cxx				\
+	namespace.h				\
+	rules.h					\
+	rules.cxx				\
+	filter.h				\
+	filter.cxx				\
+	command.h				\
+	command.cxx				\
+	file.h					\
+	file.cxx				\
+	exception.h				\
+	exception.cxx				\
+	debug.h					\
+	debug.cxx				\
+	trace.h					\
+	trace.cxx				\
+	utility.h				\
+	utility.cxx
+fcp2dot_CPPFLAGS =				\
+	$(COMMON_CPPFLAGS)
+fcp2dot_LDADD =					\
+        $(BOOST_LDFLAGS)			\
+        $(BOOST_SYSTEM_LIB)			\
+        $(BOOST_THREAD_LIB)			\
+        $(BOOST_FILESYSTEM_LIB)			\
+        $(BOOST_REGEX_LIB)			\
+        $(BOOST_PROGRAM_OPTIONS_LIB)		\
+	libparser.a
+
 ##
 ## Maintainer related targets
 ##
@@ -96,7 +127,8 @@ maintainer-check-parameters: Makefile $(bin_SCRIPTS) $(bin_PROGRAMS)
 	done
 
 all_SRCS =					\
-	$(fcp_SOURCES)
+	$(fcp_SOURCES)				\
+	$(fcp2dot_SOURCES)
 
 maintainer-check-whitespaces: Makefile $(all_SRCS)
 	$(WHITESPACE_DETECT) $(all_SRCS)

@@ -1,6 +1,7 @@
 /*.o
 /*.a
 /fcp
+/fcp2dot
 /config.h
 /config.h.in
 /stamp-h1
