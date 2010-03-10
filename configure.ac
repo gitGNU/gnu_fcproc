@@ -68,8 +68,8 @@ AC_PROG_RANLIB
 #
 # BOOST related checks
 #
-AX_BOOST_BASE([1.35.0],[],[
-  AC_MSG_ERROR([Missing Boost library >= 1.35.0])
+AX_BOOST_BASE([1.41.0],[],[
+  AC_MSG_ERROR([Missing Boost library >= 1.41.0])
 ])
 AX_BOOST_SYSTEM
 AX_BOOST_THREAD
