@@ -93,27 +93,6 @@ void run(const std::vector<std::string> & tags,
         }
 }
 
-void version()
-{
-        std::cout
-                << PROGRAM_NAME
-                << " (" << PACKAGE_NAME  << ") "
-                << PACKAGE_VERSION
-                << std::endl
-                << std::endl
-                << "Copyright (C) 2008, 2009 Francesco Salvestrini"
-                << std::endl
-                << std::endl
-                << "This is free software.  "
-                << "You may redistribute copies of it under the terms of"
-                << std::endl
-                << "the GNU General Public License "
-                << "<http://www.gnu.org/licenses/gpl.html>."
-                << std::endl
-                << "There is NO WARRANTY, to the extent permitted by law."
-                << std::endl;
-}
-
 #define DFLT_SEPARATOR ':'
 
 void help(bpo::options_description & options)
@@ -253,7 +232,16 @@ bool handle_options(int                        argc,
                 TR_CONFIG_LVL(TR_LVL_VERBOSE, true);
         }
         if (vm.count("version")) {
-                version();
+                std::vector<std::string> authors;
+
+                authors.push_back("Francesco Salvestrini");
+                authors.push_back("Alessandro Massignan");
+
+                fcp::program::version(PROGRAM_NAME,
+                                      PACKAGE_NAME,
+                                      PACKAGE_VERSION,
+                                      authors,
+                                      std::cout);
                 return false;
         }
         if (vm.count("help")) {
@@ -428,18 +416,6 @@ void program(int argc, char * argv[])
         }
 }
 
-void hint(const std::string & message)
-{
-        BUG_ON(message.size() == 0);
-
-        std::cout
-                << message
-                << std::endl
-                << "Try `" << PROGRAM_NAME << " -h' "
-                <<"for more information."
-                << std::endl;
-}
-
 int main(int argc, char * argv[])
 {
         TR_CONFIG_LVL(TR_LVL_CRITICAL, true);
@@ -456,7 +432,7 @@ int main(int argc, char * argv[])
                 program(argc, argv);
                 retval = EXIT_SUCCESS;
         } catch (wrong_option & e) {
-                hint(e.what());
+                fcp::program::hint(PROGRAM_NAME, e.what(), "-h", std::cout);
         } catch (fcp::exception & e) {
                 TR_ERR("%s\n", e.what());
         } catch (...) {
