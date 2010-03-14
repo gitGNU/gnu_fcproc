@@ -57,16 +57,15 @@ void run(std::vector<std::string> & dot,
         std::map<std::string, bool> processed_tags;
 
         // Setting up iterators
-        fcp::rules::iterator                                 in;
-        std::map<std::string,
-                std::vector<std::string> >::const_iterator   out;
+        fcp::rules::iterator                                            in;
+        std::map<std::string,std::vector<std::string> >::const_iterator out;
 
         // Setting up special characters protection
         boost::regex pattern;
         try {
-                pattern.assign ("([\"\'\\$])",
-                                boost::regex_constants::match_posix |
-                                boost::regex_constants::match_any);
+                pattern.assign("([\"\'\\$])",
+                               boost::regex_constants::match_posix |
+                               boost::regex_constants::match_any);
         } catch(boost::regex_error & e) {
                 throw fcp::exception(e.what());
         }
@@ -141,43 +140,7 @@ void run(std::vector<std::string> & dot,
         dot.push_back("}");
 }
 
-void version()
-{
-        std::cout
-                << PROGRAM_NAME
-                << " (" << PACKAGE_NAME  << ") "
-                << PACKAGE_VERSION
-                << std::endl
-                << std::endl
-                << "Copyright (C) 2008, 2009 Francesco Salvestrini"
-                << std::endl
-                << std::endl
-                << "This is free software.  "
-                << "You may redistribute copies of it under the terms of"
-                << std::endl
-                << "the GNU General Public License "
-                << "<http://www.gnu.org/licenses/gpl.html>."
-                << std::endl
-                << "There is NO WARRANTY, to the extent permitted by law."
-                << std::endl;
-}
-
 #define DFLT_SEPARATOR ':'
-
-void help(bpo::options_description & options)
-{
-        std::cout
-                << "Usage: "
-                << PROGRAM_NAME
-                << " [OPTION]... [TRANSFORMATION]..."
-                << std::endl
-                << std::endl
-                << options
-                << std::endl
-                << std::endl
-                << "Report bugs to <" << PACKAGE_BUGREPORT << ">"
-                << std::endl;
-}
 
 // XXX FIXME: This prototype sucks
 bool handle_options(int           argc,
@@ -240,12 +203,25 @@ bool handle_options(int           argc,
                 TR_CONFIG_LVL(TR_LVL_VERBOSE, true);
         }
         if (vm.count("version")) {
-                version();
+                std::vector<std::string> authors;
+
+                authors.push_back("Francesco Salvestrini");
+                authors.push_back("Alessandro Massignan");
+
+                fcp::program::version(PROGRAM_NAME,
+                                      PACKAGE_NAME,
+                                      PACKAGE_VERSION,
+                                      authors,
+                                      std::cout);
                 return false;
         }
         if (vm.count("help")) {
                 // Passing only main options
-                help(main_options);
+                fcp::program::help(PROGRAM_NAME,
+                                   "[OPTION]... [TRANSFORMATION]...",
+                                   PACKAGE_BUGREPORT,
+                                   main_options,
+                                   std::cout);
                 return false;
         }
 
@@ -253,7 +229,7 @@ bool handle_options(int           argc,
 }
 
 // XXX FIXME: This is a shame, please remove ASAP
-fcp::rules  rules;
+fcp::rules rules;
 
 void feeder(const std::string &              i,
             const std::string &              o,
@@ -299,8 +275,8 @@ void program(int argc, char * argv[])
                 throw wrong_option("Missing output file");
         }
 
-        TR_DBG("Input file  = %s\n",   input_file.c_str());
-        TR_DBG("Output file = %s\n",   output_file.c_str());
+        TR_DBG("Input file  = %s\n",   CQUOTE(input_file));
+        TR_DBG("Output file = %s\n",   CQUOTE(output_file));
         TR_DBG("Separator   = '%c'\n", separator);
 
         bfs::path rules_file(input_file);
@@ -320,7 +296,6 @@ void program(int argc, char * argv[])
         parser.parse(rules_file,
                      bfs::initial_path<bfs::path>(),
                      feeder);
-
         if (!rules.is_valid()) {
                 std::string e =
                         std::string("Invalid rules set "
@@ -329,8 +304,7 @@ void program(int argc, char * argv[])
                         input_file;
 
                 throw fcp::exception(e.c_str());
-         }
-
+        }
         BUG_ON(!rules.is_valid());
 
         TR_VRB("Processing rules...\n");
@@ -338,36 +312,19 @@ void program(int argc, char * argv[])
         std::vector<std::string> dot;
 
         run(dot, rules, separator);
-
         BUG_ON(dot.empty());
 
-        TR_VRB("Flushing to output file...\n");
+        TR_VRB("Writing to output file...\n");
 
-        std::ofstream s;
-        s.open(output_file.c_str());
-
-        assert(s.is_open());
+        std::ofstream s(output_file.c_str());
+        BUG_ON(!s.is_open());
 
         std::vector<std::string>::const_iterator i;
-
-        for (i  = dot.begin();
-             i != dot.end();
-             i++) {
+        for (i  = dot.begin(); i != dot.end(); i++) {
                 s << *i << std::endl;
         }
+
         s.close();
-}
-
-void hint(const std::string & message)
-{
-        BUG_ON(message.size() == 0);
-
-        std::cout
-                << message
-                << std::endl
-                << "Try `" << PROGRAM_NAME << " -h' "
-                <<"for more information."
-                << std::endl;
 }
 
 int main(int argc, char * argv[])
@@ -386,7 +343,7 @@ int main(int argc, char * argv[])
                 program(argc, argv);
                 retval = EXIT_SUCCESS;
         } catch (wrong_option & e) {
-                hint(e.what());
+                fcp::program::hint(PROGRAM_NAME, e.what(), "-h", std::cout);
         } catch (fcp::exception & e) {
                 TR_ERR("%s\n", e.what());
         } catch (...) {
