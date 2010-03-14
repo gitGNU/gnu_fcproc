@@ -24,6 +24,8 @@
 #include "config.h"
 
 #include <string>
+#include <vector>
+#include <iostream>
 #include <boost/filesystem.hpp>
 
 #include "namespace.h"
@@ -58,6 +60,25 @@ namespace fcp {
                 std::string get(const std::string & key);
                 bool        set(const std::string & key,
                                 const std::string & value);
+
+        }
+
+        namespace program {
+
+                void hint(const char *   program_name,
+                          const char *   message,
+                          const char *   help_option,
+                          std::ostream & stream);
+                void help(const char *               program_name,
+                          const char *               usage,
+                          const char *               bug_report_email,
+                          bpo::options_description & options,
+                          std::ostream &             stream);
+                void version(const char *               program_name,
+                             const char *               package,
+                             const char *               version,
+                             std::vector<std::string> & authors,
+                             std::ostream & stream);
 
         }
 

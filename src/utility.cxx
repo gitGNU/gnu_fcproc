@@ -21,6 +21,8 @@
 #include "config.h"
 
 #include <string>
+#include <vector>
+#include <iostream>
 #include <sstream>
 #include <cstdlib>
 
@@ -150,6 +152,102 @@ namespace fcp {
                         }
 
                         return true;
+                }
+
+        }
+
+        namespace program {
+
+                void hint(const char *   program_name,
+                          const char *   message,
+                          const char *   help_option,
+                          std::ostream & stream)
+                {
+                        BUG_ON(!program_name);
+                        BUG_ON(!message);
+
+                        stream << message
+                               << std::endl;
+                        if (help_option) {
+                                stream << "Try `"
+                                       << program_name
+                                       << " "
+                                       << help_option
+                                       << "' "
+                                       << "for more information."
+                                       << std::endl;
+                        }
+                }
+
+                void help(const char *               program_name,
+                          const char *               usage,
+                          const char *               bug_report_email,
+                          bpo::options_description & options,
+                          std::ostream &             stream)
+                {
+                        BUG_ON(!program_name);
+                        BUG_ON(!bug_report_email);
+
+                        stream << "Usage: "
+                               << program_name;
+                        if (usage) {
+                                stream << " "
+                                       << usage;
+                        }
+                        stream << std::endl;
+
+                        stream << std::endl
+                               << options
+                               << std::endl
+                               << "Report bugs to <"
+                               << bug_report_email
+                               << ">"
+                               << std::endl;
+                }
+
+                void version(const char *               program_name,
+                             const char *               package,
+                             const char *               version,
+                             std::vector<std::string> & authors,
+                             std::ostream &             stream)
+                {
+                        BUG_ON(!program_name);
+                        BUG_ON(!package);
+                        BUG_ON(!version);
+
+                        stream << program_name
+                               << " (" << package  << ") "
+                               << version
+                               << std::endl;
+
+                        std::string copyright("Copyright (C) "
+                                              "2008, 2009, 2010 ");
+
+                        stream << std::endl << copyright;
+
+                        std::string prefix(copyright.size(), ' ');
+                        for (std::vector<std::string>::iterator i =
+                                     authors.begin();
+                             i != authors.end();
+                             i++) {
+                                if (i != authors.begin()) {
+                                        stream << prefix;
+                                }
+                                stream << (*i)
+                                       << std::endl;
+                        }
+                        stream << std::endl;
+
+                        stream << "This is free software.  "
+                               << "You may redistribute copies of it "
+                                "under the terms of"
+                               << std::endl
+                               << "the GNU General Public License "
+                               << "<http://www.gnu.org/licenses/gpl.html>."
+                               << std::endl
+                               << "There is NO WARRANTY, to the extent "
+                                "permitted by law."
+                               << std::endl;
                 }
 
         }
