@@ -254,7 +254,7 @@ bool handle_options(int                        argc,
 }
 
 // XXX FIXME: This is a shame, please remove ASAP
-fcp::rules  rules;
+fcp::rules rules;
 
 void feeder(const std::string &              i,
             const std::string &              o,
