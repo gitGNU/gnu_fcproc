@@ -22,7 +22,6 @@
 /test-execution-06
 /test-execution-forced-01
 /test-execution-forced-02
-/test-fcp2dot-01
 /test-hint-01
 /test-multiline-01
 /test-antiloop-01
@@ -37,8 +36,9 @@
 /test-tmpdir-01
 /test-workdir-01
 /test-options-01
+/test-options-02
 /test-options-03
 /test-options-04
 /test-options-05
 /test-options-06
-/test-options-07
+/test-fcp2dot-01

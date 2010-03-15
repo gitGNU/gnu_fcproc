@@ -75,7 +75,7 @@ FAIL_TESTS +=					\
 	test-options-03				\
 	test-options-05				\
 	test-options-06				\
-	test-options-07				\
+	test-options-02				\
 	test-rules-04
 
 SUCCESS_TESTS +=				\
@@ -102,7 +102,8 @@ SUCCESS_TESTS +=				\
 	test-hint-01				\
 	test-tmpdir-01				\
 	test-workdir-01				\
-	test-options-04
+	test-options-04				\
+	test-fcp2dot-01
 
 XFAIL_TESTS  = $(FAIL_TESTS)
 TESTS	     = $(FAIL_TESTS) $(SUCCESS_TESTS)
@@ -539,6 +540,18 @@ test-options-01: $(srcdir)/test-options-01.in Makefile
 EXTRA_DIST += test-options-01.in
 CLEANFILES += test-options-01
 
+test-options-02: $(srcdir)/test-options-02.in Makefile
+	( rm -f $@ $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-options-02.in > $@.tmp && \
+	  chmod +x $@.tmp && \
+	  chmod a-w $@.tmp && \
+	  mv -f $@.tmp $@ ) || { \
+		rm -f $@ $@.tmp ; \
+		exit 1 ; \
+	}
+EXTRA_DIST += test-options-02.in
+CLEANFILES += test-options-02
+
 test-options-03: $(srcdir)/test-options-03.in Makefile
 	( rm -f $@ $@.tmp && \
 	  $(do_subst) < $(srcdir)/test-options-03.in > $@.tmp && \
@@ -587,17 +600,17 @@ test-options-06: $(srcdir)/test-options-06.in Makefile
 EXTRA_DIST += test-options-06.in
 CLEANFILES += test-options-06
 
-test-options-07: $(srcdir)/test-options-07.in Makefile
+test-fcp2dot-01: $(srcdir)/test-fcp2dot-01.in Makefile
 	( rm -f $@ $@.tmp && \
-	  $(do_subst) < $(srcdir)/test-options-07.in > $@.tmp && \
+	  $(do_subst) < $(srcdir)/test-fcp2dot-01.in > $@.tmp && \
 	  chmod +x $@.tmp && \
 	  chmod a-w $@.tmp && \
 	  mv -f $@.tmp $@ ) || { \
 		rm -f $@ $@.tmp ; \
 		exit 1 ; \
 	}
-EXTRA_DIST += test-options-07.in
-CLEANFILES += test-options-07
+EXTRA_DIST += test-fcp2dot-01.in
+CLEANFILES += test-fcp2dot-01
 
 clean-local:
 	rm -rf testSubDir-*
