@@ -64,10 +64,13 @@ FAIL_TESTS +=					\
 	test-parse-01				\
 	test-include-02				\
 	test-transformation-01			\
+	test-execution-02			\
 	test-execution-04			\
 	test-execution-05			\
 	test-execution-forced-02		\
 	test-samefile-01			\
+	test-antiloop-01			\
+	test-antiloop-02			\
 	test-antiloop-03			\
 	test-multipath-01			\
 	test-multipath-02			\
@@ -88,12 +91,9 @@ SUCCESS_TESTS +=				\
 	test-parse-03				\
 	test-parse-04				\
 	test-execution-01			\
-	test-execution-02			\
 	test-execution-03			\
 	test-execution-06			\
 	test-multiline-01			\
-	test-antiloop-01			\
-	test-antiloop-02			\
 	test-include-01				\
 	test-include-03				\
 	test-rules-01				\
