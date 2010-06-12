@@ -29,10 +29,15 @@ namespace fcp {
 
         class exception : public std::exception {
         public:
-                exception(const char * description);
-                ~exception(void) throw();
+                exception(const char * description) :
+                        description_(description)
+                { }
 
-                virtual const char * what(void) const throw();
+                ~exception(void) throw()
+                { }
+
+                virtual const char * what(void) const throw()
+                { return description_; }
 
         protected:
                 exception(void);

@@ -20,20 +20,4 @@
 
 #include "config.h"
 
-#include <string>
-
 #include "exception.h"
-
-namespace fcp {
-
-        exception::exception(const char * description) :
-                description_(description)
-        { }
-
-        exception::~exception(void) throw()
-        { }
-
-        const char * exception::what(void) const throw()
-        { return description_; }
-
-}
