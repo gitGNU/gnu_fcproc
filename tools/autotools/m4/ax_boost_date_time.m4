@@ -30,7 +30,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 13
+#serial 15
 
 AC_DEFUN([AX_BOOST_DATE_TIME],
 [
@@ -98,6 +98,9 @@ AC_DEFUN([AX_BOOST_DATE_TIME],
                                    [link_date_time="no"])
                   done
 
+            fi
+            if test "x$ax_lib" = "x"; then
+                AC_MSG_ERROR(Could not find a version of the library!)
             fi
 			if test "x$link_date_time" != "xyes"; then
 				AC_MSG_ERROR(Could not link against $ax_lib !)

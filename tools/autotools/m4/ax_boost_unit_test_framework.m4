@@ -29,7 +29,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 10
+#serial 12
 
 AC_DEFUN([AX_BOOST_UNIT_TEST_FRAMEWORK],
 [
@@ -122,6 +122,9 @@ AC_DEFUN([AX_BOOST_UNIT_TEST_FRAMEWORK],
 				    fi
                   done
                done
+            fi
+            if test "x$ax_lib" = "x"; then
+                AC_MSG_ERROR(Could not find a version of the library!)
             fi
 			if test "x$link_unit_test_framework" != "xyes"; then
 				AC_MSG_ERROR(Could not link against $ax_lib !)

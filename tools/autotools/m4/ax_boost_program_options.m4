@@ -29,7 +29,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 13
+#serial 15
 
 AC_DEFUN([AX_BOOST_PROGRAM_OPTIONS],
 [
@@ -95,6 +95,9 @@ AC_DEFUN([AX_BOOST_PROGRAM_OPTIONS],
                                    [link_program_options="no"])
                   done
                 fi
+            if test "x$ax_lib" = "x"; then
+                AC_MSG_ERROR(Could not find a version of the library!)
+            fi
 				if test "x$link_program_options" != "xyes"; then
 					AC_MSG_ERROR([Could not link against [$ax_lib] !])
 				fi
